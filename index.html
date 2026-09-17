@@ -1,14 +1,49 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html dir="rtl" lang="fa">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=https://mortezabarkhordari5-cmyk.github.io/tati-dictionary/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>واژه‌نامه تاتی</title>
-    <script>
-        window.location.replace("https://mortezabarkhordari5-cmyk.github.io/tati-dictionary/");
-    </script>
+    <style>
+        body { font-family: Tahoma, sans-serif; padding: 15px; line-height: 1.6; }
+        h1 { text-align: center; }
+        input { width: 100%; padding: 10px; font-size: 18px; margin-bottom: 20px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #999; padding: 8px; text-align: right; }
+        th { background-color: #f2f2f2; }
+        td.tati { color: #d32f2f; font-weight: bold; width: 40%; }
+    </style>
 </head>
 <body>
-    <p>در حال انتقال به واژه‌نامه تاتی... اگر منتقل نشدید، <a href="https://mortezabarkhordari5-cmyk.github.io/tati-dictionary/">اینجا کلیک کنید</a>.</p>
+    <h1>واژه‌نامه تاتی</h1>
+    <input type="text" id="search" placeholder="جستجوی کلمه...">
+    <table>
+        <thead>
+            <tr>
+                <th>تاتی</th>
+                <th>معنی فارسی</th>
+            </tr>
+        </thead>
+        <tbody id="results"></tbody>
+    </table>
+
+    <script src="data.js"></script>
+    <script>
+        const resultsBody = document.getElementById('results');
+        const searchInput = document.getElementById('search');
+
+        function displayWords(filter = "") {
+            resultsBody.innerHTML = "";
+            const filtered = words.filter(w => (w[0] && w[0].includes(filter)) || (w[1] && w[1].includes(filter)));
+            filtered.forEach(w => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td class="tati">${w[0]}</td><td>${w[1]}</td>`;
+                resultsBody.appendChild(row);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => displayWords(e.target.value));
+        displayWords();
+    </script>
 </body>
 </html>
