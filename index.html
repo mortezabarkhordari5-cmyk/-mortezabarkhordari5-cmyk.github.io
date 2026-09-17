@@ -1,65 +1,125 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="fa">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>واژه‌نامه تاتی</title>
+    <title>دیکشنری تاتی به فارسی</title>
     <style>
-        body { font-family: Tahoma, sans-serif; padding: 20px; }
-        input { width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #999; padding: 8px; text-align: right; }
-        th { background-color: #f2f2f2; }
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: right;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-result {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>واژه‌نامه تاتی</h1>
-    <input type="text" id="searchInput" placeholder="جستجوی کلمه (تاتی یا فارسی)..." onkeyup="filterTable()">
-
-    <table id="dictionaryTable">
+<div class="container">
+    <h2>دیکشنری تاتی به فارسی</h2>
+    <input type="text" id="searchInput" placeholder="جستجوی کلمه (تاتی یا فارسی)..." onkeyup="searchDictionary()">
+    
+    <table>
         <thead>
             <tr>
                 <th>تاتی</th>
                 <th>فارسی</th>
             </tr>
         </thead>
-        <tbody id="tableBody">
-            <!-- کلمات اینجا بارگذاری می‌شوند -->
+        <tbody id="dictTableBody">
+            <tr><td colspan="2" class="no-result">در حال بارگذاری کلمات...</td></tr>
         </tbody>
     </table>
+</div>
 
-    <script>
-        let dictionaryData = [];
+<script>
+    let dictionaryData = [];
 
-        // بارگذاری داده‌ها از فایل JSON
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                dictionaryData = data;
-                renderTable(dictionaryData);
-            });
+    // خواندن فایل دیتابیس (data.json)
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            dictionaryData = data;
+            displayData(dictionaryData);
+        })
+        .catch(error => {
+            console.error('خطا در دریافت اطلاعات:', error);
+            document.getElementById('dictTableBody').innerHTML = '<tr><td colspan="2" class="no-result" style="color:red;">خطا در بارگذاری اطلاعات فایل data.json</td></tr>';
+        });
 
-        function renderTable(data) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-            data.forEach(item => {
-                let row = `<tr>
-                    <td>${item.tati}</td>
-                    <td>${item.farsi}</td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
+    function displayData(data) {
+        const tbody = document.getElementById('dictTableBody');
+        tbody.innerHTML = '';
+
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="2" class="no-result">کلمه‌ای یافت نشد.</td></tr>';
+            return;
         }
 
-        function filterTable() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = dictionaryData.filter(item => 
-                item.tati.toLowerCase().includes(input) || 
-                item.farsi.toLowerCase().includes(input)
-            );
-            renderTable(filtered);
-        }
-    </script>
+        data.forEach(item => {
+            const row = document.رنگ || document.createElement('tr'); // اصلاح ساده برای سازگاری
+            row.innerHTML = `<td><strong>${item.tati}</strong></td><td>${item.farsi}</td>`;
+            tbody.appendChild(row);
+        });
+    }
+
+    function searchDictionary() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const filtered = dictionaryData.filter(item => 
+            item.tati.toLowerCase().includes(query) || 
+            item.farsi.toLowerCase().includes(query)
+        );
+        displayData(filtered);
+    }
+</script>
+
 </body>
 </html>
