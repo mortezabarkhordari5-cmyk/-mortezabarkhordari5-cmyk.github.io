@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نامه‌یار - تبدیل صحبت به نامه اداری رسمی</title>
+  <title>نامه‌یار - تنظیم قالب نامه اداری</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
   <style>
     :root {
@@ -27,245 +27,59 @@
       padding: 16px;
     }
 
-    .container {
-      max-width: 650px;
-      margin: 0 auto;
+    .container { max-width: 650px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 24px; padding-top: 10px; }
+    header h1 { color: var(--primary); font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+    header p { color: var(--muted); font-size: 14px; }
+    .notice {
+      background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12;
+      border-radius: 12px; padding: 12px 14px; margin: 0 0 18px; font-size: 13px;
     }
-
-    header {
-      text-align: center;
-      margin-bottom: 24px;
-      padding-top: 10px;
-    }
-
-    header h1 {
-      color: var(--primary);
-      font-size: 26px;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-
-    header p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
     .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
+      background: var(--surface); border-radius: var(--radius); padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid var(--border);
     }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: var(--text);
-    }
-
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--text); }
     input, select, textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      transition: all 0.2s ease;
-      background: #fafafa;
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px;
+      font-family: inherit; font-size: 14px; outline: none; transition: all 0.2s ease; background: #fafafa;
     }
-
     input:focus, select:focus, textarea:focus {
-      border-color: var(--primary);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(16, 107, 83, 0.1);
+      border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(16, 107, 83, 0.1);
     }
-
-    .voice-wrapper {
-      position: relative;
-    }
-
+    .voice-wrapper { position: relative; }
     .btn-voice {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
-      background: var(--primary-light);
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 18px;
-      transition: 0.2s;
+      position: absolute; left: 10px; bottom: 10px; background: var(--primary-light); border: 1px solid var(--primary);
+      color: var(--primary); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; font-size: 18px; transition: 0.2s;
     }
-
-    .btn-voice.recording {
-      background: #fee2e2;
-      border-color: #ef4444;
-      color: #ef4444;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
+    .btn-voice.recording { background: #fee2e2; border-color: #ef4444; color: #ef4444; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     .btn-primary {
-      width: 100%;
-      padding: 14px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(16, 107, 83, 0.25);
-      transition: background 0.2s;
+      width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px;
+      font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 107, 83, 0.25); transition: background 0.2s;
     }
-
-    .btn-primary:active {
-      background: var(--primary-dark);
-      transform: scale(0.99);
-    }
-
-    /* بخش نمایش نامه اداری */
+    .btn-primary:active { background: var(--primary-dark); transform: scale(0.99); }
     .result-section {
-      display: none;
-      background: #fff;
-      border: 1px solid #d1d5db;
-      border-radius: var(--radius);
-      padding: 24px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-      margin-bottom: 20px;
+      display: none; background: #fff; border: 1px solid #d1d5db; border-radius: var(--radius); padding: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06); margin-bottom: 20px;
     }
-
-    .letter-paper {
-      border: 1px dashed #cbd5e1;
-      padding: 24px;
-      border-radius: 8px;
-      background: #fff;
-      line-height: 2;
-      font-size: 14px;
-      text-align: justify;
-      position: relative;
-    }
-
-    .edit-hint {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      display: block;
-      text-align: left;
-    }
-
-    .letter-header {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 2px solid #334155;
-      padding-bottom: 12px;
-      margin-bottom: 16px;
-      font-size: 12px;
-      color: #475569;
-    }
-
-    .editable-box {
-      outline: none;
-      min-height: 180px;
-    }
-
-    .editable-box:focus {
-      background: #fafdfb;
-    }
-
-    .letter-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .btn-action {
-      flex: 1;
-      min-width: 120px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 13px;
-      text-align: center;
-      transition: background 0.2s;
-    }
-
-    .btn-action:hover {
-      background: #f1f5f9;
-    }
-
-    /* تاریخچه نامه‌ها */
-    .history-section {
-      margin-top: 24px;
-    }
-
-    .history-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .history-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .history-item:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .history-info strong {
-      font-size: 14px;
-      display: block;
-      color: var(--primary-dark);
-    }
-
-    .history-info span {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
+    .letter-paper { border: 1px dashed #cbd5e1; padding: 24px; border-radius: 8px; background: #fff; line-height: 2; font-size: 14px; text-align: justify; position: relative; }
+    .edit-hint { font-size: 11px; color: var(--muted); margin-bottom: 8px; display: block; text-align: left; }
+    .letter-header { display: flex; justify-content: space-between; border-bottom: 2px solid #334155; padding-bottom: 12px; margin-bottom: 16px; font-size: 12px; color: #475569; }
+    .editable-box { outline: none; min-height: 180px; }
+    .editable-box:focus { background: #fafdfb; }
+    .letter-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .btn-action { flex: 1; min-width: 120px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer; font-weight: 700; font-size: 13px; text-align: center; transition: background 0.2s; }
+    .btn-action:hover { background: #f1f5f9; }
+    .history-section { margin-top: 24px; }
+    .history-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+    .history-item:hover { border-color: var(--primary); background: var(--primary-light); }
+    .history-info strong { font-size: 14px; display: block; color: var(--primary-dark); }
+    .history-info span { font-size: 11px; color: var(--muted); }
     @media print {
       body * { visibility: hidden; }
       .result-section, .result-section * { visibility: visible; }
@@ -275,21 +89,23 @@
   </style>
 </head>
 <body>
-
 <div class="container">
   <header>
     <h1>نامه‌یار ✍️</h1>
-    <p>هرطور راحتی تعریف کن، نامه رسمی و اداری‌اش رو تحویل بگیر!</p>
+    <p>شرح خود را بدون بازنویسی در قالبی ساده و اداری قرار دهید.</p>
   </header>
+
+  <div class="notice" role="note">
+    <strong>توجه:</strong> این برنامه بدون اتصال به هوش مصنوعی فقط قالب‌بندی می‌کند و متن شما را بازنویسی نمی‌کند؛ پیش از ارسال، اطلاعات و لحن را بررسی کنید.
+  </div>
 
   <div class="card">
     <div class="form-group">
-      <label>به کی می‌خوای نامه بنویسی؟ (مخاطب)</label>
+      <label for="recipient">به کی می‌خوای نامه بنویسی؟ (مخاطب)</label>
       <input type="text" id="recipient" placeholder="مثلاً: شهرداری منطقه، اداره آب، مدیرعامل شرکت">
     </div>
-
     <div class="form-group">
-      <label>نوع موضوع</label>
+      <label for="letterType">نوع موضوع</label>
       <select id="letterType">
         <option value="request">درخواست / تقاضا</option>
         <option value="complaint">شکایت / اعتراض</option>
@@ -298,42 +114,35 @@
         <option value="financial">امور مالی / مساعده / وام</option>
       </select>
     </div>
-
     <div class="form-group">
-      <label>عنوان خلاصه</label>
+      <label for="subject">عنوان خلاصه</label>
       <input type="text" id="subject" placeholder="مثلاً: تعویض کنتور خراب، درخواست مرخصی، روشنایی معابر">
     </div>
-
     <div class="form-group voice-wrapper">
-      <label>ماجرا رو به زبان عامیانه خودت بنویس یا بگو:</label>
-      <textarea id="rawText" rows="5" placeholder="مثلاً: الان دو هفتس تیر برق سر کوچه ما سوخته، شهرداری پیگیری نکرده، شبا خیابون تاریکه دزد میاد..."></textarea>
-      <button class="btn-voice" id="voiceBtn" title="ضبط صدا">🎙️</button>
+      <label for="rawText">ماجرا رو به زبان خودت بنویس یا بگو:</label>
+      <textarea id="rawText" rows="5" placeholder="شرح خود را اینجا بنویسید یا با دکمهٔ میکروفون بیان کنید."></textarea>
+      <button class="btn-voice" id="voiceBtn" type="button" title="ضبط صدا" aria-label="ضبط صدا">🎙️</button>
     </div>
-
-    <button class="btn-primary" id="generateBtn">تنظیم نامه رسمی ✨</button>
+    <button class="btn-primary" id="generateBtn" type="button">تنظیم قالب نامه ✨</button>
   </div>
 
-  <!-- خروجی نامه -->
   <div class="result-section" id="resultCard">
     <span class="edit-hint">✏️ می‌توانید مستقیم روی متن زیر ضربه بزنید و ویرایشش کنید</span>
     <div class="letter-paper">
       <div class="letter-header">
         <div><strong>تاریخ:</strong> <span id="letterDate"></span></div>
-        <div><strong>شماره:</strong> پیرو سامانه</div>
-        <div><strong>پیوست:</strong> ندارد</div>
+        <div><strong>شماره:</strong> —</div>
+        <div><strong>پیوست:</strong> —</div>
       </div>
-      
-      <div id="letterContent" class="editable-box" contenteditable="true"></div>
+      <div id="letterContent" class="editable-box" contenteditable="true" role="textbox" aria-label="متن نامه" aria-multiline="true"></div>
     </div>
-
     <div class="letter-actions">
-      <button class="btn-action" onclick="copyLetter()">📋 کپی متن</button>
-      <button class="btn-action" onclick="shareLetter()">📤 ارسال / اشتراک</button>
-      <button class="btn-action" onclick="window.print()">🖨️ چاپ / ذخیره PDF</button>
+      <button class="btn-action" id="copyBtn" type="button">📋 کپی متن</button>
+      <button class="btn-action" id="shareBtn" type="button">📤 ارسال / اشتراک</button>
+      <button class="btn-action" id="printBtn" type="button">🖨️ چاپ / ذخیره PDF</button>
     </div>
   </div>
 
-  <!-- بخش تاریخچه نامه‌ها -->
   <div class="history-section" id="historySection" style="display: none;">
     <div class="history-title">📂 آخرین نامه‌های تنظیم‌شده شما:</div>
     <div class="history-list" id="historyList"></div>
@@ -341,150 +150,239 @@
 </div>
 
 <script>
-  // ضبط صدا
+  'use strict';
+
   const voiceBtn = document.getElementById('voiceBtn');
   const rawText = document.getElementById('rawText');
+  const recipientInput = document.getElementById('recipient');
+  const subjectInput = document.getElementById('subject');
+  const letterContent = document.getElementById('letterContent');
+  const letterDate = document.getElementById('letterDate');
+  const resultCard = document.getElementById('resultCard');
+  const historyKey = 'letter_history';
   let recognition;
+  let currentHistoryId = null;
 
+  // خواندن امن تاریخچه: دادهٔ خراب یا با ساختار نامعتبر نادیده گرفته می‌شود.
+  function readHistory() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(historyKey) || '[]');
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(item => item && typeof item === 'object' &&
+        typeof item.id === 'string' && typeof item.subject === 'string' &&
+        typeof item.recipient === 'string' && typeof item.content === 'string' &&
+        typeof item.date === 'string').slice(0, 5);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function writeHistory(history) {
+    try {
+      localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 5)));
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function makeId() {
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 9);
+  }
+
+  // متن قابل ویرایش فعلی را به‌صورت متن ساده ذخیره می‌کنیم، نه HTML اجرایی.
+  function saveCurrentEdits() {
+    if (!currentHistoryId || !letterContent.textContent.trim()) return;
+    const history = readHistory();
+    const item = history.find(entry => entry.id === currentHistoryId);
+    if (!item) return;
+    item.content = letterContent.innerText || letterContent.textContent;
+    item.subject = subjectInput.value.trim() || item.subject;
+    item.recipient = recipientInput.value.trim() || item.recipient;
+    item.date = letterDate.textContent || item.date;
+    writeHistory(history);
+    renderHistory();
+  }
+
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[char]);
+  }
+
+  function setParagraph(parent, text, className) {
+    const p = document.createElement('p');
+    if (className) p.className = className;
+    p.textContent = text;
+    parent.appendChild(p);
+    return p;
+  }
+
+  function createLetter(recipient, subject, userText) {
+    letterContent.replaceChildren();
+    const title = setParagraph(letterContent, 'به نام خدا', 'letter-bismillah');
+    title.style.textAlign = 'center';
+    title.style.marginBottom = '12px';
+    title.style.fontWeight = 'bold';
+
+    const recipientP = document.createElement('p');
+    const recipientLabel = document.createElement('strong');
+    recipientLabel.textContent = 'مخاطب: ';
+    recipientP.append(recipientLabel, document.createTextNode(recipient));
+    letterContent.appendChild(recipientP);
+
+    const subjectP = document.createElement('p');
+    const subjectLabel = document.createElement('strong');
+    subjectLabel.textContent = 'موضوع: ';
+    subjectP.append(subjectLabel, document.createTextNode(subject));
+    letterContent.appendChild(subjectP);
+
+    const greeting = setParagraph(letterContent, 'با سلام،');
+    greeting.style.marginTop = '10px';
+    const intro = setParagraph(letterContent, 'اینجانب در خصوص موضوع فوق، توضیحات زیر را به استحضار می‌رسانم:');
+    intro.style.marginTop = '10px';
+
+    const original = setParagraph(letterContent, userText, 'original-user-text');
+    original.style.marginTop = '8px';
+    original.style.whiteSpace = 'pre-wrap';
+
+    const request = setParagraph(letterContent, 'خواهشمند است موضوع بررسی و راهنمایی لازم درباره مراحل و اقدامات موردنیاز اعلام شود.');
+    request.style.marginTop = '10px';
+    const thanks = setParagraph(letterContent, 'با سپاس،');
+    thanks.style.marginTop = '20px';
+    const sign = document.createElement('div');
+    sign.style.marginTop = '24px';
+    sign.style.textAlign = 'left';
+    sign.style.paddingLeft = '20px';
+    const name = document.createElement('p');
+    name.textContent = 'نام و نام خانوادگی: ………………………';
+    const signature = document.createElement('p');
+    signature.textContent = 'امضا: ………………………';
+    sign.append(name, signature);
+    letterContent.appendChild(sign);
+  }
+
+  // تشخیص گفتار فارسی (در مرورگرهای پشتیبانی‌شده)
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognitionAPI();
     recognition.lang = 'fa-IR';
     recognition.continuous = false;
-
     recognition.onstart = () => voiceBtn.classList.add('recording');
     recognition.onend = () => voiceBtn.classList.remove('recording');
-    recognition.onresult = (e) => {
-      rawText.value += (rawText.value ? ' ' : '') + e.results[0][0].transcript;
+    recognition.onerror = () => voiceBtn.classList.remove('recording');
+    recognition.onresult = event => {
+      const transcript = event.results[0][0].transcript;
+      rawText.value += (rawText.value ? ' ' : '') + transcript;
     };
-
-    voiceBtn.onclick = () => {
-      try { recognition.start(); } catch(err) { recognition.stop(); }
-    };
+    voiceBtn.addEventListener('click', () => {
+      try { recognition.start(); } catch (error) { try { recognition.stop(); } catch (ignored) {} }
+    });
   } else {
     voiceBtn.style.display = 'none';
   }
 
-  // موتور ارتقای لحن به اداری
   document.getElementById('generateBtn').addEventListener('click', () => {
-    const recipient = document.getElementById('recipient').value.trim() || 'ریاست محترم مرجع ذی‌صلاح';
-    const subject = document.getElementById('subject').value.trim() || 'امور اداری و پیگیری مقتضی';
-    const text = document.getElementById('rawText').value.trim();
-
+    const text = rawText.value.trim();
     if (!text) {
       alert('لطفاً شرح خواسته یا ماجرا را به زبان خودتان بنویسید.');
       return;
     }
 
+    // قبل از جایگزین کردن نامه با نامهٔ تازه، تغییرات ویرایش‌شده ذخیره می‌شود.
+    saveCurrentEdits();
+
+    const recipient = recipientInput.value.trim() || 'مخاطب محترم';
+    const subject = subjectInput.value.trim() || 'موضوع درخواست';
     const today = new Intl.DateTimeFormat('fa-IR').format(new Date());
-    document.getElementById('letterDate').innerText = today;
-
-    let formalBody = text
-      .replace(/دیروز|پریروز|چند وقت پیش/g, 'در مورخه اخیر')
-      .replace(/الان دو هفتس|چند روزه/g, 'مدت مدیدی است')
-      .replace(/زنگ زدم|گفتم|پیام دادم/g, 'مراتب را مکرراً اعلام نمودم')
-      .replace(/کاری نکردن|رسیدگی نکردن/g, 'اقدام مؤثری در این خصوص صورت نپذیرفته است')
-      .replace(/می‌خوام|میخوام/g, 'استدعا دارم دستور فرمایید')
-      .replace(/لطفا|لطفاً/g, 'خواهشمند است')
-      .replace(/خراب شده|خرابه/g, 'دچار نقص فنی و معایب اساسی گردیده')
-      .replace(/چیکار کنم|نمیدونم چیکار کنم/g, 'جهت تعیین تکلیف و تسریع در امور')
-      .replace(/دزد اومده|خطرناکه/g, 'موجبات سلب آسایش و ایجاد مخاطرات احتمالی فراهم گردیده است');
-
-    const fullLetter = `
-      <p style="text-align: center; margin-bottom: 12px; font-weight: bold;">به نام خدا</p>
-      <p><strong>جناب آقای / سرکار خانم:</strong> ${recipient}</p>
-      <p><strong>موضوع:</strong> ${subject}</p>
-      <p style="margin-top: 10px;">با سلام و احترام،</p>
-      <p style="margin-top: 10px;">
-        احتراماً به استحضار عالی می‌رساند اینجانب پیرو پیگیری‌های به‌عمل‌آمده در خصوص موضوع معنونه، معروض می‌دارد:
-      </p>
-      <p style="margin-top: 8px; text-indent: 20px;">
-        ${formalBody}.
-      </p>
-      <p style="margin-top: 10px;">
-        علی‌هذا، با عنایت به ضرورت تسریع در امور و پیشگیری از هرگونه تضییع حقوق و بروز خسارات احتمالی، از آن مقام محترم استدعا دارد دستورات مقتضی را جهت رسیدگی فوری، بررسی دقیق موضوع و صدور اوامر لازم مبذول فرمایند.
-      </p>
-      <p style="margin-top: 20px;">پیشاپیش از بذل توجه، حسن همکاری و مساعدت بی‌شائبه جنابعالی کمال امتنان و تشکر را دارم.</p>
-      <div style="margin-top: 30px; text-align: left; padding-left: 20px;">
-        <strong>با تقدیم احترام و تشکر</strong><br>
-        <span>امضا و تاریخ</span>
-      </div>
-    `;
-
-    document.getElementById('letterContent').innerHTML = fullLetter;
-    const resultCard = document.getElementById('resultCard');
+    letterDate.textContent = today;
+    createLetter(recipient, subject, text);
     resultCard.style.display = 'block';
-    resultCard.scrollIntoView({ behavior: 'smooth' });
 
-    // ذخیره در تاریخچه محلی
-    saveToHistory(subject, recipient, fullLetter, today);
+    const history = readHistory();
+    const entry = { id: makeId(), subject, recipient, content: letterContent.innerText || letterContent.textContent, date: today };
+    history.unshift(entry);
+    writeHistory(history);
+    currentHistoryId = entry.id;
+    renderHistory();
+    resultCard.scrollIntoView({ behavior: 'smooth' });
   });
 
-  // کپی
-  function copyLetter() {
-    const text = document.getElementById('letterContent').innerText;
-    navigator.clipboard.writeText(text).then(() => {
+  // ویرایش‌ها نیز در تاریخچهٔ همان نامه نگهداری می‌شوند.
+  letterContent.addEventListener('input', saveCurrentEdits);
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const text = letterContent.innerText || letterContent.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
       alert('متن نامه با موفقیت کپی شد!');
-    });
-  }
-
-  // اشتراک‌گذاری مستقیم
-  function shareLetter() {
-    const text = document.getElementById('letterContent').innerText;
-    if (navigator.share) {
-      navigator.share({
-        title: 'نامه رسمی',
-        text: text
-      }).catch(() => {});
-    } else {
-      copyLetter();
+    } catch (error) {
+      alert('کپی خودکار در دسترس نیست. لطفاً متن نامه را انتخاب و کپی کنید.');
     }
-  }
+  });
 
-  // مدیریت تاریخچه در حافظه گوشی
-  function saveToHistory(subject, recipient, content, date) {
-    let history = JSON.parse(localStorage.getItem('letter_history') || '[]');
-    history.unshift({ subject, recipient, content, date });
-    if (history.length > 5) history.pop();
-    localStorage.setItem('letter_history', JSON.stringify(history));
-    renderHistory();
-  }
+  document.getElementById('shareBtn').addEventListener('click', async () => {
+    const text = letterContent.innerText || letterContent.textContent;
+    if (navigator.share) {
+      try { await navigator.share({ title: 'نامه', text }); } catch (error) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('قابلیت اشتراک‌گذاری در دسترس نیست؛ متن کپی شد.');
+      } catch (error) {
+        alert('قابلیت اشتراک‌گذاری یا کپی در این مرورگر در دسترس نیست.');
+      }
+    }
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
 
   function renderHistory() {
-    let history = JSON.parse(localStorage.getItem('letter_history') || '[]');
+    const history = readHistory();
     const list = document.getElementById('historyList');
-    const sec = document.getElementById('historySection');
-
+    const section = document.getElementById('historySection');
+    list.replaceChildren();
     if (history.length === 0) {
-      sec.style.display = 'none';
+      section.style.display = 'none';
       return;
     }
-
-    sec.style.display = 'block';
-    list.innerHTML = '';
-    history.forEach((item) => {
-      const el = document.createElement('div');
-      el.className = 'history-item';
-      el.innerHTML = `
-        <div class="history-info">
-          <strong>${item.subject}</strong>
-          <span>به: ${item.recipient} | تاریخ: ${item.date}</span>
-        </div>
-        <div>🔍</div>
-      `;
-      el.onclick = () => {
-        document.getElementById('letterDate').innerText = item.date;
-        document.getElementById('letterContent').innerHTML = item.content;
-        document.getElementById('resultCard').style.display = 'block';
-        document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+    section.style.display = 'block';
+    history.forEach(item => {
+      const element = document.createElement('div');
+      element.className = 'history-item';
+      element.setAttribute('role', 'button');
+      element.tabIndex = 0;
+      const info = document.createElement('div');
+      info.className = 'history-info';
+      const title = document.createElement('strong');
+      title.textContent = item.subject;
+      const details = document.createElement('span');
+      details.textContent = `به: ${item.recipient} | تاریخ: ${item.date}`;
+      info.append(title, details);
+      const icon = document.createElement('div');
+      icon.textContent = '🔍';
+      element.append(info, icon);
+      const openLetter = () => {
+        saveCurrentEdits();
+        recipientInput.value = item.recipient;
+        subjectInput.value = item.subject;
+        letterDate.textContent = item.date;
+        // سابقه به‌صورت textContent برگردانده می‌شود؛ HTML ذخیره‌شده هرگز اجرا نمی‌شود.
+        letterContent.textContent = item.content;
+        letterContent.style.whiteSpace = 'pre-wrap';
+        currentHistoryId = item.id;
+        resultCard.style.display = 'block';
+        resultCard.scrollIntoView({ behavior: 'smooth' });
       };
-      list.appendChild(el);
+      element.addEventListener('click', openLetter);
+      element.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLetter(); }
+      });
+      list.appendChild(element);
     });
   }
 
-  // لود تاریخچه در شروع
   renderHistory();
 </script>
-
 </body>
 </html>
