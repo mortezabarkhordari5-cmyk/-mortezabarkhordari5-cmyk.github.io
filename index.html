@@ -151,6 +151,7 @@
       border-radius: var(--radius);
       padding: 24px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
     }
 
     .letter-paper {
@@ -161,6 +162,15 @@
       line-height: 2;
       font-size: 14px;
       text-align: justify;
+      position: relative;
+    }
+
+    .edit-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+      text-align: left;
     }
 
     .letter-header {
@@ -173,32 +183,94 @@
       color: #475569;
     }
 
+    .editable-box {
+      outline: none;
+      min-height: 180px;
+    }
+
+    .editable-box:focus {
+      background: #fafdfb;
+    }
+
     .letter-actions {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
       margin-top: 16px;
     }
 
     .btn-action {
       flex: 1;
-      padding: 10px;
+      min-width: 120px;
+      padding: 12px;
       border: 1px solid var(--border);
       border-radius: 10px;
       background: #fff;
       cursor: pointer;
       font-weight: 700;
       font-size: 13px;
+      text-align: center;
+      transition: background 0.2s;
     }
 
     .btn-action:hover {
       background: #f1f5f9;
     }
 
+    /* تاریخچه نامه‌ها */
+    .history-section {
+      margin-top: 24px;
+    }
+
+    .history-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .history-item:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .history-info strong {
+      font-size: 14px;
+      display: block;
+      color: var(--primary-dark);
+    }
+
+    .history-info span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
     @media print {
       body * { visibility: hidden; }
       .result-section, .result-section * { visibility: visible; }
       .result-section { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
-      .letter-actions { display: none; }
+      .letter-actions, .edit-hint { display: none; }
     }
   </style>
 </head>
@@ -213,7 +285,7 @@
   <div class="card">
     <div class="form-group">
       <label>به کی می‌خوای نامه بنویسی؟ (مخاطب)</label>
-      <input type="text" id="recipient" placeholder="مثلاً: شهرداری، اداره آب، مدیرعامل شرکت، دادسرا">
+      <input type="text" id="recipient" placeholder="مثلاً: شهرداری منطقه، اداره آب، مدیرعامل شرکت">
     </div>
 
     <div class="form-group">
@@ -229,7 +301,7 @@
 
     <div class="form-group">
       <label>عنوان خلاصه</label>
-      <input type="text" id="subject" placeholder="مثلاً: تعویض کنتور خراب، درخواست مرخصی، روشنایی کوچه">
+      <input type="text" id="subject" placeholder="مثلاً: تعویض کنتور خراب، درخواست مرخصی، روشنایی معابر">
     </div>
 
     <div class="form-group voice-wrapper">
@@ -243,6 +315,7 @@
 
   <!-- خروجی نامه -->
   <div class="result-section" id="resultCard">
+    <span class="edit-hint">✏️ می‌توانید مستقیم روی متن زیر ضربه بزنید و ویرایشش کنید</span>
     <div class="letter-paper">
       <div class="letter-header">
         <div><strong>تاریخ:</strong> <span id="letterDate"></span></div>
@@ -250,18 +323,25 @@
         <div><strong>پیوست:</strong> ندارد</div>
       </div>
       
-      <div id="letterContent"></div>
+      <div id="letterContent" class="editable-box" contenteditable="true"></div>
     </div>
 
     <div class="letter-actions">
       <button class="btn-action" onclick="copyLetter()">📋 کپی متن</button>
+      <button class="btn-action" onclick="shareLetter()">📤 ارسال / اشتراک</button>
       <button class="btn-action" onclick="window.print()">🖨️ چاپ / ذخیره PDF</button>
     </div>
+  </div>
+
+  <!-- بخش تاریخچه نامه‌ها -->
+  <div class="history-section" id="historySection" style="display: none;">
+    <div class="history-title">📂 آخرین نامه‌های تنظیم‌شده شما:</div>
+    <div class="history-list" id="historyList"></div>
   </div>
 </div>
 
 <script>
-  // تبدیل گفتار به نوشتار صوتی
+  // ضبط صدا
   const voiceBtn = document.getElementById('voiceBtn');
   const rawText = document.getElementById('rawText');
   let recognition;
@@ -285,7 +365,7 @@
     voiceBtn.style.display = 'none';
   }
 
-  // موتور ساخت متن اداری شسته‌رفته
+  // موتور ارتقای لحن به اداری
   document.getElementById('generateBtn').addEventListener('click', () => {
     const recipient = document.getElementById('recipient').value.trim() || 'ریاست محترم مرجع ذی‌صلاح';
     const subject = document.getElementById('subject').value.trim() || 'امور اداری و پیگیری مقتضی';
@@ -296,20 +376,18 @@
       return;
     }
 
-    // تاریخ روز فارسی
     const today = new Intl.DateTimeFormat('fa-IR').format(new Date());
     document.getElementById('letterDate').innerText = today;
 
-    // پالایش و ارتقای کلمات عامیانه به اداری
     let formalBody = text
       .replace(/دیروز|پریروز|چند وقت پیش/g, 'در مورخه اخیر')
       .replace(/الان دو هفتس|چند روزه/g, 'مدت مدیدی است')
-      .replace(/زنگ زدم|گفتم|پیام دادم/g, 'مراتب را مکرراً به صورت شفاهی اعلام نمودم')
+      .replace(/زنگ زدم|گفتم|پیام دادم/g, 'مراتب را مکرراً اعلام نمودم')
       .replace(/کاری نکردن|رسیدگی نکردن/g, 'اقدام مؤثری در این خصوص صورت نپذیرفته است')
       .replace(/می‌خوام|میخوام/g, 'استدعا دارم دستور فرمایید')
       .replace(/لطفا|لطفاً/g, 'خواهشمند است')
       .replace(/خراب شده|خرابه/g, 'دچار نقص فنی و معایب اساسی گردیده')
-      .replace(/چیکار کنم|نمیدونم چیکار کنم/g, 'جهت تعیین تکلیف و تسریع در روند اجرایی')
+      .replace(/چیکار کنم|نمیدونم چیکار کنم/g, 'جهت تعیین تکلیف و تسریع در امور')
       .replace(/دزد اومده|خطرناکه/g, 'موجبات سلب آسایش و ایجاد مخاطرات احتمالی فراهم گردیده است');
 
     const fullLetter = `
@@ -337,14 +415,75 @@
     const resultCard = document.getElementById('resultCard');
     resultCard.style.display = 'block';
     resultCard.scrollIntoView({ behavior: 'smooth' });
+
+    // ذخیره در تاریخچه محلی
+    saveToHistory(subject, recipient, fullLetter, today);
   });
 
+  // کپی
   function copyLetter() {
     const text = document.getElementById('letterContent').innerText;
     navigator.clipboard.writeText(text).then(() => {
       alert('متن نامه با موفقیت کپی شد!');
     });
   }
+
+  // اشتراک‌گذاری مستقیم
+  function shareLetter() {
+    const text = document.getElementById('letterContent').innerText;
+    if (navigator.share) {
+      navigator.share({
+        title: 'نامه رسمی',
+        text: text
+      }).catch(() => {});
+    } else {
+      copyLetter();
+    }
+  }
+
+  // مدیریت تاریخچه در حافظه گوشی
+  function saveToHistory(subject, recipient, content, date) {
+    let history = JSON.parse(localStorage.getItem('letter_history') || '[]');
+    history.unshift({ subject, recipient, content, date });
+    if (history.length > 5) history.pop();
+    localStorage.setItem('letter_history', JSON.stringify(history));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    let history = JSON.parse(localStorage.getItem('letter_history') || '[]');
+    const list = document.getElementById('historyList');
+    const sec = document.getElementById('historySection');
+
+    if (history.length === 0) {
+      sec.style.display = 'none';
+      return;
+    }
+
+    sec.style.display = 'block';
+    list.innerHTML = '';
+    history.forEach((item) => {
+      const el = document.createElement('div');
+      el.className = 'history-item';
+      el.innerHTML = `
+        <div class="history-info">
+          <strong>${item.subject}</strong>
+          <span>به: ${item.recipient} | تاریخ: ${item.date}</span>
+        </div>
+        <div>🔍</div>
+      `;
+      el.onclick = () => {
+        document.getElementById('letterDate').innerText = item.date;
+        document.getElementById('letterContent').innerHTML = item.content;
+        document.getElementById('resultCard').style.display = 'block';
+        document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+      };
+      list.appendChild(el);
+    });
+  }
+
+  // لود تاریخچه در شروع
+  renderHistory();
 </script>
 
 </body>
