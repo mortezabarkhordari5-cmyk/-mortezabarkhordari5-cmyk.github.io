@@ -4,114 +4,155 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1463d8">
-  <title>خدمت پلاس | خدمات در خانه</title>
+  <title>خدمت پلاس | سامانه هوشمند خدمات در خانه</title>
 
   <style>
     :root {
       font-family: Tahoma, Arial, sans-serif;
-      color: #17243b;
-      background: #f5f7fb;
+      color: #1e293b;
+      background: #f1f5f9;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: #f5f7fb; padding-bottom: 70px; }
-    .wrap { width: min(100% - 24px, 768px); margin-inline: auto; padding: 12px 0; }
-    header { background: #1463d8; color: #fff; padding: 16px; text-align: center; border-radius: 0 0 16px 16px; }
-    h1 { margin: 0; font-size: 1.25rem; }
-    .card { background: #fff; border-radius: 12px; padding: 16px; margin-top: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    h3 { margin-top: 0; font-size: 1.1rem; color: #1463d8; }
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-    .service-btn { background: #f0f4ff; border: 1px solid #d0e1fd; padding: 14px; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; color: #1463d8; font-size: 0.95rem; }
-    .service-btn:active { background: #d0e1fd; }
-    input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; margin-bottom: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
-    .btn { background: #1463d8; color: #fff; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; }
-    .btn:active { background: #0f4eb4; }
-    .order-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-right: 4px solid #1463d8; font-size: 0.9rem; }
+    body { margin: 0; background: #f1f5f9; padding-bottom: 80px; }
+    .wrap { width: min(100% - 20px, 768px); margin-inline: auto; padding: 10px 0; }
+    header { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: #fff; padding: 20px 16px; text-align: center; border-radius: 0 0 20px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    h1 { margin: 0; font-size: 1.35rem; font-weight: 800; }
+    p.subtitle { margin: 6px 0 0 0; font-size: 0.85rem; opacity: 0.9; }
+    .card { background: #fff; border-radius: 14px; padding: 16px; margin-top: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    h3 { margin-top: 0; font-size: 1.05rem; color: #1d4ed8; display: flex; align-items: center; gap: 8px; }
+    
+    .cats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .cat-card { background: #f8fafc; border: 2px solid #e2e8f0; padding: 14px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .cat-card:active, .cat-card.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+    .cat-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .cat-title { font-weight: bold; font-size: 0.9rem; }
+
+    label { font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-top: 12px; }
+    input, select, textarea { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; background: #f8fafc; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; background: #fff; }
+    
+    .btn { background: #2563eb; color: #fff; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 16px; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+    .btn:active { background: #1d4ed8; }
+
+    .order-item { background: #f8fafc; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 5px solid #2563eb; font-size: 0.85rem; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>خدمت پلاس | خدمات در خانه</h1>
+    <h1>خدمت پلاس</h1>
+    <p class="subtitle">متخصص مطمئن برای کارهای خانه</p>
   </header>
 
   <div class="wrap">
-    <!-- دسته‌بندی خدمات -->
+    <!-- انتخاب دسته خدمت -->
     <div class="card">
-      <h3>انتخاب خدمت مورد نظر</h3>
-      <div class="grid">
-        <div class="service-btn" onclick="selectService('نظافت منزل')">🧹 نظافت منزل</div>
-        <div class="service-btn" onclick="selectService('لولة‌کشی و تأسیسات')">🔧 لوله‌کشی</div>
-        <div class="service-btn" onclick="selectService('برق‌کاری')">⚡ برق‌کاری</div>
-        <div class="service-btn" onclick="selectService('تعمیر لوازم خانگی')">❄️ تعمیر لوازم</div>
+      <h3>🛠️ انتخاب نوع خدمت</h3>
+      <div class="cats-grid">
+        <div class="cat-card" onclick="selectCategory(this, 'نظافت و پذیرایی')">
+          <div class="cat-icon">🧹</div>
+          <div class="cat-title">نظافت منزل</div>
+        </div>
+        <div class="cat-card" onclick="selectCategory(this, 'لوله‌کشی و تأسیسات')">
+          <div class="cat-icon">🔧</div>
+          <div class="cat-title">لوله‌کشی</div>
+        </div>
+        <div class="cat-card" onclick="selectCategory(this, 'برق‌کاری و روشنایی')">
+          <div class="cat-icon">⚡</div>
+          <div class="cat-title">برق‌کاری</div>
+        </div>
+        <div class="cat-card" onclick="selectCategory(this, 'تعمیر لوازم خانگی')">
+          <div class="cat-icon">❄️</div>
+          <div class="cat-title">تعمیر لوازم</div>
+        </div>
       </div>
     </div>
 
-    <!-- فرم ثبت سفارش -->
+    <!-- فرم جزئیات و ثبت سفارش -->
     <div class="card">
-      <h3>ثبت سفارش سریع</h3>
+      <h3>📋 تکمیل جزئیات سفارش</h3>
       <form id="orderForm" onsubmit="submitOrder(event)">
+        
         <label>خدمت انتخابی:</label>
-        <input type="text" id="selectedService" placeholder="از بالا انتخاب کنید یا بنویسید" required>
+        <input type="text" id="serviceName" placeholder="از بالا انتخاب کنید" required readonly style="background: #e2e8f0; color: #334155;">
 
-        <label>شماره تماس:</label>
-        <input type="tel" id="phone" placeholder="مثلاً 09123456789" required>
+        <label>تاریخ حضور:</label>
+        <input type="date" id="orderDate" required>
 
-        <label>آدرس یا توضیحات:</label>
-        <textarea id="address" rows="3" placeholder="آدرس پستی یا جزئیات کار..." required></textarea>
+        <label>ساعت حضور:</label>
+        <select id="orderTime" required>
+          <option value="">انتخاب بازه زمانی...</option>
+          <option value="صبح (۸ تا ۱۲)">صبح (۸ تا ۱۲)</option>
+          <option value="ظهر (۱۲ تا ۱۶)">ظهر (۱۲ تا ۱۶)</option>
+          <option value="عصر (۱۶ تا ۲۰)">عصر (۱۶ تا ۲۰)</option>
+        </select>
 
-        <button type="submit" class="btn">ثبت نهایی سفارش</button>
+        <label>شماره تماس همراه:</label>
+        <input type="tel" id="phone" placeholder="09123456789" required>
+
+        <label>آدرس پستی یا توضیحات:</label>
+        <textarea id="address" rows="3" placeholder="محله، خیابان، پلاک، واحد..." required></textarea>
+
+        <button type="submit" class="btn">ثبت نهایی و اعزام متخصص</button>
       </form>
     </div>
 
-    <!-- لیست سفارش‌های ثبت شده در این مرورگر -->
+    <!-- پیگیری سفارش‌ها -->
     <div class="card">
-      <h3>سفارش‌های من</h3>
+      <h3>📦 سفارش‌های ثبت‌شده من</h3>
       <div id="ordersList">
-        <p style="color: #64748b; font-size: 0.9rem;">هنوز سفارشی ثبت نکرده‌اید.</p>
+        <p style="color: #64748b; font-size: 0.85rem;">هنوز سفارشی ثبت نکرده‌اید.</p>
       </div>
     </div>
   </div>
 
   <script>
-    let chosenService = '';
-
-    function selectService(name) {
-      chosenService = name;
-      document.getElementById('selectedService').value = name;
-      window.scrollTo({ top: 300, behavior: 'smooth' });
+    function selectCategory(el, name) {
+      document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('serviceName').value = name;
     }
 
     function submitOrder(e) {
       e.preventDefault();
-      const service = document.getElementById('selectedService').value;
+      const service = document.getElementById('serviceName').value;
+      const date = document.getElementById('orderDate').value;
+      const time = document.getElementById('orderTime').value;
       const phone = document.getElementById('phone').value;
       const address = document.getElementById('address').value;
 
-      const newOrder = { service, phone, address, date: new Date().toLocaleDateString('fa-IR') };
-      
-      let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
-      orders.unshift(newOrder);
-      localStorage.setItem('khedmat_orders', JSON.stringify(orders));
+      if (!service) {
+        alert('لطفاً یک خدمت را از بالا انتخاب کنید.');
+        return;
+      }
 
-      alert('سفارش شما با موفقیت ثبت شد!');
+      const newOrder = { service, date, time, phone, address, created: new Date().toLocaleString('fa-IR') };
+      
+      let orders = JSON.parse(localStorage.getItem('khedmat_plus_orders') || '[]');
+      orders.unshift(newOrder);
+      localStorage.setItem('khedmat_plus_orders', JSON.stringify(orders));
+
+      alert('سفارش شما با موفقیت ثبت شد و به زودی متخصص با شما تماس می‌گیرد.');
       document.getElementById('orderForm').reset();
+      document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
       loadOrders();
     }
 
     function loadOrders() {
-      let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+      let orders = JSON.parse(localStorage.getItem('khedmat_plus_orders') || '[]');
       const container = document.getElementById('ordersList');
       
       if (orders.length === 0) {
-        container.innerHTML = '<p style="color: #64748b; font-size: 0.9rem;">هنوز سفارشی ثبت نکرده‌اید.</p>';
+        container.innerHTML = '<p style="color: #64748b; font-size: 0.85rem;">هنوز سفارشی ثبت نکرده‌اید.</p>';
         return;
       }
 
       container.innerHTML = orders.map(o => `
         <div class="order-item">
-          <strong>${o.service}</strong><br>
-          <span style="color: #475569;">تلفن: ${o.phone}</span><br>
-          <span style="color: #64748b; font-size: 0.8rem;">آدرس: ${o.address} (${o.date})</span>
+          <strong style="color: #1d4ed8; font-size: 0.95rem;">${o.service}</strong><br>
+          <span style="color: #475569;">📅 تاریخ: ${o.date} (${o.time})</span><br>
+          <span style="color: #475569;">📍 آدرس: ${o.address}</span><br>
+          <span style="color: #64748b; font-size: 0.75rem;">تلفن: ${o.phone}</span>
         </div>
       `).join('');
     }
