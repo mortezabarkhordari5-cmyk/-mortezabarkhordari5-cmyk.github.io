@@ -1,388 +1,412 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نامه‌یار - تنظیم قالب نامه اداری</title>
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>خدمت پلاس | خدمات در خانه</title>
   <style>
     :root {
-      --primary: #106b53;
-      --primary-dark: #094737;
-      --primary-light: #e8f5f1;
-      --bg: #f4f6f8;
-      --surface: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --radius: 16px;
+      font-family: Tahoma, Arial, sans-serif;
+      color: #17243b;
+      background: #f5f7fb;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 16px;
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(100% - 32px, 1080px); margin: auto; }
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e8edf5;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
-
-    .container { max-width: 650px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 24px; padding-top: 10px; }
-    header h1 { color: var(--primary); font-size: 26px; font-weight: 900; margin-bottom: 6px; }
-    header p { color: var(--muted); font-size: 14px; }
-    .notice {
-      background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12;
-      border-radius: 12px; padding: 12px 14px; margin: 0 0 18px; font-size: 13px;
+    .top {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand { color: #1463d8; font-size: 1.25rem; font-weight: 800; }
+    .tagline { color: #68768c; font-size: .82rem; }
+    .hero {
+      margin-top: 20px;
+      padding: 28px;
+      border-radius: 22px;
+      color: #fff;
+      background: linear-gradient(125deg, #1266e3, #0e3990);
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.5rem, 4vw, 2.3rem); }
+    .hero p { margin: 0 0 20px; color: #e4edff; line-height: 1.9; }
+    .search {
+      display: block;
+      width: min(100%, 600px);
+      padding: 15px 18px;
+      border: 0;
+      border-radius: 13px;
+      outline: none;
+      background: #fff;
+      color: #17243b;
+    }
+    section { margin: 32px 0; }
+    h2 { font-size: 1.15rem; margin: 0 0 16px; }
+    .chips, .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+    .chip, .filter {
+      border: 1px solid #dbe3ef;
+      background: #fff;
+      color: #34445d;
+      padding: 10px 14px;
+      border-radius: 12px;
+    }
+    .chip.active, .filter.active {
+      background: #1463d8;
+      border-color: #1463d8;
+      color: #fff;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .section-head h2 { margin: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+      gap: 16px;
     }
     .card {
-      background: var(--surface); border-radius: var(--radius); padding: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid var(--border);
+      overflow: hidden;
+      border: 1px solid #e5ebf4;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 5px 18px #14213d0a;
     }
-    .form-group { margin-bottom: 16px; }
-    label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--text); }
-    input, select, textarea {
-      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px;
-      font-family: inherit; font-size: 14px; outline: none; transition: all 0.2s ease; background: #fafafa;
+    .thumb {
+      height: 150px;
+      display: grid;
+      place-items: center;
+      background: #eaf1fc;
+      font-size: 3rem;
     }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(16, 107, 83, 0.1);
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .body { padding: 16px; }
+    .category { color: #64748b; font-size: .82rem; }
+    .title { margin: 8px 0 12px; font-size: 1rem; min-height: 25px; }
+    .badges { display: flex; gap: 6px; flex-wrap: wrap; min-height: 26px; }
+    .badge {
+      background: #eef4ff;
+      color: #1959ad;
+      padding: 4px 8px;
+      border-radius: 7px;
+      font-size: .72rem;
     }
-    .voice-wrapper { position: relative; }
-    .btn-voice {
-      position: absolute; left: 10px; bottom: 10px; background: var(--primary-light); border: 1px solid var(--primary);
-      color: var(--primary); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; font-size: 18px; transition: 0.2s;
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 15px;
     }
-    .btn-voice.recording { background: #fee2e2; border-color: #ef4444; color: #ef4444; animation: pulse 1s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-    .btn-primary {
-      width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px;
-      font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 107, 83, 0.25); transition: background 0.2s;
+    .price { font-weight: 700; font-size: .85rem; }
+    .details, .close {
+      border: 0;
+      border-radius: 10px;
+      background: #1463d8;
+      color: white;
+      padding: 9px 12px;
     }
-    .btn-primary:active { background: var(--primary-dark); transform: scale(0.99); }
-    .result-section {
-      display: none; background: #fff; border: 1px solid #d1d5db; border-radius: var(--radius); padding: 24px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06); margin-bottom: 20px;
+    .notice {
+      padding: 18px;
+      background: #fff;
+      border: 1px solid #e5ebf4;
+      border-radius: 14px;
+      color: #52627a;
     }
-    .letter-paper { border: 1px dashed #cbd5e1; padding: 24px; border-radius: 8px; background: #fff; line-height: 2; font-size: 14px; text-align: justify; position: relative; }
-    .edit-hint { font-size: 11px; color: var(--muted); margin-bottom: 8px; display: block; text-align: left; }
-    .letter-header { display: flex; justify-content: space-between; border-bottom: 2px solid #334155; padding-bottom: 12px; margin-bottom: 16px; font-size: 12px; color: #475569; }
-    .editable-box { outline: none; min-height: 180px; }
-    .editable-box:focus { background: #fafdfb; }
-    .letter-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-    .btn-action { flex: 1; min-width: 120px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer; font-weight: 700; font-size: 13px; text-align: center; transition: background 0.2s; }
-    .btn-action:hover { background: #f1f5f9; }
-    .history-section { margin-top: 24px; }
-    .history-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-    .history-list { display: flex; flex-direction: column; gap: 10px; }
-    .history-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
-    .history-item:hover { border-color: var(--primary); background: var(--primary-light); }
-    .history-info strong { font-size: 14px; display: block; color: var(--primary-dark); }
-    .history-info span { font-size: 11px; color: var(--muted); }
-    @media print {
-      body * { visibility: hidden; }
-      .result-section, .result-section * { visibility: visible; }
-      .result-section { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
-      .letter-actions, .edit-hint { display: none; }
+    .notice.error { color: #ae2936; border-color: #ffcbd0; }
+    dialog {
+      border: 0;
+      border-radius: 18px;
+      padding: 24px;
+      width: min(90vw, 420px);
+      color: #17243b;
     }
+    dialog::backdrop { background: #12233c99; }
+    dialog h2 { margin-top: 0; }
+    dialog p { line-height: 1.9; }
+    footer { padding: 25px 0; color: #75839a; text-align: center; font-size: .8rem; }
   </style>
 </head>
 <body>
-<div class="container">
   <header>
-    <h1>نامه‌یار ✍️</h1>
-    <p>شرح خود را بدون بازنویسی در قالبی ساده و اداری قرار دهید.</p>
+    <div class="wrap top">
+      <div class="brand">خدمت پلاس</div>
+      <div class="tagline">خدمات موردنیاز، نزدیک‌تر از همیشه</div>
+    </div>
   </header>
 
-  <div class="notice" role="note">
-    <strong>توجه:</strong> این برنامه بدون اتصال به هوش مصنوعی فقط قالب‌بندی می‌کند و متن شما را بازنویسی نمی‌کند؛ پیش از ارسال، اطلاعات و لحن را بررسی کنید.
-  </div>
+  <main class="wrap">
+    <div class="hero">
+      <h1>برای خانه‌ات، متخصص پیدا کن</h1>
+      <p>خدمات را جست‌وجو کن و گزینه‌های موجود را ببین.</p>
+      <input id="search" class="search" type="search"
+             placeholder="مثلاً نظافت منزل یا تعمیر پکیج"
+             aria-label="جست‌وجوی خدمات">
+    </div>
 
-  <div class="card">
-    <div class="form-group">
-      <label for="recipient">به کی می‌خوای نامه بنویسی؟ (مخاطب)</label>
-      <input type="text" id="recipient" placeholder="مثلاً: شهرداری منطقه، اداره آب، مدیرعامل شرکت">
-    </div>
-    <div class="form-group">
-      <label for="letterType">نوع موضوع</label>
-      <select id="letterType">
-        <option value="request">درخواست / تقاضا</option>
-        <option value="complaint">شکایت / اعتراض</option>
-        <option value="followup">پیگیری نامه قبلی</option>
-        <option value="resignation">استعفا / انصراف</option>
-        <option value="financial">امور مالی / مساعده / وام</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="subject">عنوان خلاصه</label>
-      <input type="text" id="subject" placeholder="مثلاً: تعویض کنتور خراب، درخواست مرخصی، روشنایی معابر">
-    </div>
-    <div class="form-group voice-wrapper">
-      <label for="rawText">ماجرا رو به زبان خودت بنویس یا بگو:</label>
-      <textarea id="rawText" rows="5" placeholder="شرح خود را اینجا بنویسید یا با دکمهٔ میکروفون بیان کنید."></textarea>
-      <button class="btn-voice" id="voiceBtn" type="button" title="ضبط صدا" aria-label="ضبط صدا">🎙️</button>
-    </div>
-    <button class="btn-primary" id="generateBtn" type="button">تنظیم قالب نامه ✨</button>
-  </div>
+    <section>
+      <h2>دسته‌بندی خدمات</h2>
+      <div id="categories" class="chips"></div>
+    </section>
 
-  <div class="result-section" id="resultCard">
-    <span class="edit-hint">✏️ می‌توانید مستقیم روی متن زیر ضربه بزنید و ویرایشش کنید</span>
-    <div class="letter-paper">
-      <div class="letter-header">
-        <div><strong>تاریخ:</strong> <span id="letterDate"></span></div>
-        <div><strong>شماره:</strong> —</div>
-        <div><strong>پیوست:</strong> —</div>
+    <section>
+      <div class="section-head">
+        <h2>خدمات <span id="count"></span></h2>
+        <div id="filters" class="filters"></div>
       </div>
-      <div id="letterContent" class="editable-box" contenteditable="true" role="textbox" aria-label="متن نامه" aria-multiline="true"></div>
-    </div>
-    <div class="letter-actions">
-      <button class="btn-action" id="copyBtn" type="button">📋 کپی متن</button>
-      <button class="btn-action" id="shareBtn" type="button">📤 ارسال / اشتراک</button>
-      <button class="btn-action" id="printBtn" type="button">🖨️ چاپ / ذخیره PDF</button>
-    </div>
-  </div>
+      <div id="message" class="notice" role="status">در حال دریافت خدمات…</div>
+      <div id="services" class="grid"></div>
+    </section>
+  </main>
 
-  <div class="history-section" id="historySection" style="display: none;">
-    <div class="history-title">📂 آخرین نامه‌های تنظیم‌شده شما:</div>
-    <div class="history-list" id="historyList"></div>
-  </div>
-</div>
+  <dialog id="service-dialog" aria-labelledby="dialog-title">
+    <h2 id="dialog-title"></h2>
+    <p id="dialog-category"></p>
+    <p id="dialog-price"></p>
+    <p class="category">ثبت سفارش هنوز فعال نشده است؛ این نسخه برای مشاهدهٔ خدمات است.</p>
+    <button id="close-dialog" class="close" type="button">بستن</button>
+  </dialog>
 
-<script>
-  'use strict';
+  <footer>خدمت پلاس</footer>
 
-  const voiceBtn = document.getElementById('voiceBtn');
-  const rawText = document.getElementById('rawText');
-  const recipientInput = document.getElementById('recipient');
-  const subjectInput = document.getElementById('subject');
-  const letterContent = document.getElementById('letterContent');
-  const letterDate = document.getElementById('letterDate');
-  const resultCard = document.getElementById('resultCard');
-  const historyKey = 'letter_history';
-  let recognition;
-  let currentHistoryId = null;
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://toegqqofbotxmgycgnfd.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_RlPDxHNUrXCSRxs9iHXjhg_MqHSurSg";
 
-  // خواندن امن تاریخچه: دادهٔ خراب یا با ساختار نامعتبر نادیده گرفته می‌شود.
-  function readHistory() {
-    try {
-      const parsed = JSON.parse(localStorage.getItem(historyKey) || '[]');
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter(item => item && typeof item === 'object' &&
-        typeof item.id === 'string' && typeof item.subject === 'string' &&
-        typeof item.recipient === 'string' && typeof item.content === 'string' &&
-        typeof item.date === 'string').slice(0, 5);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  function writeHistory(history) {
-    try {
-      localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 5)));
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  function makeId() {
-    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 9);
-  }
-
-  // متن قابل ویرایش فعلی را به‌صورت متن ساده ذخیره می‌کنیم، نه HTML اجرایی.
-  function saveCurrentEdits() {
-    if (!currentHistoryId || !letterContent.textContent.trim()) return;
-    const history = readHistory();
-    const item = history.find(entry => entry.id === currentHistoryId);
-    if (!item) return;
-    item.content = letterContent.innerText || letterContent.textContent;
-    item.subject = subjectInput.value.trim() || item.subject;
-    item.recipient = recipientInput.value.trim() || item.recipient;
-    item.date = letterDate.textContent || item.date;
-    writeHistory(history);
-    renderHistory();
-  }
-
-  function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    })[char]);
-  }
-
-  function setParagraph(parent, text, className) {
-    const p = document.createElement('p');
-    if (className) p.className = className;
-    p.textContent = text;
-    parent.appendChild(p);
-    return p;
-  }
-
-  function createLetter(recipient, subject, userText) {
-    letterContent.replaceChildren();
-    const title = setParagraph(letterContent, 'به نام خدا', 'letter-bismillah');
-    title.style.textAlign = 'center';
-    title.style.marginBottom = '12px';
-    title.style.fontWeight = 'bold';
-
-    const recipientP = document.createElement('p');
-    const recipientLabel = document.createElement('strong');
-    recipientLabel.textContent = 'مخاطب: ';
-    recipientP.append(recipientLabel, document.createTextNode(recipient));
-    letterContent.appendChild(recipientP);
-
-    const subjectP = document.createElement('p');
-    const subjectLabel = document.createElement('strong');
-    subjectLabel.textContent = 'موضوع: ';
-    subjectP.append(subjectLabel, document.createTextNode(subject));
-    letterContent.appendChild(subjectP);
-
-    const greeting = setParagraph(letterContent, 'با سلام،');
-    greeting.style.marginTop = '10px';
-    const intro = setParagraph(letterContent, 'اینجانب در خصوص موضوع فوق، توضیحات زیر را به استحضار می‌رسانم:');
-    intro.style.marginTop = '10px';
-
-    const original = setParagraph(letterContent, userText, 'original-user-text');
-    original.style.marginTop = '8px';
-    original.style.whiteSpace = 'pre-wrap';
-
-    const request = setParagraph(letterContent, 'خواهشمند است موضوع بررسی و راهنمایی لازم درباره مراحل و اقدامات موردنیاز اعلام شود.');
-    request.style.marginTop = '10px';
-    const thanks = setParagraph(letterContent, 'با سپاس،');
-    thanks.style.marginTop = '20px';
-    const sign = document.createElement('div');
-    sign.style.marginTop = '24px';
-    sign.style.textAlign = 'left';
-    sign.style.paddingLeft = '20px';
-    const name = document.createElement('p');
-    name.textContent = 'نام و نام خانوادگی: ………………………';
-    const signature = document.createElement('p');
-    signature.textContent = 'امضا: ………………………';
-    sign.append(name, signature);
-    letterContent.appendChild(sign);
-  }
-
-  // تشخیص گفتار فارسی (در مرورگرهای پشتیبانی‌شده)
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognitionAPI();
-    recognition.lang = 'fa-IR';
-    recognition.continuous = false;
-    recognition.onstart = () => voiceBtn.classList.add('recording');
-    recognition.onend = () => voiceBtn.classList.remove('recording');
-    recognition.onerror = () => voiceBtn.classList.remove('recording');
-    recognition.onresult = event => {
-      const transcript = event.results[0][0].transcript;
-      rawText.value += (rawText.value ? ' ' : '') + transcript;
+    const state = {
+      categories: [],
+      services: [],
+      category: "all",
+      filter: "all"
     };
-    voiceBtn.addEventListener('click', () => {
-      try { recognition.start(); } catch (error) { try { recognition.stop(); } catch (ignored) {} }
-    });
-  } else {
-    voiceBtn.style.display = 'none';
-  }
 
-  document.getElementById('generateBtn').addEventListener('click', () => {
-    const text = rawText.value.trim();
-    if (!text) {
-      alert('لطفاً شرح خواسته یا ماجرا را به زبان خودتان بنویسید.');
-      return;
+    const $ = (selector) => document.querySelector(selector);
+    const icons = {
+      wrench: "🔧", home: "🏠", sparkles: "✨", building: "🏗️"
+    };
+    const filters = [
+      ["all", "همه"],
+      ["popular", "پرطرفدار"],
+      ["hot", "ویژه"],
+      ["urgent", "فوری"]
+    ];
+
+    function normalize(value) {
+      return String(value ?? "")
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        .toLocaleLowerCase("fa-IR")
+        .trim();
     }
 
-    // قبل از جایگزین کردن نامه با نامهٔ تازه، تغییرات ویرایش‌شده ذخیره می‌شود.
-    saveCurrentEdits();
-
-    const recipient = recipientInput.value.trim() || 'مخاطب محترم';
-    const subject = subjectInput.value.trim() || 'موضوع درخواست';
-    const today = new Intl.DateTimeFormat('fa-IR').format(new Date());
-    letterDate.textContent = today;
-    createLetter(recipient, subject, text);
-    resultCard.style.display = 'block';
-
-    const history = readHistory();
-    const entry = { id: makeId(), subject, recipient, content: letterContent.innerText || letterContent.textContent, date: today };
-    history.unshift(entry);
-    writeHistory(history);
-    currentHistoryId = entry.id;
-    renderHistory();
-    resultCard.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // ویرایش‌ها نیز در تاریخچهٔ همان نامه نگهداری می‌شوند.
-  letterContent.addEventListener('input', saveCurrentEdits);
-
-  document.getElementById('copyBtn').addEventListener('click', async () => {
-    const text = letterContent.innerText || letterContent.textContent;
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('متن نامه با موفقیت کپی شد!');
-    } catch (error) {
-      alert('کپی خودکار در دسترس نیست. لطفاً متن نامه را انتخاب و کپی کنید.');
+    function formatPrice(service) {
+      const price = Number(service.price_start);
+      if (!Number.isFinite(price) || price <= 0) {
+        return "قیمت پس از بررسی";
+      }
+      return `از ${new Intl.NumberFormat("fa-IR").format(price)} ${service.unit || "تومان"}`;
     }
-  });
 
-  document.getElementById('shareBtn').addEventListener('click', async () => {
-    const text = letterContent.innerText || letterContent.textContent;
-    if (navigator.share) {
-      try { await navigator.share({ title: 'نامه', text }); } catch (error) {}
-    } else {
+    function safeImageUrl(value) {
       try {
-        await navigator.clipboard.writeText(text);
-        alert('قابلیت اشتراک‌گذاری در دسترس نیست؛ متن کپی شد.');
-      } catch (error) {
-        alert('قابلیت اشتراک‌گذاری یا کپی در این مرورگر در دسترس نیست.');
+        const url = new URL(value);
+        return url.protocol === "https:" ? url.href : null;
+      } catch {
+        return null;
       }
     }
-  });
 
-  document.getElementById('printBtn').addEventListener('click', () => window.print());
-
-  function renderHistory() {
-    const history = readHistory();
-    const list = document.getElementById('historyList');
-    const section = document.getElementById('historySection');
-    list.replaceChildren();
-    if (history.length === 0) {
-      section.style.display = 'none';
-      return;
+    function categoryName(service) {
+      return state.categories.find(
+        (item) => String(item.id) === String(service.category_id)
+      )?.title || "سایر خدمات";
     }
-    section.style.display = 'block';
-    history.forEach(item => {
-      const element = document.createElement('div');
-      element.className = 'history-item';
-      element.setAttribute('role', 'button');
-      element.tabIndex = 0;
-      const info = document.createElement('div');
-      info.className = 'history-info';
-      const title = document.createElement('strong');
-      title.textContent = item.subject;
-      const details = document.createElement('span');
-      details.textContent = `به: ${item.recipient} | تاریخ: ${item.date}`;
-      info.append(title, details);
-      const icon = document.createElement('div');
-      icon.textContent = '🔍';
-      element.append(info, icon);
-      const openLetter = () => {
-        saveCurrentEdits();
-        recipientInput.value = item.recipient;
-        subjectInput.value = item.subject;
-        letterDate.textContent = item.date;
-        // سابقه به‌صورت textContent برگردانده می‌شود؛ HTML ذخیره‌شده هرگز اجرا نمی‌شود.
-        letterContent.textContent = item.content;
-        letterContent.style.whiteSpace = 'pre-wrap';
-        currentHistoryId = item.id;
-        resultCard.style.display = 'block';
-        resultCard.scrollIntoView({ behavior: 'smooth' });
-      };
-      element.addEventListener('click', openLetter);
-      element.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLetter(); }
-      });
-      list.appendChild(element);
-    });
-  }
 
-  renderHistory();
-</script>
+    function addButton(container, text, className, onClick) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = className;
+      button.textContent = text;
+      button.addEventListener("click", onClick);
+      container.append(button);
+    }
+
+    function renderCategories() {
+      const container = $("#categories");
+      container.replaceChildren();
+
+      addButton(
+        container, "همه دسته‌ها",
+        `chip ${state.category === "all" ? "active" : ""}`,
+        () => { state.category = "all"; render(); }
+      );
+
+      for (const item of state.categories) {
+        addButton(
+          container,
+          `${icons[item.icon] || "🛠️"} ${item.title}`,
+          `chip ${state.category === String(item.id) ? "active" : ""}`,
+          () => { state.category = String(item.id); render(); }
+        );
+      }
+    }
+
+    function renderFilters() {
+      const container = $("#filters");
+      container.replaceChildren();
+      for (const [value, label] of filters) {
+        addButton(
+          container, label,
+          `filter ${state.filter === value ? "active" : ""}`,
+          () => { state.filter = value; render(); }
+        );
+      }
+    }
+
+    function openDetails(service) {
+      $("#dialog-title").textContent = service.title;
+      $("#dialog-category").textContent = `دسته‌بندی: ${categoryName(service)}`;
+      $("#dialog-price").textContent = `قیمت: ${formatPrice(service)}`;
+      $("#service-dialog").showModal();
+    }
+
+    function makeCard(service) {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+      const fallback = document.createElement("span");
+      fallback.textContent = "🛠️";
+      thumb.append(fallback);
+
+      const imageUrl = safeImageUrl(service.image_url);
+      if (imageUrl) {
+        const image = document.createElement("img");
+        image.alt = service.title;
+        image.loading = "lazy";
+        image.onload = () => fallback.remove();
+        image.onerror = () => image.remove();
+        image.src = imageUrl;
+        thumb.prepend(image);
+      }
+
+      const body = document.createElement("div");
+      body.className = "body";
+      const category = document.createElement("div");
+      category.className = "category";
+      category.textContent = categoryName(service);
+
+      const title = document.createElement("h3");
+      title.className = "title";
+      title.textContent = service.title;
+
+      const badges = document.createElement("div");
+      badges.className = "badges";
+      for (const [enabled, label] of [
+        [service.is_hot, "ویژه"],
+        [service.is_popular, "پرطرفدار"],
+        [service.is_urgent, "فوری"]
+      ]) {
+        if (!enabled) continue;
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = label;
+        badges.append(badge);
+      }
+
+      const bottom = document.createElement("div");
+      bottom.className = "bottom";
+      const price = document.createElement("span");
+      price.className, "price";
+      price.textContent = formatPrice(service);
+      bottom.append(price);
+      addButton(bottom, "جزئیات", "details", () => openDetails(service));
+
+      body.append(category, title, badges, bottom);
+      card.append(thumb, body);
+      return card;
+    }
+
+    function render() {
+      renderCategories();
+      renderFilters();
+
+      const query = normalize($("#search").value);
+      const visible = state.services.filter((service) => {
+        const categoryMatches =
+          state.category === "all" ||
+          String(service.category_id) === state.category;
+        const filterMatches =
+          state.filter === "all" ||
+          (state.filter === "popular" && service.is_popular) ||
+          (state.filter === "hot" && service.is_hot) ||
+          (state.filter === "urgent" && service.is_urgent);
+        const searchMatches = normalize(
+          `${service.title} ${categoryName(service)}`
+        ).includes(query);
+
+        return categoryMatches && filterMatches && searchMatches;
+      });
+
+      $("#count").textContent = `(${new Intl.NumberFormat("fa-IR").format(visible.length)})`;
+      $("#services").replaceChildren(...visible.map(makeCard));
+      $("#message").hidden = visible.length > 0;
+      if (!visible.length) {
+        $("#message").textContent = "خدمتی با این جست‌وجو یا فیلتر پیدا نشد.";
+      }
+    }
+
+    async function loadData() {
+      try {
+        const db = window.supabase.createClient(
+          SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY
+        );
+        const [categoriesResult, servicesResult] = await Promise.all([
+          db.from("categories").select("id,title,icon").order("id"),
+          db.from("services")
+            .select("id,category_id,title,price_start,unit,image_url,is_hot,is_popular,is_urgent")
+            .order("id")
+        ]);
+
+        if (categoriesResult.error) throw categoriesResult.error;
+        if (servicesResult.error) throw servicesResult.error;
+
+        state.categories = categoriesResult.data || [];
+        state.services = servicesResult.data || [];
+        render();
+      } catch (error) {
+        $("#message").hidden = false;
+        $("#message").classList.add("error");
+        $("#message").textContent =
+          `دریافت اطلاعات ناموفق بود: ${error.message}`;
+      }
+    }
+
+    $("#search").addEventListener("input", render);
+    $("#close-dialog").addEventListener(
+      "click", () => $("#service-dialog").close()
+    );
+    loadData();
+  </script>
 </body>
 </html>
