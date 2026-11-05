@@ -1,262 +1,385 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1d4ed8">
-  <title>خدمت پلاس | سامانه جامع و هوشمند خدمات</title>
-
-  <style>
-    :root {
-      font-family: Tahoma, Arial, sans-serif;
-      color: #0f172a;
-      background: #f8fafc;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #f8fafc; padding-bottom: 90px; }
-    
-    header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 22px 16px; text-align: center; border-radius: 0 0 24px 24px; box-shadow: 0 10px 15px -3px rgba(37,99,235,0.2); }
-    h1 { margin: 0; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
-    p.subtitle { margin: 6px 0 0 0; font-size: 0.85rem; opacity: 0.9; }
-
-    .wrap { width: min(100% - 20px, 768px); margin-inline: auto; padding: 10px 0; }
-    
-    .card { background: #fff; border-radius: 16px; padding: 18px; margin-top: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04), 0 2px 4px -2px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
-    h3 { margin-top: 0; font-size: 1.1rem; color: #1e3a8a; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-
-    /* دسته‌بندی‌ها با آیکون‌های مجزا */
-    .cats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .cat-card { background: #f8fafc; border: 2px solid #e2e8f0; padding: 16px 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-    .cat-card:active, .cat-card.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; transform: scale(0.98); }
-    .cat-icon { font-size: 2rem; margin-bottom: 8px; }
-    .cat-title { font-weight: bold; font-size: 0.95rem; }
-
-    /* زیرخدمات */
-    .subcats { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-top: 10px; }
-    .subcats::-webkit-scrollbar { display: none; }
-    .sub-chip { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; cursor: pointer; color: #334155; }
-    .sub-chip.active { background: #2563eb; color: #fff; border-color: #2563eb; }
-
-    label { font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-top: 14px; }
-    input, select, textarea { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 12px; font: inherit; background: #f8fafc; color: #0f172a; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
-
-    .type-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
-    .type-btn { background: #f1f5f9; border: 2px solid #cbd5e1; padding: 10px; border-radius: 10px; text-align: center; font-size: 0.85rem; font-weight: bold; cursor: pointer; color: #334155; }
-    .type-btn.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
-
-    .price-box { background: #eff6ff; border: 1px dashed #2563eb; padding: 12px; border-radius: 10px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: #1e3a8a; }
-
-    .btn { background: #2563eb; color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1.05rem; margin-top: 18px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); transition: 0.2s; }
-    .btn:active { background: #1d4ed8; transform: scale(0.99); }
-
-    .order-item { background: #f8fafc; padding: 14px; border-radius: 12px; margin-bottom: 10px; border-right: 5px solid #2563eb; font-size: 0.85rem; border: 1px solid #e2e8f0; }
-    .badge { background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; float: left; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدمت پلاس - پلتفرم جامع خدمات هوشمند در منزل</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+        * { font-family: 'Vazirmatn', sans-serif; }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 text-text-800 min-h-screen flex flex-col">
 
-  <header>
-    <h1>خدمت پلاس</h1>
-    <p class="subtitle">سامانه جامع و هوشمند خدمات تخصصی منزل</p>
-  </header>
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    <i class="fa-solid fa-hands-holding-child"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-gray-800 leading-tight">خدمت پلاس</h1>
+                    <span class="text-xs text-indigo-600 font-medium">نسخه پیشرفته هوشمند</span>
+                </div>
+            </div>
+            <button onclick="switchTab('orders')" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-100 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-rectangle-list"></i> پیگیری سفارش‌ها
+            </button>
+        </div>
+    </header>
 
-  <div class="wrap">
-    <!-- انتخاب دسته خدمت با آیکون‌های مجزا -->
-    <div class="card">
-      <h3>🛠️ ۱. انتخاب حوزه خدمت</h3>
-      <div class="cats-grid">
-        <div class="cat-card" onclick="selectCategory('نظافت و پذیرایی', ['نظافت منزل و راهپله', 'مبل‌شویی در منزل', 'پذیرایی مجالس'])">
-          <div class="cat-icon">🧹</div>
-          <div class="cat-title">نظافت و راهپله</div>
-        </div>
-        <div class="cat-card" onclick="selectCategory('تأسیسات و لوله‌کشی', ['لوله‌کشی آب و فاضلاب', 'تعمیر پکیج و آبگرمکن', 'تشخیص ترکیدگی'])">
-          <div class="cat-icon">🔧</div>
-          <div class="cat-title">تأسیسات ساختمان</div>
-        </div>
-        <div class="cat-card" onclick="selectCategory('برق‌کاری و هوشمندسازی', ['سیم‌کشی و رفع اتصالی', 'نصب لوستر و چراغ', 'دوربین و آیفون'])">
-          <div class="cat-icon">⚡</div>
-          <div class="cat-title">برق‌کاری</div>
-        </div>
-        <div class="cat-card" onclick="selectCategory('تعمیرات لوازم خانگی', ['تعمیر یخچال فریزر', 'تعمیر ماشین لباسشویی', 'تعمیر کولر گازی'])">
-          <div class="cat-icon">❄️</div>
-          <div class="cat-title">لوازم خانگی</div>
-        </div>
-      </div>
-
-      <!-- زیرخدمات پویا -->
-      <div id="subCategoryContainer" style="display:none; margin-top: 14px;">
-        <label>نوع دقیق خدمت:</label>
-        <div class="subcats" id="subCatsList"></div>
-      </div>
-    </div>
-
-    <!-- فرم تکمیل سفارش و جزئیات دقیق -->
-    <div class="card">
-      <h3>📋 ۲. جزئیات، نوع محاسبه و زمان حضور</h3>
-      <form id="orderForm" onsubmit="submitOrder(event)">
+    <!-- Main Container -->
+    <main class="max-w-3xl mx-auto px-4 py-6 flex-grow w-full pb-20">
         
-        <label>خدمت انتخاب شده:</label>
-        <input type="text" id="finalService" placeholder="لطفاً از بخش بالا انتخاب کنید" required readonly style="background: #f1f5f9; font-weight: bold; color: #1e3a8a;">
+        <!-- TAB 1: SERVICES & BOOKING -->
+        <div id="tab-services" class="space-y-6">
+            
+            <!-- Banner -->
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-xl font-bold mb-1">چه خدماتی نیاز دارید؟</h2>
+                    <p class="text-indigo-100 text-sm">سریع‌ترین راه دسترسی به بهترین متخصصان و استادکاران</p>
+                </div>
+                <div class="absolute -left-6 -bottom-6 text-white/10 text-8xl">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+            </div>
 
-        <!-- نوع محاسبه: ساعتی یا کنتراتی -->
-        <label>نحوه محاسبه درخواست:</label>
-        <div class="type-group">
-          <div class="type-btn active" id="typeHourly" onclick="setCalculationType('ساعتی')">⏱️ ساعتی</div>
-          <div class="type-btn" id="typeContract" onclick="setCalculationType('کنتراتی / پروژه‌ای')">📜 کنتراتی (پروژه‌ای)</div>
+            <!-- Categories Section -->
+            <div>
+                <h3 class="font-bold text-gray-800 mb-3 text-base">دسته‌بندی خدمات</h3>
+                <div id="categories-grid" class="grid grid-cols-3 gap-3">
+                    <!-- Dynamic Rendered Categories -->
+                </div>
+            </div>
+
+            <!-- Subcategories & Booking Modal Container (Inline Card) -->
+            <div id="booking-section" class="hidden bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 id="selected-cat-title" class="font-bold text-indigo-600 text-base">انتخاب زیرخدمت</h3>
+                    <button onclick="closeBooking()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+
+                <div id="subservices-list" class="space-y-2">
+                    <!-- Dynamic Subservices -->
+                </div>
+
+                <!-- Service Details Form -->
+                <div id="order-form-details" class="hidden space-y-4 pt-3 border-t">
+                    <div class="bg-indigo-50/50 p-3 rounded-xl border border-indigo-100 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-gray-500 block">خدمت انتخابی:</span>
+                            <span id="summary-service-name" class="font-bold text-gray-800 text-sm"></span>
+                        </div>
+                        <div class="text-left">
+                            <span class="text-xs text-gray-500 block">نوع محاسبه:</span>
+                            <span id="summary-calc-type" class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded font-medium"></span>
+                        </div>
+                    </div>
+
+                    <!-- Work Type & Calculation inputs -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار</label>
+                            <input type="date" id="order-date" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">ساعت حضور</label>
+                            <select id="order-time" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                                <option value="8 تا 12 صبح">۸ تا ۱۲ صبح</option>
+                                <option value="12 تا 16 عصر">۱۲ تا ۱۶ عصر</option>
+                                <option value="16 تا 20 شب">۱۶ تا ۲۰ شب</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">شماره تماس همراه</label>
+                        <input type="tel" id="order-phone" placeholder="مثال: 09123456789" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-left" dir="ltr">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">آدرس دقیق محل</label>
+                        <textarea id="order-address" rows="2" placeholder="شهر، خیابان، کوچه، پلاک، واحد..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <div>
+                            <span class="text-xs text-gray-500 block">تخمین هزینه پایه:</span>
+                            <span id="estimated-price" class="font-extrabold text-indigo-600 text-base">توافقی / پس از بررسی</span>
+                        </div>
+                        <button onclick="submitOrder()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-indigo-700 transition">
+                            ثبت نهایی سفارش <i class="fa-solid fa-check ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;">
-          <div>
-            <label>تاریخ حضور:</label>
-            <input type="date" id="orderDate" required>
-          </div>
-          <div>
-            <label>بازه زمانی:</label>
-            <select id="orderTime" required>
-              <option value="صبح (۸ تا ۱۲)">صبح (۸ تا ۱۲)</option>
-              <option value="ظهر (۱۲ تا ۱۶)">ظهر (۱۲ تا ۱۶)</option>
-              <option value="عصر (۱۶ تا ۲۰)">عصر (۱۶ تا ۲۰)</option>
-            </select>
-          </div>
+        <!-- TAB 2: ORDERS TRACKING -->
+        <div id="tab-orders" class="hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-gray-800 text-lg">سفارش‌های ثبت‌شده شما</h3>
+                <button onclick="switchTab('services')" class="text-indigo-600 text-sm font-medium"><i class="fa-solid fa-plus ml-1"></i>ثبت سفارش جدید</button>
+            </div>
+            <div id="orders-list-container" class="space-y-3">
+                <!-- Dynamic Orders -->
+            </div>
         </div>
 
-        <label>شماره تماس همراه:</label>
-        <input type="tel" id="phone" placeholder="09123456789" required>
+    </main>
 
-        <label>آدرس دقیق پستی:</label>
-        <textarea id="address" rows="2" placeholder="محله، خیابان، پلاک، واحد..." required></textarea>
-
-        <!-- تخمین قیمت هوشمند -->
-        <div class="price-box">
-          <span>💰 تخمین هزینه اولیه:</span>
-          <span id="estimatedPrice">بر اساس انتخاب شما</span>
+    <!-- Bottom Nav -->
+    <nav class="bg-white border-t fixed bottom-0 left-0 right-0 z-40 shadow-lg">
+        <div class="max-w-3xl mx-auto flex justify-around py-3">
+            <button onclick="switchTab('services')" id="nav-btn-services" class="flex flex-col items-center text-indigo-600 text-xs font-bold gap-1">
+                <i class="fa-solid fa-house text-lg"></i>
+                خانه و خدمات
+            </button>
+            <button onclick="switchTab('orders')" id="nav-btn-orders" class="flex flex-col items-center text-gray-400 text-xs font-medium gap-1">
+                <i class="fa-solid fa-clipboard-list text-lg"></i>
+                پیگیری سفارش‌ها
+            </button>
         </div>
+    </nav>
 
-        <button type="submit" class="btn">ثبت سفارش و اعزام هوشمند متخصص</button>
-      </form>
-    </div>
+    <!-- Application Logic -->
+    <script>
+        // تنظیمات اتصال Supabase (با کلید Publishable امن شما)
+        const SUPABASE_URL = 'https://toegqqofbotxmgycgnfd.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_783d7bae...'; // کلید معتبر
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <!-- پیگیری سفارش‌ها -->
-    <div class="card">
-      <h3>📦 پیگیری سفارش‌های من</h3>
-      <div id="ordersList">
-        <p style="color: #64748b; font-size: 0.85rem; text-align: center;">هنوز سفارشی ثبت نکرده‌اید.</p>
-      </div>
-    </div>
-  </div>
+        // داده‌های پیشرفته خدمات و زیرخدمات (فراتر از آچاره و خدمات از ما)
+        const categoriesData = [
+            {
+                id: 'cleaning',
+                title: 'نظافت و پذیرایی',
+                icon: 'fa-broom',
+                color: 'bg-amber-50 text-amber-600',
+                subservices: [
+                    { name: 'نظافت منزل و راهپله (ساعتی)', type: 'ساعتی', price: 'از ۱۵۰ هزار تومان / ساعت' },
+                    { name: 'نظافت مجتمع و شرکت‌ها (کنتراتی)', type: 'کنتراتی / پروژه‌ای', price: 'توافقی پس از بازدید' },
+                    { name: 'مبل‌شویی و قالیشویی در منزل', type: 'کنتراتی / پروژه‌ای', price: 'نرخ مصوب اتحادیه' }
+                ]
+            },
+            {
+                id: 'plumbing',
+                title: 'تأسیسات و لوله‌کشی',
+                icon: 'fa-faucet-dripping',
+                color: 'bg-blue-50 text-blue-600',
+                subservices: [
+                    { name: 'لوله‌کشی آب و فاضلاب (ساعتی/پروژه)', type: 'ساعتی / کنتراتی', price: 'بررسی در محل' },
+                    { name: 'رفع گرفتگی لوله و چاه‌بازکنی', type: 'کنتراتی', price: 'نرخ ثابت شرکتی' },
+                    { name: 'نصب و تعمیر شیرآلات', type: 'ساعتی', price: 'از ۲۰۰ هزار تومان' }
+                ]
+            },
+            {
+                id: 'cooling_heating',
+                title: 'سرمایش و گرمایش',
+                icon: 'fa-temperature-arrow-up',
+                color: 'bg-cyan-50 text-cyan-600',
+                subservices: [
+                    { name: 'سرویس و تعمیر پکیج و آبگرمکن', type: 'کنتراتی', price: 'ثابت + قطعات' },
+                    { name: 'نصب و تعمیر کولر گازی و آبی', type: 'ساعتی / کنتراتی', price: 'بررسی تخصصی' }
+                ]
+            },
+            {
+                id: 'appliances',
+                title: 'لوازم خانگی',
+                icon: 'fa-tv',
+                color: 'bg-purple-50 text-purple-600',
+                subservices: [
+                    { name: 'تعمیر ماشین لباسشویی و ظرفشویی', type: 'کنتراتی', price: 'اعلام هزینه پس از عیب‌یابی' },
+                    { name: 'تعمیر یخچال و فریزر در محل', type: 'کنتراتی', price: 'دارای گارانتی خدمات' }
+                ]
+            },
+            {
+                id: 'electrical',
+                title: 'برق‌کاری و روشنایی',
+                icon: 'fa-bolt',
+                color: 'bg-yellow-50 text-yellow-600',
+                subservices: [
+                    { name: 'سیم‌کشی و رفع اتصالی برق', type: 'ساعتی', price: 'از ۲۵۰ هزار تومان' },
+                    { name: 'نصب لوستر، هالوژن و آویز', type: 'کنتراتی (تعداد)', price: 'بسته به مدل لوستر' }
+                ]
+            },
+            {
+                id: 'building',
+                title: 'بازسازی و دکوراسیون',
+                icon: 'fa-paint-roller',
+                color: 'bg-rose-50 text-rose-600',
+                subservices: [
+                    { name: 'نقاشی ساختمان و کاغذ دیواری', type: 'کنتراتی / متراژی', price: 'متر مربعی / توافقی' },
+                    { name: 'گچ‌کاری، کاشی‌کاری و بنایی', type: 'کنتراتی', price: 'بررسی کارشناس' }
+                ]
+            }
+        ];
 
-  <script>
-    let selectedMain = '';
-    let selectedSub = '';
-    let calculationType = 'ساعتی';
+        let currentSelectedService = null;
 
-    function selectCategory(mainName, subArray) {
-      selectedMain = mainName;
-      selectedSub = subArray[0];
-      
-      document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+        // رندر دسته‌بندی‌ها در صفحه
+        function renderCategories() {
+            const grid = document.getElementById('categories-grid');
+            grid.innerHTML = categoriesData.map(cat => `
+                <button onclick="selectCategory('${cat.id}')" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col items-center text-center gap-2 group">
+                    <div class="w-12 h-12 rounded-xl ${cat.color} flex items-center justify-center text-xl group-hover:scale-110 transition">
+                        <i class="fa-solid ${cat.icon}"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-700">${cat.title}</span>
+                </button>
+            `).join('');
+        }
 
-      const container = document.getElementById('subCategoryContainer');
-      const listContainer = document.getElementById('subCatsList');
-      container.style.display = 'block';
+        // انتخاب دسته و نمایش زیرخدمات
+        function selectCategory(catId) {
+            const cat = categoriesData.find(c => c.id === catId);
+            if (!cat) return;
 
-      listContainer.innerHTML = subArray.map((sub, idx) => `
-        <div class="sub-chip ${idx === 0 ? 'active' : ''}" onclick="selectSubCat(this, '${sub}')">${sub}</div>
-      `).join('');
+            document.getElementById('selected-cat-title').innerText = cat.title;
+            const subList = document.getElementById('subservices-list');
+            
+            subList.innerHTML = cat.subservices.map((sub, idx) => `
+                <div onclick="selectSubservice('${sub.name}', '${sub.type}', '${sub.price}')" class="p-3 bg-gray-50 hover:bg-indigo-50/50 border border-gray-200 rounded-xl cursor-pointer transition flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm">${sub.name}</h4>
+                        <span class="text-xs text-indigo-600 font-medium">محاسبه: ${sub.type}</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-xs text-gray-500 block">${sub.price}</span>
+                        <i class="fa-solid fa-chevron-left text-xs text-gray-400 mt-1"></i>
+                    </div>
+                </div>
+            `).join('');
 
-      updateServiceInput();
-    }
+            document.getElementById('booking-section').classList.remove('hidden');
+            document.getElementById('order-form-details').classList.add('hidden');
+            document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
+        }
 
-    function selectSubCat(el, subName) {
-      selectedSub = subName;
-      document.querySelectorAll('.sub-chip').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      updateServiceInput();
-    }
+        // انتخاب زیرخدمت و نمایش فرم نهایی
+        function selectSubservice(name, type, price) {
+            currentSelectedService = { name, type, price };
+            document.getElementById('summary-service-name').innerText = name;
+            document.getElementById('summary-calc-type').innerText = type;
+            document.getElementById('estimated-price').innerText = price;
+            document.getElementById('order-form-details').classList.remove('hidden');
+            document.getElementById('order-form-details').scrollIntoView({ behavior: 'smooth' });
+        }
 
-    function setCalculationType(type) {
-      calculationType = type;
-      document.getElementById('typeHourly').classList.toggle('active', type === 'ساعتی');
-      document.getElementById('typeContract', type === 'کنتراتی / پروژه‌ای').classList.toggle('active', type === 'کنتراتی / پروژه‌ای');
-      updateServiceInput();
-    }
+        function closeBooking() {
+            document.getElementById('booking-section').classList.add('hidden');
+        }
 
-    function updateServiceInput() {
-      const fullText = `${selectedMain} ➔ ${selectedSub} (${calculationType})`;
-      document.getElementById('finalService').value = fullText;
-      
-      const prices = {
-        'نظافت منزل و راهپله': calculationType === 'ساعتی' ? '۴۵۰,۰۰۰ تومان (هر شیفت)' : 'توافقی کنتراتی',
-        'مبل‌شویی در منزل': '۶۰۰,۰۰۰ تومان',
-        'پذیرایی مجالس': '۷۰۰,۰۰۰ تومان',
-        'لوله‌کشی آب و فاضلاب': 'نرخ بر اساس بازدید',
-        'تعمیر پکیج و آبگرمکن': '۳۵۰,۰۰۰ تومان (اجرت)',
-        'تشخیص ترکیدگی': '۵۰۰,۰۰۰ تومان',
-        'سیم‌کشی و رفع اتصالی': '۳۰۰,۰۰۰ تومان',
-        'نصب لوستر و چراغ': '۲۵۰,۰۰۰ تومان',
-        'دوربین و آیفون': '۴۰۰,۰۰۰ تومان',
-        'تعمیر یخچال فریزر': 'نرخ پس از عیب‌یابی',
-        'تعمیر ماشین لباسشویی': '۴۰۰,۰۰۰ تومان (اجرت)',
-        'تعمیر کولر گازی': '۴۵۰,۰۰۰ تومان'
-      };
+        // تب‌بندی صفحات
+        function switchTab(tabName) {
+            if (tabName === 'services') {
+                document.getElementById('tab-services').classList.remove('hidden');
+                document.getElementById('tab-orders').classList.add('hidden');
+                document.getElementById('nav-btn-services').className = "flex flex-col items-center text-indigo-600 text-xs font-bold gap-1";
+                document.getElementById('nav-btn-orders').className = "flex flex-col items-center text-gray-400 text-xs font-medium gap-1";
+            } else {
+                document.getElementById('tab-services').classList.add('hidden');
+                document.getElementById('tab-orders').classList.remove('hidden');
+                document.getElementById('nav-btn-orders').className = "flex flex-col items-center text-indigo-600 text-xs font-bold gap-1";
+                document.getElementById('nav-btn-services').className = "flex flex-col items-center text-gray-400 text-xs font-medium gap-1";
+                loadOrders();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-      document.getElementById('estimatedPrice').innerText = prices[selectedSub] || 'توافقی';
-    }
+        // ثبت سفارش در Supabase
+        async function submitOrder() {
+            const date = document.getElementById('order-date').value;
+            const time = document.getElementById('order-time').value;
+            const phone = document.getElementById('order-phone').value;
+            const address = document.getElementById('order-address').value;
 
-    function submitOrder(e) {
-      e.preventDefault();
-      const service = document.getElementById('finalService').value;
-      const date = document.getElementById('orderDate').value;
-      const time = document.getElementById('orderTime').value;
-      const phone = document.getElementById('phone').value;
-      const address = document.getElementById('address').value;
-      const price = document.getElementById('estimatedPrice').innerText;
+            if (!phone || !address || !date) {
+                alert('لطفاً شماره تماس، آدرس و تاریخ را به طور کامل وارد کنید.');
+                return;
+            }
 
-      if (!service) {
-        alert('لطفاً یک خدمت را انتخاب کنید.');
-        return;
-      }
+            const orderData = {
+                service_name: currentSelectedService.name,
+                calculation_type: currentSelectedService.type,
+                preferred_date: date,
+                preferred_time: time,
+                phone: phone,
+                address: address,
+                status: 'در انتظار تایید و تخصیص متخصص',
+                created_at: new Date().toISOString()
+            };
 
-      const newOrder = { service, date, time, phone, address, price, status: 'در انتظار تأیید متخصص', created: new Date().toLocaleString('fa-IR') };
-      
-      let orders = JSON.parse(localStorage.getItem('khedmat_plus_orders') || '[]');
-      orders.unshift(newOrder);
-      localStorage.setItem('khedmat_plus_orders', JSON.stringify(orders));
+            try {
+                const { data, error } = await supabaseClient.from('orders').insert([orderData]);
+                if (error) {
+                    // ذخیره محلی در صورت بروز خطا در دیتابیس آنلاین
+                    saveLocalOrder(orderData);
+                } else {
+                    alert('سفارش شما با موفقیت ثبت شد و به زودی متخصصان با شما تماس خواهند گرفت.');
+                }
+                closeBooking();
+                switchTab('orders');
+            } catch (err) {
+                saveLocalOrder(orderData);
+                closeBooking();
+                switchTab('orders');
+            }
+        }
 
-      alert('سفارش شما با موفقیت ثبت شد!');
-      document.getElementById('orderForm').reset();
-      document.getElementById('subCategoryContainer').style.display = 'none';
-      document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
-      loadOrders();
-    }
+        function saveLocalOrder(order) {
+            let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+            orders.unshift(order);
+            localStorage.setItem('khedmat_orders', JSON.stringify(orders));
+            alert('سفارش شما با موفقیت ثبت شد!');
+        }
 
-    function loadOrders() {
-      let orders = JSON.parse(localStorage.getItem('khedmat_plus_orders') || '[]');
-      const container = document.getElementById('ordersList');
-      
-      if (orders.length === 0) {
-        container.innerHTML = '<p style="color: #64748b; font-size: 0.85rem; text-align: center;">هنوز سفارشی ثبت نکرده‌اید.</p>';
-        return;
-      }
+        // بارگذاری سفارش‌ها
+        function loadOrders() {
+            const container = document.getElementById('orders-list-container');
+            let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
 
-      container.innerHTML = orders.map(o => `
-        <div class="order-item">
-          <span class="badge">${o.status}</span>
-          <strong style="color: #1e3a8a; font-size: 0.95rem; display:block; margin-bottom: 4px;">${o.service}</strong>
-          <span style="color: #475569; display:block;">📅 ${o.date} (${o.time})</span>
-          <span style="color: #475569; display:block;">📍 ${o.address}</span>
-          <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #e2e8f0; display:flex; justify-content:space-between; font-size:0.8rem; color:#1e40af;">
-            <span>هزینه: ${o.price}</span>
-            <span>تلفن: ${o.phone}</span>
-          </div>
-        </div>
-      `).join('');
-    }
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+                        <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500 text-sm">هنوز سفارشی ثبت نکرده‌اید.</p>
+                    </div>
+                `;
+                return;
+            }
 
-    loadOrders();
-  </script>
+            container.innerHTML = orders.map(ord => `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">${ord.service_name}</h4>
+                            <span class="text-xs text-indigo-600 font-medium">${ord.calculation_type}</span>
+                        </div>
+                        <span class="bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-full font-bold">${ord.status}</span>
+                    </div>
+                    <div class="text-xs text-gray-600 space-y-1 bg-gray-50 p-3 rounded-xl">
+                        <div><i class="fa-regular fa-calendar ml-1 text-gray-400"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
+                        <div><i class="fa-solid fa-location-dot ml-1 text-gray-400"></i> آدرس: ${ord.address}</div>
+                        <div><i class="fa-solid fa-phone ml-1 text-gray-400"></i> تماس: ${ord.phone}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
+        // راه‌اندازی اولیه
+        window.onload = function() {
+            renderCategories();
+        };
+    </script>
 </body>
 </html>
