@@ -9,12 +9,6 @@
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- کتابخانه‌های تقویم شمسی -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
@@ -149,11 +143,11 @@
                     <!-- Dynamic Extra Options -->
                     <div id="extra-options-container" class="extra-box hidden"></div>
 
-                    <!-- Persian Date & Time Picker -->
+                    <!-- Date & Time Picker -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
                             <label>تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" class="form-control" style="text-align: center; font-weight: 700; color: #4f46e5; direction: ltr;" autocomplete="off">
+                            <input type="date" id="order-date" class="form-control" style="text-align: center; font-weight: 700; color: #4f46e5;">
                         </div>
                         <div class="form-group">
                             <label>ساعت حضور</label>
@@ -393,30 +387,6 @@
             calculatePrice();
             document.getElementById('order-form-details').classList.remove('hidden');
             document.getElementById('order-form-details').scrollIntoView({ behavior: 'smooth' });
-
-            // راه‌اندازی و مقداردهی تقویم شمسی
-            initOrderDatePicker();
-        }
-
-        function initOrderDatePicker() {
-            if (typeof $ === 'undefined' || !$.fn.persianDatepicker) return;
-            const now = new persianDate();
-            const today = now.format('YYYY/MM/DD');
-            
-            const dateInput = document.getElementById('order-date');
-            if (dateInput && !dateInput.value) {
-                dateInput.value = today;
-            }
-
-            $('#order-date').persianDatepicker({
-                format: 'YYYY/MM/DD',
-                initialValue: true,
-                autoClose: true,
-                onSelect: function(unix) {
-                    const d = new persianDate(unix).format('YYYY/MM/DD');
-                    document.getElementById('order-date').value = d;
-                }
-            });
         }
 
         function calculatePrice() {
@@ -534,7 +504,7 @@
                             <h4 style="font-size: 13px; font-weight: 700; color: #1e293b;">${ord.service_name}</h4>
                             <span style="font-size: 11px; color: #4f46e5; font-weight: 500;">${ord.calculation_type}</span>
                         </div>
-                        <span class="badge">${ord.status}</span>
+                        <span class="badge">${ord.status}</div>
                     </div>
                     <div style="font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 4px; background: #f8fafc; padding: 12px; border-radius: 10px;">
                         <div><i class="fa-regular fa-calendar" style="color: #94a3b8; margin-left: 4px;"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
@@ -543,3 +513,14 @@
                         <div><i class="fa-solid fa-location-dot" style="color: #94a3b8; margin-left: 4px;"></i> آدرس: ${ord.address}</div>
                         <div><i class="fa-solid fa-phone" style="color: #94a3b8; margin-left: 4px;"></i> تماس: ${ord.phone}</div>
                     </div>
+                    <div style="display: flex; justify-content: flex-end; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+                        <button onclick="cancelOrder('${ord.id}')" class="cancel-dfn cancel-btn">
+                            <i class="fa-solid fa-trash-can"></i> لغو سفارش
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
