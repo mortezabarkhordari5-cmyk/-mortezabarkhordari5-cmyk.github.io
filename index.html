@@ -3,25 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1463d8">
   <title>خدمت پلاس | خدمات در خانه</title>
+
   <style>
     :root {
       font-family: Tahoma, Arial, sans-serif;
       color: #17243b;
       background: #f5f7fb;
     }
+
     * { box-sizing: border-box; }
-    body { margin: 0; }
+
+    body {
+      margin: 0;
+      background: #f5f7fb;
+    }
+
     button, input { font: inherit; }
     button { cursor: pointer; }
-    .wrap { width: min(100% - 32px, 1080px); margin: auto; }
+
+    .wrap {
+      width: min(100% - 32px, 1080px);
+      margin-inline: auto;
+    }
+
     header {
-      background: #fff;
-      border-bottom: 1px solid #e8edf5;
       position: sticky;
       top: 0;
       z-index: 2;
+      background: #fff;
+      border-bottom: 1px solid #e8edf5;
     }
+
     .top {
       min-height: 68px;
       display: flex;
@@ -29,8 +43,18 @@
       justify-content: space-between;
       gap: 12px;
     }
-    .brand { color: #1463d8; font-size: 1.25rem; font-weight: 800; }
-    .tagline { color: #68768c; font-size: .82rem; }
+
+    .brand {
+      color: #1463d8;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .tagline {
+      color: #68768c;
+      font-size: .82rem;
+    }
+
     .hero {
       margin-top: 20px;
       padding: 28px;
@@ -38,8 +62,18 @@
       color: #fff;
       background: linear-gradient(125deg, #1266e3, #0e3990);
     }
-    .hero h1 { margin: 0 0 10px; font-size: clamp(1.5rem, 4vw, 2.3rem); }
-    .hero p { margin: 0 0 20px; color: #e4edff; line-height: 1.9; }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.5rem, 4vw, 2.3rem);
+    }
+
+    .hero p {
+      margin: 0 0 20px;
+      color: #e4edff;
+      line-height: 1.9;
+    }
+
     .search {
       display: block;
       width: min(100%, 600px);
@@ -50,25 +84,34 @@
       background: #fff;
       color: #17243b;
     }
+
     section { margin: 32px 0; }
-    h2 { font-size: 1.15rem; margin: 0 0 16px; }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 1.15rem;
+    }
+
     .chips, .filters {
       display: flex;
       gap: 9px;
       flex-wrap: wrap;
     }
+
     .chip, .filter {
+      padding: 10px 14px;
       border: 1px solid #dbe3ef;
+      border-radius: 12px;
       background: #fff;
       color: #34445d;
-      padding: 10px 14px;
-      border-radius: 12px;
     }
+
     .chip.active, .filter.active {
-      background: #1463d8;
       border-color: #1463d8;
+      background: #1463d8;
       color: #fff;
     }
+
     .section-head {
       display: flex;
       align-items: center;
@@ -77,12 +120,15 @@
       flex-wrap: wrap;
       margin-bottom: 16px;
     }
+
     .section-head h2 { margin: 0; }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
       gap: 16px;
     }
+
     .card {
       overflow: hidden;
       border: 1px solid #e5ebf4;
@@ -90,6 +136,7 @@
       background: #fff;
       box-shadow: 0 5px 18px #14213d0a;
     }
+
     .thumb {
       height: 150px;
       display: grid;
@@ -97,54 +144,98 @@
       background: #eaf1fc;
       font-size: 3rem;
     }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .body { padding: 16px; }
-    .category { color: #64748b; font-size: .82rem; }
-    .title { margin: 8px 0 12px; font-size: 1rem; min-height: 25px; }
-    .badges { display: flex; gap: 6px; flex-wrap: wrap; min-height: 26px; }
+
+    .category {
+      color: #64748b;
+      font-size: .82rem;
+    }
+
+    .title {
+      min-height: 25px;
+      margin: 8px 0 12px;
+      font-size: 1rem;
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-height: 26px;
+    }
+
     .badge {
-      background: #eef4ff;
-      color: #1959ad;
       padding: 4px 8px;
       border-radius: 7px;
+      background: #eef4ff;
+      color: #1959ad;
       font-size: .72rem;
     }
+
     .bottom {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       margin-top: 15px;
     }
-    .price { font-weight: 700; font-size: .85rem; }
+
+    .price {
+      font-weight: 700;
+      font-size: .85rem;
+    }
+
     .details, .close {
+      padding: 9px 12px;
       border: 0;
       border-radius: 10px;
       background: #1463d8;
-      color: white;
-      padding: 9px 12px;
+      color: #fff;
     }
+
     .notice {
       padding: 18px;
-      background: #fff;
       border: 1px solid #e5ebf4;
       border-radius: 14px;
+      background: #fff;
       color: #52627a;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
     }
-    .notice.error { color: #ae2936; border-color: #ffcbd0; }
+
+    .notice.error {
+      border-color: #ffcbd0;
+      color: #ae2936;
+    }
+
     dialog {
+      width: min(90vw, 420px);
+      padding: 24px;
       border: 0;
       border-radius: 18px;
-      padding: 24px;
-      width: min(90vw, 420px);
       color: #17243b;
     }
+
     dialog::backdrop { background: #12233c99; }
     dialog h2 { margin-top: 0; }
     dialog p { line-height: 1.9; }
-    footer { padding: 25px 0; color: #75839a; text-align: center; font-size: .8rem; }
+
+    footer {
+      padding: 25px 0;
+      color: #75839a;
+      text-align: center;
+      font-size: .8rem;
+    }
   </style>
 </head>
+
 <body>
   <header>
     <div class="wrap top">
@@ -157,9 +248,13 @@
     <div class="hero">
       <h1>برای خانه‌ات، متخصص پیدا کن</h1>
       <p>خدمات را جست‌وجو کن و گزینه‌های موجود را ببین.</p>
-      <input id="search" class="search" type="search"
-             placeholder="مثلاً نظافت منزل یا تعمیر پکیج"
-             aria-label="جست‌وجوی خدمات">
+      <input
+        id="search"
+        class="search"
+        type="search"
+        placeholder="مثلاً نظافت منزل یا تعمیر پکیج"
+        aria-label="جست‌وجوی خدمات"
+      >
     </div>
 
     <section>
@@ -172,7 +267,10 @@
         <h2>خدمات <span id="count"></span></h2>
         <div id="filters" class="filters"></div>
       </div>
-      <div id="message" class="notice" role="status">در حال دریافت خدمات…</div>
+
+      <div id="message" class="notice" role="status">
+        در حال دریافت خدمات…
+      </div>
       <div id="services" class="grid"></div>
     </section>
   </main>
@@ -181,16 +279,23 @@
     <h2 id="dialog-title"></h2>
     <p id="dialog-category"></p>
     <p id="dialog-price"></p>
-    <p class="category">ثبت سفارش هنوز فعال نشده است؛ این نسخه برای مشاهدهٔ خدمات است.</p>
+    <p class="category">
+      ثبت سفارش هنوز فعال نشده است؛ این نسخه برای مشاهدهٔ خدمات است.
+    </p>
     <button id="close-dialog" class="close" type="button">بستن</button>
   </dialog>
 
   <footer>خدمت پلاس</footer>
 
+  <!-- کتابخانه باید پیش از کد برنامه بارگذاری شود -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
     const SUPABASE_URL = "https://toegqqofbotxmgycgnfd.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_RlPDxHNUrXCSRxs9iHXjhg_MqHSurSg";
+
+    // اینجا کلید Publishable واقعی خودت را قرار بده.
+    // باید با sb_publishable_ شروع شود؛ کلید secret/service_role را نگذار.
+    const SUPABASE_PUBLISHABLE_KEY = "کلید-کامل-sb_publishable-خودت-را-اینجا-قرار-بده";
 
     const state = {
       categories: [],
@@ -200,9 +305,14 @@
     };
 
     const $ = (selector) => document.querySelector(selector);
+
     const icons = {
-      wrench: "🔧", home: "🏠", sparkles: "✨", building: "🏗️"
+      wrench: "🔧",
+      home: "🏠",
+      sparkles: "✨",
+      building: "🏗️"
     };
+
     const filters = [
       ["all", "همه"],
       ["popular", "پرطرفدار"],
@@ -220,10 +330,13 @@
 
     function formatPrice(service) {
       const price = Number(service.price_start);
+
       if (!Number.isFinite(price) || price <= 0) {
         return "قیمت پس از بررسی";
       }
-      return `از ${new Intl.NumberFormat("fa-IR").format(price)} ${service.unit || "تومان"}`;
+
+      const unit = service.unit || "تومان";
+      return `از ${new Intl.NumberFormat("fa-IR").format(price)} ${unit}`;
     }
 
     function safeImageUrl(value) {
@@ -236,9 +349,11 @@
     }
 
     function categoryName(service) {
-      return state.categories.find(
+      const category = state.categories.find(
         (item) => String(item.id) === String(service.category_id)
-      )?.title || "سایر خدمات";
+      );
+
+      return category?.title || "سایر خدمات";
     }
 
     function addButton(container, text, className, onClick) {
@@ -255,9 +370,13 @@
       container.replaceChildren();
 
       addButton(
-        container, "همه دسته‌ها",
+        container,
+        "همه دسته‌ها",
         `chip ${state.category === "all" ? "active" : ""}`,
-        () => { state.category = "all"; render(); }
+        () => {
+          state.category = "all";
+          render();
+        }
       );
 
       for (const item of state.categories) {
@@ -265,7 +384,10 @@
           container,
           `${icons[item.icon] || "🛠️"} ${item.title}`,
           `chip ${state.category === String(item.id) ? "active" : ""}`,
-          () => { state.category = String(item.id); render(); }
+          () => {
+            state.category = String(item.id);
+            render();
+          }
         );
       }
     }
@@ -273,19 +395,26 @@
     function renderFilters() {
       const container = $("#filters");
       container.replaceChildren();
+
       for (const [value, label] of filters) {
         addButton(
-          container, label,
+          container,
+          label,
           `filter ${state.filter === value ? "active" : ""}`,
-          () => { state.filter = value; render(); }
+          () => {
+            state.filter = value;
+            render();
+          }
         );
       }
     }
 
     function openDetails(service) {
       $("#dialog-title").textContent = service.title;
-      $("#dialog-category").textContent = `دسته‌بندی: ${categoryName(service)}`;
-      $("#dialog-price").textContent = `قیمت: ${formatPrice(service)}`;
+      $("#dialog-category").textContent =
+        `دسته‌بندی: ${categoryName(service)}`;
+      $("#dialog-price").textContent =
+        `قیمت: ${formatPrice(service)}`;
       $("#service-dialog").showModal();
     }
 
@@ -295,14 +424,16 @@
 
       const thumb = document.createElement("div");
       thumb.className = "thumb";
+
       const fallback = document.createElement("span");
       fallback.textContent = "🛠️";
       thumb.append(fallback);
 
       const imageUrl = safeImageUrl(service.image_url);
+
       if (imageUrl) {
         const image = document.createElement("img");
-        image.alt = service.title;
+        image.alt = service.title || "تصویر خدمت";
         image.loading = "lazy";
         image.onload = () => fallback.remove();
         image.onerror = () => image.remove();
@@ -312,22 +443,27 @@
 
       const body = document.createElement("div");
       body.className = "body";
+
       const category = document.createElement("div");
       category.className = "category";
       category.textContent = categoryName(service);
 
       const title = document.createElement("h3");
       title.className = "title";
-      title.textContent = service.title;
+      title.textContent = service.title || "خدمت بدون عنوان";
 
       const badges = document.createElement("div");
       badges.className = "badges";
-      for (const [enabled, label] of [
+
+      const badgeOptions = [
         [service.is_hot, "ویژه"],
         [service.is_popular, "پرطرفدار"],
         [service.is_urgent, "فوری"]
-      ]) {
+      ];
+
+      for (const [enabled, label] of badgeOptions) {
         if (!enabled) continue;
+
         const badge = document.createElement("span");
         badge.className = "badge";
         badge.textContent = label;
@@ -336,14 +472,22 @@
 
       const bottom = document.createElement("div");
       bottom.className = "bottom";
+
       const price = document.createElement("span");
-      price.className, "price";
+      price.className = "price";
       price.textContent = formatPrice(service);
+
       bottom.append(price);
-      addButton(bottom, "جزئیات", "details", () => openDetails(service));
+      addButton(
+        bottom,
+        "جزئیات",
+        "details",
+        () => openDetails(service)
+      );
 
       body.append(category, title, badges, bottom);
       card.append(thumb, body);
+
       return card;
     }
 
@@ -352,60 +496,103 @@
       renderFilters();
 
       const query = normalize($("#search").value);
+
       const visible = state.services.filter((service) => {
         const categoryMatches =
           state.category === "all" ||
           String(service.category_id) === state.category;
+
         const filterMatches =
           state.filter === "all" ||
           (state.filter === "popular" && service.is_popular) ||
           (state.filter === "hot" && service.is_hot) ||
           (state.filter === "urgent" && service.is_urgent);
+
         const searchMatches = normalize(
-          `${service.title} ${categoryName(service)}`
+          `${service.title || ""} ${categoryName(service)}`
         ).includes(query);
 
         return categoryMatches && filterMatches && searchMatches;
       });
 
-      $("#count").textContent = `(${new Intl.NumberFormat("fa-IR").format(visible.length)})`;
+      $("#count").textContent =
+        `(${new Intl.NumberFormat("fa-IR").format(visible.length)})`;
+
       $("#services").replaceChildren(...visible.map(makeCard));
-      $("#message").hidden = visible.length > 0;
-      if (!visible.length) {
-        $("#message").textContent = "خدمتی با این جست‌وجو یا فیلتر پیدا نشد.";
+
+      const message = $("#message");
+
+      if (visible.length > 0) {
+        message.hidden = true;
+      } else {
+        message.hidden = false;
+        message.classList.remove("error");
+        message.textContent =
+          "خدمتی با این جست‌وجو یا فیلتر پیدا نشد.";
       }
     }
 
     async function loadData() {
+      const message = $("#message");
+
       try {
+        if (!window.supabase || !window.supabase.createClient) {
+          throw new Error(
+            "کتابخانه Supabase بارگذاری نشده است. اتصال اینترنت را بررسی و صفحه را دوباره باز کنید."
+          );
+        }
+
+        if (
+          !SUPABASE_PUBLISHABLE_KEY.startsWith("sb_publishable_")
+        ) {
+          throw new Error(
+            "کلید Publishable را در کد وارد نکرده‌اید. کلید کامل sb_publishable را جایگزین متن نمونه کنید."
+          );
+        }
+
         const db = window.supabase.createClient(
-          SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY
         );
+
         const [categoriesResult, servicesResult] = await Promise.all([
-          db.from("categories").select("id,title,icon").order("id"),
+          db.from("categories")
+            .select("id,title,icon")
+            .order("id"),
+
           db.from("services")
-            .select("id,category_id,title,price_start,unit,image_url,is_hot,is_popular,is_urgent")
+            .select(
+              "id,category_id,title,price_start,unit,image_url,is_hot,is_popular,is_urgent"
+            )
             .order("id")
         ]);
 
-        if (categoriesResult.error) throw categoriesResult.error;
-        if (servicesResult.error) throw servicesResult.error;
+        if (categoriesResult.error) {
+          throw categoriesResult.error;
+        }
+
+        if (servicesResult.error) {
+          throw servicesResult.error;
+        }
 
         state.categories = categoriesResult.data || [];
         state.services = servicesResult.data || [];
+
         render();
       } catch (error) {
-        $("#message").hidden = false;
-        $("#message").classList.add("error");
-        $("#message").textContent =
-          `دریافت اطلاعات ناموفق بود: ${error.message}`;
+        message.hidden = false;
+        message.classList.add("error");
+        message.textContent =
+          `دریافت اطلاعات ناموفق بود: ${error.message || "خطای نامشخص"}`;
       }
     }
 
     $("#search").addEventListener("input", render);
-    $("#close-dialog").addEventListener(
-      "click", () => $("#service-dialog").close()
-    );
+
+    $("#close-dialog").addEventListener("click", () => {
+      $("#service-dialog").close();
+    });
+
     loadData();
   </script>
 </body>
