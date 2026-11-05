@@ -13,27 +13,111 @@
       background: #f5f7fb;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: #f5f7fb; }
-    .wrap { width: min(100% - 32px, 1080px); margin-inline: auto; padding: 16px 0; }
-    header { background: #1463d8; color: #fff; padding: 16px; text-align: center; }
+    body { margin: 0; background: #f5f7fb; padding-bottom: 70px; }
+    .wrap { width: min(100% - 24px, 768px); margin-inline: auto; padding: 12px 0; }
+    header { background: #1463d8; color: #fff; padding: 16px; text-align: center; border-radius: 0 0 16px 16px; }
     h1 { margin: 0; font-size: 1.25rem; }
     .card { background: #fff; border-radius: 12px; padding: 16px; margin-top: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .btn { background: #1463d8; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
+    h3 { margin-top: 0; font-size: 1.1rem; color: #1463d8; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .service-btn { background: #f0f4ff; border: 1px solid #d0e1fd; padding: 14px; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; color: #1463d8; font-size: 0.95rem; }
+    .service-btn:active { background: #d0e1fd; }
+    input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; margin-bottom: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+    .btn { background: #1463d8; color: #fff; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; }
+    .btn:active { background: #0f4eb4; }
+    .order-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-right: 4px solid #1463d8; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>خدمت پلاس</h1>
+    <h1>خدمت پلاس | خدمات در خانه</h1>
   </header>
 
   <div class="wrap">
+    <!-- دسته‌بندی خدمات -->
     <div class="card">
-      <h3>خوش آمدید</h3>
-      <p>سامانه خدمات در خانه خدمت پلاس آماده خدمت‌رسانی است.</p>
-      <button class="btn" onclick="alert('برنامه با موفقیت بارگذاری شد!')">ثبت سفارش</button>
+      <h3>انتخاب خدمت مورد نظر</h3>
+      <div class="grid">
+        <div class="service-btn" onclick="selectService('نظافت منزل')">🧹 نظافت منزل</div>
+        <div class="service-btn" onclick="selectService('لولة‌کشی و تأسیسات')">🔧 لوله‌کشی</div>
+        <div class="service-btn" onclick="selectService('برق‌کاری')">⚡ برق‌کاری</div>
+        <div class="service-btn" onclick="selectService('تعمیر لوازم خانگی')">❄️ تعمیر لوازم</div>
+      </div>
+    </div>
+
+    <!-- فرم ثبت سفارش -->
+    <div class="card">
+      <h3>ثبت سفارش سریع</h3>
+      <form id="orderForm" onsubmit="submitOrder(event)">
+        <label>خدمت انتخابی:</label>
+        <input type="text" id="selectedService" placeholder="از بالا انتخاب کنید یا بنویسید" required>
+
+        <label>شماره تماس:</label>
+        <input type="tel" id="phone" placeholder="مثلاً 09123456789" required>
+
+        <label>آدرس یا توضیحات:</label>
+        <textarea id="address" rows="3" placeholder="آدرس پستی یا جزئیات کار..." required></textarea>
+
+        <button type="submit" class="btn">ثبت نهایی سفارش</button>
+      </form>
+    </div>
+
+    <!-- لیست سفارش‌های ثبت شده در این مرورگر -->
+    <div class="card">
+      <h3>سفارش‌های من</h3>
+      <div id="ordersList">
+        <p style="color: #64748b; font-size: 0.9rem;">هنوز سفارشی ثبت نکرده‌اید.</p>
+      </div>
     </div>
   </div>
+
+  <script>
+    let chosenService = '';
+
+    function selectService(name) {
+      chosenService = name;
+      document.getElementById('selectedService').value = name;
+      window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
+
+    function submitOrder(e) {
+      e.preventDefault();
+      const service = document.getElementById('selectedService').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+
+      const newOrder = { service, phone, address, date: new Date().toLocaleDateString('fa-IR') };
+      
+      let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+      orders.unshift(newOrder);
+      localStorage.setItem('khedmat_orders', JSON.stringify(orders));
+
+      alert('سفارش شما با موفقیت ثبت شد!');
+      document.getElementById('orderForm').reset();
+      loadOrders();
+    }
+
+    function loadOrders() {
+      let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+      const container = document.getElementById('ordersList');
+      
+      if (orders.length === 0) {
+        container.innerHTML = '<p style="color: #64748b; font-size: 0.9rem;">هنوز سفارشی ثبت نکرده‌اید.</p>';
+        return;
+      }
+
+      container.innerHTML = orders.map(o => `
+        <div class="order-item">
+          <strong>${o.service}</strong><br>
+          <span style="color: #475569;">تلفن: ${o.phone}</span><br>
+          <span style="color: #64748b; font-size: 0.8rem;">آدرس: ${o.address} (${o.date})</span>
+        </div>
+      `).join('');
+    }
+
+    loadOrders();
+  </script>
 
 </body>
 </html>
