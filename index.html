@@ -3,137 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1463d8">
-  <title>خدمت پلاس | سامانه هوشمند خدمات در خانه</title>
+  <meta name="theme-color" content="#1d4ed8">
+  <title>خدمت پلاس | سامانه جامع و هوشمند خدمات</title>
 
   <style>
     :root {
       font-family: Tahoma, Arial, sans-serif;
-      color: #1e293b;
-      background: #f1f5f9;
+      color: #0f172a;
+      background: #f8fafc;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: #f1f5f9; padding-bottom: 80px; }
-    .wrap { width: min(100% - 20px, 768px); margin-inline: auto; padding: 10px 0; }
-    header { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: #fff; padding: 20px 16px; text-align: center; border-radius: 0 0 20px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-    h1 { margin: 0; font-size: 1.35rem; font-weight: 800; }
+    body { margin: 0; background: #f8fafc; padding-bottom: 90px; }
+    
+    header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 22px 16px; text-align: center; border-radius: 0 0 24px 24px; box-shadow: 0 10px 15px -3px rgba(37,99,235,0.2); }
+    h1 { margin: 0; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
     p.subtitle { margin: 6px 0 0 0; font-size: 0.85rem; opacity: 0.9; }
-    .card { background: #fff; border-radius: 14px; padding: 16px; margin-top: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    h3 { margin-top: 0; font-size: 1.05rem; color: #1d4ed8; display: flex; align-items: center; gap: 8px; }
-    
-    .cats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-    .cat-card { background: #f8fafc; border: 2px solid #e2e8f0; padding: 14px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
-    .cat-card:active, .cat-card.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
-    .cat-icon { font-size: 1.6rem; margin-bottom: 6px; }
-    .cat-title { font-weight: bold; font-size: 0.9rem; }
 
-    label { font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-top: 12px; }
-    input, select, textarea { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; background: #f8fafc; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; background: #fff; }
+    .wrap { width: min(100% - 20px, 768px); margin-inline: auto; padding: 10px 0; }
     
-    .btn { background: #2563eb; color: #fff; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 16px; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
-    .btn:active { background: #1d4ed8; }
+    .card { background: #fff; border-radius: 16px; padding: 18px; margin-top: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04), 0 2px 4px -2px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
+    h3 { margin-top: 0; font-size: 1.1rem; color: #1e3a8a; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 
-    .order-item { background: #f8fafc; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 5px solid #2563eb; font-size: 0.85rem; }
+    /* دسته‌بندی‌ها */
+    .cats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .cat-card { background: #f8fafc; border: 2px solid #e2e8f0; padding: 16px 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+    .cat-card:active, .cat-card.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; transform: scale(0.98); }
+    .cat-icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .cat-title { font-weight: bold; font-size: 0.95rem; }
+
+    /* زیرخدمات */
+    .subcats { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-top: 10px; }
+    .subcats::-webkit-scrollbar { display: none; }
+    .sub-chip { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; cursor: pointer; color: #334155; }
+    .sub-chip.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+    label { font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-top: 14px; }
+    input, select, textarea { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 12px; font: inherit; background: #f8fafc; color: #0f172a; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+
+    .price-box { background: #eff6ff; border: 1px dashed #2563eb; padding: 12px; border-radius: 10px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: #1e3a8a; }
+
+    .btn { background: #2563eb; color: #fff; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1.05rem; margin-top: 18px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); transition: 0.2s; }
+    .btn:active { background: #1d4ed8; transform: scale(0.99); }
+
+    .order-item { background: #f8fafc; padding: 14px; border-radius: 12px; margin-bottom: 10px; border-right: 5px solid #2563eb; font-size: 0.85rem; border: 1px solid #e2e8f0; }
+    .badge { background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; float: left; }
   </style>
 </head>
 <body>
 
   <header>
     <h1>خدمت پلاس</h1>
-    <p class="subtitle">متخصص مطمئن برای کارهای خانه</p>
+    <p class="subtitle">نسل جدید سامانه هوشمند خدمات تخصصی منزل</p>
   </header>
 
   <div class="wrap">
     <!-- انتخاب دسته خدمت -->
     <div class="card">
-      <h3>🛠️ انتخاب نوع خدمت</h3>
+      <h3>🛠️ ۱. انتخاب حوزه خدمت</h3>
       <div class="cats-grid">
-        <div class="cat-card" onclick="selectCategory(this, 'نظافت و پذیرایی')">
+        <div class="cat-card" onclick="selectCategory('نظافت و پذیرایی', ['نظافت منزل و راهپله', 'مبل‌شویی در منزل', 'پذیرایی مجالس'])">
           <div class="cat-icon">🧹</div>
           <div class="cat-title">نظافت منزل</div>
         </div>
-        <div class="cat-card" onclick="selectCategory(this, 'لوله‌کشی و تأسیسات')">
+        <div class="cat-card" onclick="selectCategory('تأسیسات و لوله‌کشی', ['لوله‌کشی آب و فاضلاب', 'تعمیر پکیج و آبگرمکن', 'تشخیص ترکیدگی'])">
           <div class="cat-icon">🔧</div>
-          <div class="cat-title">لوله‌کشی</div>
+          <div class="cat-title">تأسیسات</div>
         </div>
-        <div class="cat-card" onclick="selectCategory(this, 'برق‌کاری و روشنایی')">
+        <div class="cat-card" onclick="selectCategory('برق‌کاری و هوشمندسازی', ['سیم‌کشی و رفع اتصالی', 'نصب لوستر و چراغ', 'دوربین و آیفون'])">
           <div class="cat-icon">⚡</div>
           <div class="cat-title">برق‌کاری</div>
         </div>
-        <div class="cat-card" onclick="selectCategory(this, 'تعمیر لوازم خانگی')">
+        <div class="cat-card" onclick="selectCategory('تعمیرات لوازم خانگی', ['تعمیر یخچال فریزر', 'تعمیر ماشین لباسشویی', 'تعمیر کولر گازی'])">
           <div class="cat-icon">❄️</div>
-          <div class="cat-title">تعمیر لوازم</div>
+          <div class="cat-title">لوازم خانگی</div>
         </div>
+      </div>
+
+      <!-- زیرخدمات پویا -->
+      <div id="subCategoryContainer" style="display:none; margin-top: 14px;">
+        <label>نوع دقیق خدمت:</label>
+        <div class="subcats" id="subCatsList"></div>
       </div>
     </div>
 
-    <!-- فرم جزئیات و ثبت سفارش -->
+    <!-- فرم تکمیل سفارش و تخمین قیمت -->
     <div class="card">
-      <h3>📋 تکمیل جزئیات سفارش</h3>
+      <h3>📋 ۲. جزئیات و اعزام متخصص</h3>
       <form id="orderForm" onsubmit="submitOrder(event)">
         
-        <label>خدمت انتخابی:</label>
-        <input type="text" id="serviceName" placeholder="از بالا انتخاب کنید" required readonly style="background: #e2e8f0; color: #334155;">
+        <label>خدمت انتخاب شده:</label>
+        <input type="text" id="finalService" placeholder="لطفاً از بالا انتخاب کنید" required readonly style="background: #f1f5f9; font-weight: bold; color: #1e3a8a;">
 
-        <label>تاریخ حضور:</label>
-        <input type="date" id="orderDate" required>
-
-        <label>ساعت حضور:</label>
-        <select id="orderTime" required>
-          <option value="">انتخاب بازه زمانی...</option>
-          <option value="صبح (۸ تا ۱۲)">صبح (۸ تا ۱۲)</option>
-          <option value="ظهر (۱۲ تا ۱۶)">ظهر (۱۲ تا ۱۶)</option>
-          <option value="عصر (۱۶ تا ۲۰)">عصر (۱۶ تا ۲۰)</option>
-        </select>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label>تاریخ حضور:</label>
+            <input type="date" id="orderDate" required>
+          </div>
+          <div>
+            <label>بازه زمانی:</label>
+            <select id="orderTime" required>
+              <option value="صبح (۸ تا ۱۲)">صبح (۸ تا ۱۲)</option>
+              <option value="ظهر (۱۲ تا ۱۶)">ظهر (۱۲ تا ۱۶)</option>
+              <option value="عصر (۱۶ تا ۲۰)">عصر (۱۶ تا ۲۰)</option>
+            </select>
+          </div>
+        </div>
 
         <label>شماره تماس همراه:</label>
         <input type="tel" id="phone" placeholder="09123456789" required>
 
-        <label>آدرس پستی یا توضیحات:</label>
-        <textarea id="address" rows="3" placeholder="محله، خیابان، پلاک، واحد..." required></textarea>
+        <label>آدرس دقیق پستی:</label>
+        <textarea id="address" rows="2" placeholder="محله، خیابان، پلاک، واحد..." required></textarea>
 
-        <button type="submit" class="btn">ثبت نهایی و اعزام متخصص</button>
+        <!-- تخمین قیمت هوشمند -->
+        <div class="price-box">
+          <span>💰 تخمین هزینه اولیه:</span>
+          <span id="estimatedPrice">بر اساس انتخاب شما</span>
+        </div>
+
+        <button type="submit" class="btn">ثبت سفارش و جستجوی متخصص نزدیک</button>
       </form>
     </div>
 
     <!-- پیگیری سفارش‌ها -->
     <div class="card">
-      <h3>📦 سفارش‌های ثبت‌شده من</h3>
+      <h3>📦 پیگیری سفارش‌های من</h3>
       <div id="ordersList">
-        <p style="color: #64748b; font-size: 0.85rem;">هنوز سفارشی ثبت نکرده‌اید.</p>
+        <p style="color: #64748b; font-size: 0.85rem; text-align: center;">هنوز سفارشی ثبت نکرده‌اید.</p>
       </div>
     </div>
   </div>
 
   <script>
-    function selectCategory(el, name) {
+    let selectedMain = '';
+    let selectedSub = '';
+
+    function selectCategory(mainName, subArray) {
+      selectedMain = mainName;
+      selectedSub = subArray[0];
+      
+      // آپدیت ظاهر کارت‌ها
       document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      // نمایش زیرخدمات
+      const container = document.getElementById('subCategoryContainer');
+      const listContainer = document.getElementById('subCatsList');
+      container.style.display = 'block';
+
+      listContainer.innerHTML = subArray.map((sub, idx) => `
+        <div class="sub-chip ${idx === 0 ? 'active' : ''}" onclick="selectSubCat(this, '${sub}')">${sub}</div>
+      `).join('');
+
+      updateServiceInput();
+    }
+
+    function selectSubCat(el, subName) {
+      selectedSub = subName;
+      document.querySelectorAll('.sub-chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
-      document.getElementById('serviceName').value = name;
+      updateServiceInput();
+    }
+
+    function updateServiceInput() {
+      const fullText = `${selectedMain} ➔ ${selectedSub}`;
+      document.getElementById('finalService').value = fullText;
+      
+      // تخمین قیمت پویا و هوشمند
+      const prices = {
+        'نظافت منزل و راهپله': '۴۵۰,۰۰۰ تومان',
+        'مبل‌شویی در منزل': '۶۰۰,۰۰۰ تومان',
+        'پذیرایی مجالس': '۷۰۰,۰۰۰ تومان',
+        'لوله‌کشی آب و فاضلاب': 'نرخ بر اساس بازدید',
+        'تعمیر پکیج و آبگرمکن': '۳۵۰,۰۰۰ تومان (اجرت)',
+        'تشخیص ترکیدگی': '۵۰۰,۰۰۰ تومان',
+        'سیم‌کشی و رفع اتصالی': '۳۰۰,۰۰۰ تومان',
+        'نصب لوستر و چراغ': '۲۵۰,۰۰۰ تومان',
+        'دوربین و آیفون': '۴۰۰,۰۰۰ تومان',
+        'تعمیر یخچال فریزر': 'نرخ پس از عیب‌یابی',
+        'تعمیر ماشین لباسشویی': '۴۰۰,۰۰۰ تومان (اجرت)',
+        'تعمیر کولر گازی': '۴۵۰,۰۰۰ تومان'
+      };
+
+      document.getElementById('estimatedPrice').innerText = prices[selectedSub] || 'توافقی';
     }
 
     function submitOrder(e) {
       e.preventDefault();
-      const service = document.getElementById('serviceName').value;
+      const service = document.getElementById('finalService').value;
       const date = document.getElementById('orderDate').value;
       const time = document.getElementById('orderTime').value;
       const phone = document.getElementById('phone').value;
       const address = document.getElementById('address').value;
+      const price = document.getElementById('estimatedPrice').innerText;
 
       if (!service) {
-        alert('لطفاً یک خدمت را از بالا انتخاب کنید.');
+        alert('لطفاً یک خدمت را انتخاب کنید.');
         return;
       }
 
-      const newOrder = { service, date, time, phone, address, created: new Date().toLocaleString('fa-IR') };
+      const newOrder = { service, date, time, phone, address, price, status: 'در انتظار تأیید متخصص', created: new Date().toLocaleString('fa-IR') };
       
       let orders = JSON.parse(localStorage.getItem('khedmat_plus_orders') || '[]');
       orders.unshift(newOrder);
       localStorage.setItem('khedmat_plus_orders', JSON.stringify(orders));
 
-      alert('سفارش شما با موفقیت ثبت شد و به زودی متخصص با شما تماس می‌گیرد.');
+      alert('سفارش شما با موفقیت ثبت شد! هوش مصنوعی در حال اعزام نزدیک‌ترین متخصص است.');
       document.getElementById('orderForm').reset();
+      document.getElementById('subCategoryContainer').style.display = 'none';
       document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
       loadOrders();
     }
@@ -143,16 +221,20 @@
       const container = document.getElementById('ordersList');
       
       if (orders.length === 0) {
-        container.innerHTML = '<p style="color: #64748b; font-size: 0.85rem;">هنوز سفارشی ثبت نکرده‌اید.</p>';
+        container.innerHTML = '<p style="color: #64748b; font-size: 0.85rem; text-align: center;">هنوز سفارشی ثبت نکرده‌اید.</p>';
         return;
       }
 
       container.innerHTML = orders.map(o => `
         <div class="order-item">
-          <strong style="color: #1d4ed8; font-size: 0.95rem;">${o.service}</strong><br>
-          <span style="color: #475569;">📅 تاریخ: ${o.date} (${o.time})</span><br>
-          <span style="color: #475569;">📍 آدرس: ${o.address}</span><br>
-          <span style="color: #64748b; font-size: 0.75rem;">تلفن: ${o.phone}</span>
+          <span class="badge">${o.status}</span>
+          <strong style="color: #1e3a8a; font-size: 0.95rem; display:block; margin-bottom: 4px;">${o.service}</strong>
+          <span style="color: #475569; display:block;">📅 ${o.date} (${o.time})</span>
+          <span style="color: #475569; display:block;">📍 ${o.address}</span>
+          <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #e2e8f0; display:flex; justify-content:space-between; font-size:0.8rem; color:#1e40af;">
+            <span>هزینه: ${o.price}</span>
+            <span>تلفن: ${o.phone}</span>
+          </div>
         </div>
       `).join('');
     }
