@@ -55,9 +55,7 @@
             <!-- Categories Section -->
             <div>
                 <h3 class="font-bold text-gray-800 mb-3 text-base">دسته‌بندی خدمات</h3>
-                <div id="categories-grid" class="grid grid-cols-3 gap-3">
-                    <!-- Dynamic Rendered Categories -->
-                </div>
+                <div id="categories-grid" class="grid grid-cols-3 gap-3"></div>
             </div>
 
             <!-- Booking Section -->
@@ -67,9 +65,7 @@
                     <button onclick="closeBooking()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
 
-                <div id="subservices-list" class="space-y-2">
-                    <!-- Dynamic Subservices -->
-                </div>
+                <div id="subservices-list" class="space-y-2"></div>
 
                 <!-- Service Details Form -->
                 <div id="order-form-details" class="hidden space-y-4 pt-3 border-t">
@@ -87,11 +83,11 @@
                     <!-- Dynamic Extra Options -->
                     <div id="extra-options-container" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200"></div>
 
-                    <!-- Date & Time (Persian) -->
+                    <!-- Date & Time (Persian interactive picker) -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" placeholder="مثال: 1405/08/15" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-center" dir="ltr">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار (انتخاب کنید)</label>
+                            <input type="date" id="order-date" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-center cursor-pointer">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">ساعت حضور</label>
@@ -115,8 +111,8 @@
 
                     <div class="flex items-center justify-between pt-2">
                         <div>
-                            <span class="text-xs text-gray-500 block">تخمین هزینه پایه:</span>
-                            <span id="estimated-price" class="font-extrabold text-indigo-600 text-base">توافقی / پس از بررسی</span>
+                            <span class="text-xs text-gray-500 block">مبلغ نهایی قابل پرداخت:</span>
+                            <span id="estimated-price" class="font-extrabold text-indigo-600 text-lg">۰ تومان</span>
                         </div>
                         <button onclick="submitOrder()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-indigo-700 transition">
                             ثبت نهایی سفارش <i class="fa-solid fa-check ml-1"></i>
@@ -133,9 +129,7 @@
                 <h3 class="font-bold text-gray-800 text-lg">سفارش‌های ثبت‌شده شما</h3>
                 <button onclick="switchTab('services')" class="text-indigo-600 text-sm font-medium"><i class="fa-solid fa-plus ml-1"></i>ثبت سفارش جدید</button>
             </div>
-            <div id="orders-list-container" class="space-y-3">
-                <!-- Dynamic Orders -->
-            </div>
+            <div id="orders-list-container" class="space-y-3"></div>
         </div>
 
     </main>
@@ -167,9 +161,9 @@
                 icon: 'fa-broom',
                 color: 'bg-amber-50 text-amber-600',
                 subservices: [
-                    { name: 'نظافت راه پله و مشاعات', type: 'کنتراتی / پروژه‌ای', price: 'بر اساس تعداد طبقات', hasStairDetails: true },
-                    { name: 'نظافت منزل و آپارتمان', type: 'ساعتی', price: 'از ۱۵۰ هزار تومان / ساعت', hasHomeDetails: true },
-                    { name: 'مبل‌شویی و قالیشویی در منزل', type: 'پروژه‌ای', price: 'نرخ مصوب اتحادیه' }
+                    { name: 'نظافت راه پله و مشاعات', type: 'کنتراتی / پروژه‌ای', basePrice: 250000, hasStairDetails: true },
+                    { name: 'نظافت منزل و آپارتمان', type: 'ساعتی', basePrice: 150000, hasHomeDetails: true },
+                    { name: 'مبل‌شویی و قالیشویی در منزل', type: 'پروژه‌ای', basePrice: 400000 }
                 ]
             },
             {
@@ -178,9 +172,9 @@
                 icon: 'fa-faucet-dripping',
                 color: 'bg-blue-50 text-blue-600',
                 subservices: [
-                    { name: 'لوله‌کشی آب و فاضلاب', type: 'ساعتی / کنتراتی', price: 'بررسی در محل' },
-                    { name: 'رفع گرفتگی لوله و چاه‌بازکنی', type: 'کنتراتی', price: 'نرخ ثابت شرکتی' },
-                    { name: 'نصب و تعمیر شیرآلات', type: 'ساعتی', price: 'از ۲۰۰ هزار تومان' }
+                    { name: 'لوله‌کشی آب و فاضلاب', type: 'ساعتی / کنتراتی', basePrice: 300000 },
+                    { name: 'رفع گرفتگی لوله و چاه‌بازکنی', type: 'کنتراتی', basePrice: 250000 },
+                    { name: 'نصب و تعمیر شیرآلات', type: 'کنتراتی', basePrice: 200000 }
                 ]
             },
             {
@@ -189,8 +183,8 @@
                 icon: 'fa-temperature-arrow-up',
                 color: 'bg-cyan-50 text-cyan-600',
                 subservices: [
-                    { name: 'سرویس و تعمیر پکیج و آبگرمکن', type: 'کنتراتی', price: 'ثابت + قطعات' },
-                    { name: 'نصب و تعمیر کولر گازی و آبی', type: 'ساعتی / کنتراتی', price: 'بررسی تخصصی' }
+                    { name: 'سرویس و تعمیر پکیج و آبگرمکن', type: 'کنتراتی', basePrice: 350000 },
+                    { name: 'نصب و تعمیر کولر گازی و آبی', type: 'کنتراتی', basePrice: 400000 }
                 ]
             },
             {
@@ -199,8 +193,8 @@
                 icon: 'fa-tv',
                 color: 'bg-purple-50 text-purple-600',
                 subservices: [
-                    { name: 'تعمیر ماشین لباسشویی و ظرفشویی', type: 'کنتراتی', price: 'اعلام هزینه پس از عیب‌یابی' },
-                    { name: 'تعمیر یخچال و فریزر در محل', type: 'کنتراتی', price: 'دارای گارانتی خدمات' }
+                    { name: 'تعمیر ماشین لباسشویی و ظرفشویی', type: 'کنتراتی', basePrice: 350000 },
+                    { name: 'تعمیر یخچال و فریزر در محل', type: 'کنتراتی', basePrice: 450000 }
                 ]
             },
             {
@@ -209,8 +203,8 @@
                 icon: 'fa-bolt',
                 color: 'bg-yellow-50 text-yellow-600',
                 subservices: [
-                    { name: 'سیم‌کشی و رفع اتصالی برق', type: 'ساعتی', price: 'از ۲۵۰ هزار تومان' },
-                    { name: 'نصب لوستر، هالوژن و آویز', type: 'کنتراتی (تعداد)', price: 'بسته به مدل لوستر' }
+                    { name: 'سیم‌کشی و رفع اتصالی برق', type: 'ساعتی', basePrice: 250000 },
+                    { name: 'نصب لوستر، هالوژن و آویز', type: 'کنتراتی (تعداد)', basePrice: 200000 }
                 ]
             },
             {
@@ -219,8 +213,8 @@
                 icon: 'fa-paint-roller',
                 color: 'bg-rose-50 text-rose-600',
                 subservices: [
-                    { name: 'نقاشی ساختمان و کاغذ دیواری', type: 'کنتراتی / متراژی', price: 'متر مربعی / توافقی' },
-                    { name: 'گچ‌کاری، کاشی‌کاری و بنایی', type: 'کنتراتی', price: 'بررسی کارشناس' }
+                    { name: 'نقاشی ساختمان و کاغذ دیواری', type: 'متراژی', basePrice: 500000 },
+                    { name: 'گچ‌کاری، کاشی‌کاری و بنایی', type: 'کنتراتی', basePrice: 600000 }
                 ]
             }
         ];
@@ -229,7 +223,9 @@
 
         window.onload = function() {
             renderCategories();
-            document.getElementById('order-date').value = "1405/08/15";
+            // تنظیم تاریخ امروز به صورت پیش‌فرض
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('order-date').value = today;
         };
 
         function renderCategories() {
@@ -258,7 +254,7 @@
                         <span class="text-xs text-indigo-600 font-medium">محاسبه: ${sub.type}</span>
                     </div>
                     <div class="text-left">
-                        <span class="text-xs text-gray-500 block">${sub.price}</span>
+                        <span class="text-xs text-indigo-600 font-bold block">پایه: ${sub.basePrice.toLocaleString()} ت</span>
                         <i class="fa-solid fa-chevron-left text-xs text-gray-400 mt-1"></i>
                     </div>
                 </div>
@@ -273,7 +269,6 @@
             currentSelectedService = sub;
             document.getElementById('summary-service-name').innerText = sub.name;
             document.getElementById('summary-calc-type').innerText = sub.type;
-            document.getElementById('estimated-price').innerText = sub.price;
 
             const extraContainer = document.getElementById('extra-options-container');
             if (sub.hasStairDetails) {
@@ -281,22 +276,22 @@
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div>
                             <label class="block font-medium text-gray-600 mb-1">تعداد طبقات راه پله</label>
-                            <input type="number" id="extra-floors" value="4" min="1" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
+                            <input type="number" id="extra-floors" value="4" min="1" oninput="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
                         </div>
                         <div>
                             <label class="block font-medium text-gray-600 mb-1">تعداد واحد ساختمان</label>
-                            <input type="number" id="extra-units" value="8" min="1" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
+                            <input type="number" id="extra-units" value="8" min="1" oninput="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
                         </div>
                         <div>
                             <label class="block font-medium text-gray-600 mb-1">آسانسور دارد؟</label>
-                            <select id="extra-elevator" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                            <select id="extra-elevator" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
                                 <option value="دارد">بله، دارد</option>
                                 <option value="ندارد">خیر، ندارد</option>
                             </select>
                         </div>
                         <div>
                             <label class="block font-medium text-gray-600 mb-1">پارکینگ دارد؟</label>
-                            <select id="extra-parking" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                            <select id="extra-parking" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
                                 <option value="دارد">بله، دارد</option>
                                 <option value="ندارد">خیر، ندارد</option>
                             </select>
@@ -308,18 +303,18 @@
                 extraContainer.innerHTML = `
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                            <label class="block font-medium text-gray-600 mb-1">مدت زمان نظافت (ساعت)</label>
-                            <select id="extra-hours" class="w-full bg-white border border-gray-300 rounded-lg p-2">
-                                <option value="4 ساعت">۴ ساعت</option>
-                                <option value="6 ساعت">۶ ساعت</option>
-                                <option value="8 ساعت">۸ ساعت (یک روز کامل)</option>
+                            <label class="block font-medium text-gray-600 mb-1">مدت زمان نظافت</label>
+                            <select id="extra-hours" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                                <option value="4">۴ ساعت</option>
+                                <option value="6">۶ ساعت</option>
+                                <option value="8">۸ ساعت (یک روز کامل)</option>
                             </select>
                         </div>
                         <div>
                             <label class="block font-medium text-gray-600 mb-1">نیاز به مواد شوینده؟</label>
-                            <select id="extra-detergent" class="w-full bg-white border border-gray-300 rounded-lg p-2">
-                                <option value="توسط مشتری">توسط خودم تهیه می‌شود</option>
-                                <option value="توسط متخصص">توسط متخصص آورده شود</option>
+                            <select id="extra-detergent" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                                <option value="0">توسط خودم تهیه می‌شود</option>
+                                <option value="150000">توسط متخصص آورده شود (+۱۵۰ ت)</option>
                             </select>
                         </div>
                     </div>
@@ -329,8 +324,26 @@
                 extraContainer.innerHTML = '';
             }
 
+            calculatePrice();
             document.getElementById('order-form-details').classList.remove('hidden');
             document.getElementById('order-form-details').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function calculatePrice() {
+            if (!currentSelectedService) return;
+            let total = currentSelectedService.basePrice;
+
+            if (currentSelectedService.hasStairDetails) {
+                const floors = parseInt(document.getElementById('extra-floors').value) || 1;
+                const units = parseInt(document.getElementById('extra-units').value) || 1;
+                total = (floors * 50000) + (units * 15000) + 100000;
+            } else if (currentSelectedService.hasHomeDetails) {
+                const hours = parseInt(document.getElementById('extra-hours').value) || 4;
+                const detergent = parseInt(document.getElementById('extra-detergent').value) || 0;
+                total = (hours * currentSelectedService.basePrice) + detergent;
+            }
+
+            document.getElementById('estimated-price').innerText = total.toLocaleString() + ' تومان';
         }
 
         function closeBooking() {
@@ -358,9 +371,10 @@
             const time = document.getElementById('order-time').value;
             const phone = document.getElementById('order-phone').value;
             const address = document.getElementById('order-address').value;
+            const finalPriceText = document.getElementById('estimated-price').innerText;
 
             if (!date || !phone || !address) {
-                alert('لطفاً تاریخ شمسی، شماره تماس و آدرس را به طور کامل وارد کنید.');
+                alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');
                 return;
             }
 
@@ -373,8 +387,8 @@
                 extraInfoText = `طبقات: ${floors} | واحدها: ${units} | آسانسور: ${elevator} | پارکینگ: ${parking}`;
             } else if (document.getElementById('extra-hours')) {
                 const hours = document.getElementById('extra-hours').value;
-                const detergent = document.getElementById('extra-detergent').value;
-                extraInfoText = `مدت: ${hours} | شوینده: ${detergent}`;
+                const detergent = document.getElementById('extra-detergent').value > 0 ? 'توسط متخصص' : 'توسط مشتری';
+                extraInfoText = `مدت: ${hours} ساعت | شوینده: ${detergent}`;
             }
 
             const orderData = {
@@ -386,6 +400,7 @@
                 preferred_time: time,
                 phone: phone,
                 address: address,
+                total_price: finalPriceText,
                 status: 'در انتظار تایید و تخصیص متخصص',
                 created_at: new Date().toISOString()
             };
@@ -434,6 +449,7 @@
                     <div class="text-xs text-gray-600 space-y-1 bg-gray-50 p-3 rounded-xl">
                         <div><i class="fa-regular fa-calendar ml-1 text-gray-400"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
                         ${ord.extra_details ? `<div><i class="fa-solid fa-circle-info ml-1 text-gray-400"></i> جزئیات: ${ord.extra_details}</div>` : ''}
+                        <div><i class="fa-solid fa-money-bill-wave ml-1 text-emerald-500"></i> مبلغ: <span class="font-bold text-emerald-600">${ord.total_price}</span></div>
                         <div><i class="fa-solid fa-location-dot ml-1 text-gray-400"></i> آدرس: ${ord.address}</div>
                         <div><i class="fa-solid fa-phone ml-1 text-gray-400"></i> تماس: ${ord.phone}</div>
                     </div>
