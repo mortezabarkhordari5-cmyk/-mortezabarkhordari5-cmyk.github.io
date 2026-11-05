@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدمت پلاس - پلتفرم جامع خدمات هوشمند در منزل</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Tailwind CSS v3 (Stable) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS SDK -->
@@ -47,7 +47,7 @@
                     <h2 class="text-xl font-bold mb-1">چه خدماتی نیاز دارید؟</h2>
                     <p class="text-indigo-100 text-sm">سریع‌ترین راه دسترسی به بهترین متخصصان و استادکاران</p>
                 </div>
-                <div class="absolute -left-6 -bottom-6 text-white/10 text-8xl">
+                <div class="absolute -left-6 -bottom-6 text-white/10 text-8xl opacity-20">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
             </div>
@@ -62,7 +62,7 @@
             <div id="booking-section" class="hidden bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
                     <h3 id="selected-cat-title" class="font-bold text-indigo-600 text-base">انتخاب زیرخدمت</h3>
-                    <button onclick="closeBooking()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <button onclick="closeBooking()" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
                 <div id="subservices-list" class="space-y-2"></div>
@@ -84,23 +84,10 @@
                     <div id="extra-options-container" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200"></div>
 
                     <!-- Persian Date & Time Picker -->
-                    <div class="grid grid-cols-2 gap-3 relative">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" readonly onclick="togglePersianCalendar()" placeholder="انتخاب تاریخ..." class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-center cursor-pointer font-bold text-indigo-700">
-                            
-                            <!-- Custom Persian Calendar Modal/Popup -->
-                            <div id="persian-calendar-popup" class="hidden absolute top-full mt-1 right-0 left-0 bg-white border border-gray-200 rounded-2xl shadow-xl p-4 z-50">
-                                <div class="flex justify-between items-center mb-3">
-                                    <button type="button" onclick="changeMonth(-1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-xs"><i class="fa-solid fa-chevron-right"></i></button>
-                                    <span id="cal-month-year" class="font-bold text-sm text-gray-800">فروردین ۱۴۰۵</span>
-                                    <button type="button" onclick="changeMonth(1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-xs"><i class="fa-solid fa-chevron-left"></i></button>
-                                </div>
-                                <div class="grid grid-cols-7 text-center text-xs font-bold text-gray-400 mb-2">
-                                    <span>ش</span><span>ی</span><span>د</span><span>س</span><span>چ</span><span>پ</span><span>ج</span>
-                                </div>
-                                <div id="cal-days-grid" class="grid grid-cols-7 gap-1 text-center text-xs"></div>
-                            </div>
+                            <input type="text" id="order-date" value="1405/08/15" placeholder="1405/08/15" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-center font-bold text-indigo-700" dir="ltr">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">ساعت حضور</label>
@@ -234,68 +221,9 @@
 
         let currentSelectedService = null;
 
-        // Persian Calendar Variables (Current: Aban 1405)
-        let currentPersianYear = 1405;
-        let currentPersianMonth = 8; // Aban
-        const persianMonths = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
-
         window.onload = function() {
             renderCategories();
-            document.getElementById('order-date').value = "1405/08/15";
         };
-
-        function togglePersianCalendar() {
-            const popup = document.getElementById('persian-calendar-popup');
-            popup.classList.toggle('hidden');
-            renderPersianCalendarGrid();
-        }
-
-        function changeMonth(direction) {
-            currentPersianMonth += direction;
-            if (currentPersianMonth > 12) {
-                currentPersianMonth = 1;
-                currentPersianYear++;
-            } else if (currentPersianMonth < 1) {
-                currentPersianMonth = 12;
-                currentPersianYear--;
-            }
-            renderPersianCalendarGrid();
-        }
-
-        function renderPersianCalendarGrid() {
-            document.getElementById('cal-month-year').innerText = `${persianMonths[currentPersianMonth - 1]} ${currentPersianYear}`;
-            const grid = document.getElementById('cal-days-grid');
-            grid.innerHTML = '';
-
-            // Days count per month in Jalali
-            let daysCount = 31;
-            if (currentPersianMonth > 6 && currentPersianMonth < 12) daysCount = 30;
-            if (currentPersianMonth === 12) daysCount = 29; // Assuming non-leap for simplicity
-
-            // Starting offset (Aban 1405 starts on Saturday/Sunday approx)
-            let startDayOffset = (currentPersianMonth * 2) % 7; 
-
-            for (let i = 0; i < startDayOffset; i++) {
-                grid.innerHTML += `<div></div>`;
-            }
-
-            for (let day = 1; day <= daysCount; day++) {
-                let mStr = currentPersianMonth < 10 ? '0' + currentPersianMonth : currentPersianMonth;
-                let dStr = day < 10 ? '0' + day : day;
-                let dateStr = `${currentPersianYear}/${mStr}/${dStr}`;
-                
-                grid.innerHTML += `
-                    <button type="button" onclick="selectPersianDate('${dateStr}')" class="h-8 rounded-lg hover:bg-indigo-600 hover:text-white flex items-center justify-center font-medium text-gray-700 transition">
-                        ${day}
-                    </button>
-                `;
-            }
-        }
-
-        function selectPersianDate(dateStr) {
-            document.getElementById('order-date').value = dateStr;
-            document.getElementById('persian-calendar-popup').classList.add('hidden');
-        }
 
         function renderCategories() {
             const grid = document.getElementById('categories-grid');
@@ -417,11 +345,9 @@
 
         function closeBooking() {
             document.getElementById('booking-section').classList.add('hidden');
-            document.getElementById('persian-calendar-popup').classList.add('hidden');
         }
 
         function switchTab(tabName) {
-            document.getElementById('persian-calendar-popup').classList.add('hidden');
             if (tabName === 'services') {
                 document.getElementById('tab-services').classList.remove('hidden');
                 document.getElementById('tab-orders').classList.add('hidden');
@@ -526,4 +452,12 @@
                     </div>
                     <div class="flex justify-end pt-1 border-t">
                         <button onclick="cancelOrder('${ord.id}')" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-100 transition">
-                            <i class="fa-so
+                            <i class="fa-solid fa-trash-can ml-1"></i> لغو سفارش
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
