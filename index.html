@@ -24,11 +24,11 @@
     .card { background: #fff; border-radius: 16px; padding: 18px; margin-top: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04), 0 2px 4px -2px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
     h3 { margin-top: 0; font-size: 1.1rem; color: #1e3a8a; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 
-    /* دسته‌بندی‌ها */
+    /* دسته‌بندی‌ها با آیکون‌های مجزا */
     .cats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .cat-card { background: #f8fafc; border: 2px solid #e2e8f0; padding: 16px 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
     .cat-card:active, .cat-card.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; transform: scale(0.98); }
-    .cat-icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .cat-icon { font-size: 2rem; margin-bottom: 8px; }
     .cat-title { font-weight: bold; font-size: 0.95rem; }
 
     /* زیرخدمات */
@@ -40,6 +40,10 @@
     label { font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-top: 14px; }
     input, select, textarea { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 12px; font: inherit; background: #f8fafc; color: #0f172a; }
     input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+
+    .type-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    .type-btn { background: #f1f5f9; border: 2px solid #cbd5e1; padding: 10px; border-radius: 10px; text-align: center; font-size: 0.85rem; font-weight: bold; cursor: pointer; color: #334155; }
+    .type-btn.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
 
     .price-box { background: #eff6ff; border: 1px dashed #2563eb; padding: 12px; border-radius: 10px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: #1e3a8a; }
 
@@ -54,21 +58,21 @@
 
   <header>
     <h1>خدمت پلاس</h1>
-    <p class="subtitle">نسل جدید سامانه هوشمند خدمات تخصصی منزل</p>
+    <p class="subtitle">سامانه جامع و هوشمند خدمات تخصصی منزل</p>
   </header>
 
   <div class="wrap">
-    <!-- انتخاب دسته خدمت -->
+    <!-- انتخاب دسته خدمت با آیکون‌های مجزا -->
     <div class="card">
       <h3>🛠️ ۱. انتخاب حوزه خدمت</h3>
       <div class="cats-grid">
         <div class="cat-card" onclick="selectCategory('نظافت و پذیرایی', ['نظافت منزل و راهپله', 'مبل‌شویی در منزل', 'پذیرایی مجالس'])">
           <div class="cat-icon">🧹</div>
-          <div class="cat-title">نظافت منزل</div>
+          <div class="cat-title">نظافت و راهپله</div>
         </div>
         <div class="cat-card" onclick="selectCategory('تأسیسات و لوله‌کشی', ['لوله‌کشی آب و فاضلاب', 'تعمیر پکیج و آبگرمکن', 'تشخیص ترکیدگی'])">
           <div class="cat-icon">🔧</div>
-          <div class="cat-title">تأسیسات</div>
+          <div class="cat-title">تأسیسات ساختمان</div>
         </div>
         <div class="cat-card" onclick="selectCategory('برق‌کاری و هوشمندسازی', ['سیم‌کشی و رفع اتصالی', 'نصب لوستر و چراغ', 'دوربین و آیفون'])">
           <div class="cat-icon">⚡</div>
@@ -87,15 +91,22 @@
       </div>
     </div>
 
-    <!-- فرم تکمیل سفارش و تخمین قیمت -->
+    <!-- فرم تکمیل سفارش و جزئیات دقیق -->
     <div class="card">
-      <h3>📋 ۲. جزئیات و اعزام متخصص</h3>
+      <h3>📋 ۲. جزئیات، نوع محاسبه و زمان حضور</h3>
       <form id="orderForm" onsubmit="submitOrder(event)">
         
         <label>خدمت انتخاب شده:</label>
-        <input type="text" id="finalService" placeholder="لطفاً از بالا انتخاب کنید" required readonly style="background: #f1f5f9; font-weight: bold; color: #1e3a8a;">
+        <input type="text" id="finalService" placeholder="لطفاً از بخش بالا انتخاب کنید" required readonly style="background: #f1f5f9; font-weight: bold; color: #1e3a8a;">
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <!-- نوع محاسبه: ساعتی یا کنتراتی -->
+        <label>نحوه محاسبه درخواست:</label>
+        <div class="type-group">
+          <div class="type-btn active" id="typeHourly" onclick="setCalculationType('ساعتی')">⏱️ ساعتی</div>
+          <div class="type-btn" id="typeContract" onclick="setCalculationType('کنتراتی / پروژه‌ای')">📜 کنتراتی (پروژه‌ای)</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;">
           <div>
             <label>تاریخ حضور:</label>
             <input type="date" id="orderDate" required>
@@ -122,7 +133,7 @@
           <span id="estimatedPrice">بر اساس انتخاب شما</span>
         </div>
 
-        <button type="submit" class="btn">ثبت سفارش و جستجوی متخصص نزدیک</button>
+        <button type="submit" class="btn">ثبت سفارش و اعزام هوشمند متخصص</button>
       </form>
     </div>
 
@@ -138,16 +149,15 @@
   <script>
     let selectedMain = '';
     let selectedSub = '';
+    let calculationType = 'ساعتی';
 
     function selectCategory(mainName, subArray) {
       selectedMain = mainName;
       selectedSub = subArray[0];
       
-      // آپدیت ظاهر کارت‌ها
       document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
       event.currentTarget.classList.add('active');
 
-      // نمایش زیرخدمات
       const container = document.getElementById('subCategoryContainer');
       const listContainer = document.getElementById('subCatsList');
       container.style.display = 'block';
@@ -166,13 +176,19 @@
       updateServiceInput();
     }
 
+    function setCalculationType(type) {
+      calculationType = type;
+      document.getElementById('typeHourly').classList.toggle('active', type === 'ساعتی');
+      document.getElementById('typeContract', type === 'کنتراتی / پروژه‌ای').classList.toggle('active', type === 'کنتراتی / پروژه‌ای');
+      updateServiceInput();
+    }
+
     function updateServiceInput() {
-      const fullText = `${selectedMain} ➔ ${selectedSub}`;
+      const fullText = `${selectedMain} ➔ ${selectedSub} (${calculationType})`;
       document.getElementById('finalService').value = fullText;
       
-      // تخمین قیمت پویا و هوشمند
       const prices = {
-        'نظافت منزل و راهپله': '۴۵۰,۰۰۰ تومان',
+        'نظافت منزل و راهپله': calculationType === 'ساعتی' ? '۴۵۰,۰۰۰ تومان (هر شیفت)' : 'توافقی کنتراتی',
         'مبل‌شویی در منزل': '۶۰۰,۰۰۰ تومان',
         'پذیرایی مجالس': '۷۰۰,۰۰۰ تومان',
         'لوله‌کشی آب و فاضلاب': 'نرخ بر اساس بازدید',
@@ -209,7 +225,7 @@
       orders.unshift(newOrder);
       localStorage.setItem('khedmat_plus_orders', JSON.stringify(orders));
 
-      alert('سفارش شما با موفقیت ثبت شد! هوش مصنوعی در حال اعزام نزدیک‌ترین متخصص است.');
+      alert('سفارش شما با موفقیت ثبت شد!');
       document.getElementById('orderForm').reset();
       document.getElementById('subCategoryContainer').style.display = 'none';
       document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
