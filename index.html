@@ -4,94 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدمت پلاس - پلتفرم جامع خدمات هوشمند در منزل</title>
-    <!-- Tailwind CSS v3 (Stable) -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
-        * { font-family: 'Vazirmatn', sans-serif; }
+        * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
+        .header-container { max-width: 768px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo-box { width: 40px; height: 40px; background: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); }
+        .header-title h1 { font-size: 16px; font-weight: 700; color: #1e293b; line-height: 1.2; }
+        .header-title span { font-size: 11px; color: #4f46e5; font-weight: 500; }
+        
+        .btn-orders-top { background: #eef2ff; color: #4338ca; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        
+        main { max-width: 768px; margin: 0 auto; padding: 16px; flex-grow: 1; width: 100%; padding-bottom: 80px; }
+        
+        .banner { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border-radius: 16px; padding: 20px; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); margin-bottom: 24px; position: relative; overflow: hidden; }
+        .banner h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .banner p { font-size: 13px; color: #e0e7ff; }
+        
+        .section-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+        
+        .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .cat-card { background: white; padding: 16px 8px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 1px 2px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; }
+        .cat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .cat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .cat-card span { font-size: 12px; font-weight: 700; color: #334155; }
+        
+        .booking-section { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-top: 16px; }
+        .booking-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px; }
+        .booking-header h3 { color: #4f46e5; font-size: 15px; font-weight: 700; }
+        .close-btn { background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; }
+        
+        .sub-item { padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .sub-item:hover { background: #eef2ff; border-color: #c7d2fe; }
+        .sub-item h4 { font-size: 13px; font-weight: 700; color: #1e293b; }
+        .sub-item span { font-size: 11px; color: #4f46e5; font-weight: 500; }
+        
+        .form-details { border-top: 1px solid #f1f5f9; padding-top: 16px; margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .summary-box { background: #eef2ff; padding: 12px; border-radius: 12px; border: 1px solid #c7d2fe; display: flex; justify-content: space-between; align-items: center; }
+        .summary-box span { font-size: 11px; color: #64748b; }
+        .summary-box b { font-size: 13px; color: #1e293b; }
+        
+        .extra-box { background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 11px; font-weight: 600; color: #475569; }
+        .form-control { width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; transition: 0.2s; }
+        .form-control:focus { border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1); }
+        
+        .submit-btn { background: #4f46e5; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .submit-btn:hover { background: #4338ca; }
+        
+        .bottom-nav { background: white; border-top: 1px solid #e2e8f0; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.02); }
+        .nav-container { max-width: 768px; margin: 0 auto; display: flex; justify-content: space-around; padding: 10px; }
+        .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 500; color: #94a3b8; cursor: pointer; gap: 4px; }
+        .nav-btn.active { color: #4f46e5; font-weight: 700; }
+        .nav-btn i { font-size: 18px; }
+        
+        .order-card { background: white; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .badge { background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .cancel-btn { background: #fff1f2; color: #e11d48; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .cancel-btn:hover { background: #ffe4e6; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body>
 
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
+    <header>
+        <div class="header-container">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="logo-box">
                     <i class="fa-solid fa-hands-holding-child"></i>
                 </div>
-                <div>
-                    <h1 class="font-bold text-lg text-gray-800 leading-tight">خدمت پلاس</h1>
-                    <span class="text-xs text-indigo-600 font-medium">نسخه پیشرفته هوشمند</span>
+                <div class="header-title">
+                    <h1>خدمت پلاس</h1>
+                    <span>نسخه پیشرفته هوشمند</span>
                 </div>
             </div>
-            <button onclick="switchTab('orders')" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-100 transition flex items-center gap-1.5">
+            <button onclick="switchTab('orders')" class="btn-orders-top">
                 <i class="fa-solid fa-rectangle-list"></i> پیگیری سفارش‌ها
             </button>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-3xl mx-auto px-4 py-6 flex-grow w-full pb-20">
+    <main>
         
         <!-- TAB 1: SERVICES & BOOKING -->
-        <div id="tab-services" class="space-y-6">
+        <div id="tab-services">
             
             <!-- Banner -->
-            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
-                <div class="relative z-10">
-                    <h2 class="text-xl font-bold mb-1">چه خدماتی نیاز دارید؟</h2>
-                    <p class="text-indigo-100 text-sm">سریع‌ترین راه دسترسی به بهترین متخصصان و استادکاران</p>
+            <div class="banner">
+                <div style="position: relative; z-index: 10;">
+                    <h2>چه خدماتی نیاز دارید؟</h2>
+                    <p>سریع‌ترین راه دسترسی به بهترین متخصصان و استادکاران</p>
                 </div>
-                <div class="absolute -left-6 -bottom-6 text-white/10 text-8xl opacity-20">
+                <div style="position: absolute; left: -10px; bottom: -10px; color: rgba(255,255,255,0.1); font-size: 80px;">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
             </div>
 
             <!-- Categories Section -->
             <div>
-                <h3 class="font-bold text-gray-800 mb-3 text-base">دسته‌بندی خدمات</h3>
-                <div id="categories-grid" class="grid grid-cols-3 gap-3"></div>
+                <h3 class="section-title">دسته‌بندی خدمات</h3>
+                <div id="categories-grid" class="categories-grid"></div>
             </div>
 
             <!-- Booking Section -->
-            <div id="booking-section" class="hidden bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h3 id="selected-cat-title" class="font-bold text-indigo-600 text-base">انتخاب زیرخدمت</h3>
-                    <button onclick="closeBooking()" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div id="booking-section" class="booking-section hidden">
+                <div class="booking-header">
+                    <h3 id="selected-cat-title">انتخاب زیرخدمت</h3>
+                    <button onclick="closeBooking()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
-                <div id="subservices-list" class="space-y-2"></div>
+                <div id="subservices-list"></div>
 
                 <!-- Service Details Form -->
-                <div id="order-form-details" class="hidden space-y-4 pt-3 border-t">
-                    <div class="bg-indigo-50/50 p-3 rounded-xl border border-indigo-100 flex justify-between items-center">
+                <div id="order-form-details" class="form-details hidden">
+                    <div class="summary-box">
                         <div>
-                            <span class="text-xs text-gray-500 block">خدمت انتخابی:</span>
-                            <span id="summary-service-name" class="font-bold text-gray-800 text-sm"></span>
+                            <span>خدمت انتخابی:</span>
+                            <b id="summary-service-name"></b>
                         </div>
-                        <div class="text-left">
-                            <span class="text-xs text-gray-500 block">نوع محاسبه:</span>
-                            <span id="summary-calc-type" class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded font-medium"></span>
+                        <div style="text-align: left;">
+                            <span>نوع محاسبه:</span>
+                            <div id="summary-calc-type" style="background: #4f46e5; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-top: 2px; font-weight: 600;"></div>
                         </div>
                     </div>
 
                     <!-- Dynamic Extra Options -->
-                    <div id="extra-options-container" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200"></div>
+                    <div id="extra-options-container" class="extra-box hidden"></div>
 
                     <!-- Persian Date & Time Picker -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" value="1405/08/15" placeholder="1405/08/15" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-center font-bold text-indigo-700" dir="ltr">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="form-group">
+                            <label>تاریخ انجام کار (شمسی)</label>
+                            <input type="text" id="order-date" value="1405/08/15" class="form-control" style="text-align: center; font-weight: 700; color: #4f46e5;" dir="ltr">
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">ساعت حضور</label>
-                            <select id="order-time" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                        <div class="form-group">
+                            <label>ساعت حضور</label>
+                            <select id="order-time" class="form-control">
                                 <option value="8 تا 12 صبح">۸ تا ۱۲ صبح</option>
                                 <option value="12 تا 16 عصر">۱۲ تا ۱۶ عصر</option>
                                 <option value="16 تا 20 شب">۱۶ تا ۲۰ شب</option>
@@ -99,23 +158,23 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">شماره تماس همراه</label>
-                        <input type="tel" id="order-phone" placeholder="مثال: 09123456789" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-left" dir="ltr">
+                    <div class="form-group">
+                        <label>شماره تماس همراه</label>
+                        <input type="tel" id="order-phone" placeholder="مثال: 09123456789" class="form-control" style="text-align: left;" dir="ltr">
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">آدرس دقیق محل</label>
-                        <textarea id="order-address" rows="2" placeholder="شهر، خیابان، کوچه، پلاک، واحد..." class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                    <div class="form-group">
+                        <label>آدرس دقیق محل</label>
+                        <textarea id="order-address" rows="2" placeholder="شهر، خیابان، کوچه، پلاک، واحد..." class="form-control"></textarea>
                     </div>
 
-                    <div class="flex items-center justify-between pt-2">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
                         <div>
-                            <span class="text-xs text-gray-500 block">مبلغ نهایی قابل پرداخت:</span>
-                            <span id="estimated-price" class="font-extrabold text-indigo-600 text-lg">۰ تومان</span>
+                            <span style="font-size: 11px; color: #64748b;">مبلغ نهایی قابل پرداخت:</span>
+                            <div id="estimated-price" style="font-size: 16px; font-weight: 800; color: #4f46e5;">۰ تومان</div>
                         </div>
-                        <button onclick="submitOrder()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-indigo-700 transition">
-                            ثبت نهایی سفارش <i class="fa-solid fa-check ml-1"></i>
+                        <button onclick="submitOrder()" class="submit-btn">
+                            ثبت نهایی سفارش <i class="fa-solid fa-check"></i>
                         </button>
                     </div>
                 </div>
@@ -124,25 +183,25 @@
         </div>
 
         <!-- TAB 2: ORDERS TRACKING -->
-        <div id="tab-orders" class="hidden space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-gray-800 text-lg">سفارش‌های ثبت‌شده شما</h3>
-                <button onclick="switchTab('services')" class="text-indigo-600 text-sm font-medium"><i class="fa-solid fa-plus ml-1"></i>ثبت سفارش جدید</button>
+        <div id="tab-orders" class="hidden" style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="section-title" style="margin-bottom: 0;">سفارش‌های ثبت‌شده شما</h3>
+                <button onclick="switchTab('services')" style="background: none; border: none; color: #4f46e5; font-size: 13px; font-weight: 600; cursor: pointer;"><i class="fa-solid fa-plus"></i> ثبت سفارش جدید</button>
             </div>
-            <div id="orders-list-container" class="space-y-3"></div>
+            <div id="orders-list-container"></div>
         </div>
 
     </main>
 
     <!-- Bottom Nav -->
-    <nav class="bg-white border-t fixed bottom-0 left-0 right-0 z-40 shadow-lg">
-        <div class="max-w-3xl mx-auto flex justify-around py-3">
-            <button onclick="switchTab('services')" id="nav-btn-services" class="flex flex-col items-center text-indigo-600 text-xs font-bold gap-1">
-                <i class="fa-solid fa-house text-lg"></i>
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <button onclick="switchTab('services')" id="nav-btn-services" class="nav-btn active">
+                <i class="fa-solid fa-house"></i>
                 خانه و خدمات
             </button>
-            <button onclick="switchTab('orders')" id="nav-btn-orders" class="flex flex-col items-center text-gray-400 text-xs font-medium gap-1">
-                <i class="fa-solid fa-clipboard-list text-lg"></i>
+            <button onclick="switchTab('orders')" id="nav-btn-orders" class="nav-btn">
+                <i class="fa-solid fa-clipboard-list"></i>
                 پیگیری سفارش‌ها
             </button>
         </div>
@@ -159,7 +218,8 @@
                 id: 'cleaning',
                 title: 'نظافت و پذیرایی',
                 icon: 'fa-broom',
-                color: 'bg-amber-50 text-amber-600',
+                bgColor: '#fef3c7',
+                color: '#d97706',
                 subservices: [
                     { name: 'نظافت راه پله و مشاعات', type: 'کنتراتی / پروژه‌ای', basePrice: 250000, hasStairDetails: true },
                     { name: 'نظافت منزل و آپارتمان', type: 'ساعتی', basePrice: 150000, hasHomeDetails: true },
@@ -170,7 +230,8 @@
                 id: 'plumbing',
                 title: 'تأسیسات و لوله‌کشی',
                 icon: 'fa-faucet-dripping',
-                color: 'bg-blue-50 text-blue-600',
+                bgColor: '#e0f2fe',
+                color: '#0284c7',
                 subservices: [
                     { name: 'لوله‌کشی آب و فاضلاب', type: 'ساعتی / کنتراتی', basePrice: 300000 },
                     { name: 'رفع گرفتگی لوله و چاه‌بازکنی', type: 'کنتراتی', basePrice: 250000 },
@@ -181,7 +242,8 @@
                 id: 'cooling_heating',
                 title: 'سرمایش و گرمایش',
                 icon: 'fa-temperature-arrow-up',
-                color: 'bg-cyan-50 text-cyan-600',
+                bgColor: '#cffafe',
+                color: '#0891b2',
                 subservices: [
                     { name: 'سرویس و تعمیر پکیج و آبگرمکن', type: 'کنتراتی', basePrice: 350000 },
                     { name: 'نصب و تعمیر کولر گازی و آبی', type: 'کنتراتی', basePrice: 400000 }
@@ -191,7 +253,8 @@
                 id: 'appliances',
                 title: 'لوازم خانگی',
                 icon: 'fa-tv',
-                color: 'bg-purple-50 text-purple-600',
+                bgColor: '#f3e8ff',
+                color: '#9333ea',
                 subservices: [
                     { name: 'تعمیر ماشین لباسشویی و ظرفشویی', type: 'کنتراتی', basePrice: 350000 },
                     { name: 'تعمیر یخچال و فریزر در محل', type: 'کنتراتی', basePrice: 450000 }
@@ -201,7 +264,8 @@
                 id: 'electrical',
                 title: 'برق‌کاری و روشنایی',
                 icon: 'fa-bolt',
-                color: 'bg-yellow-50 text-yellow-600',
+                bgColor: '#fef9c3',
+                color: '#ca8a04',
                 subservices: [
                     { name: 'سیم‌کشی و رفع اتصالی برق', type: 'ساعتی', basePrice: 250000 },
                     { name: 'نصب لوستر، هالوژن و آویز', type: 'کنتراتی (تعداد)', basePrice: 200000 }
@@ -211,7 +275,8 @@
                 id: 'building',
                 title: 'بازسازی و دکوراسیون',
                 icon: 'fa-paint-roller',
-                color: 'bg-rose-50 text-rose-600',
+                bgColor: '#ffe4e6',
+                color: '#e11d48',
                 subservices: [
                     { name: 'نقاشی ساختمان و کاغذ دیواری', type: 'متراژی', basePrice: 500000 },
                     { name: 'گچ‌کاری، کاشی‌کاری و بنایی', type: 'کنتراتی', basePrice: 600000 }
@@ -228,12 +293,12 @@
         function renderCategories() {
             const grid = document.getElementById('categories-grid');
             grid.innerHTML = categoriesData.map(cat => `
-                <button onclick="selectCategory('${cat.id}')" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col items-center text-center gap-2 group">
-                    <div class="w-12 h-12 rounded-xl ${cat.color} flex items-center justify-center text-xl group-hover:scale-110 transition">
+                <div onclick="selectCategory('${cat.id}')" class="cat-card">
+                    <div class="cat-icon" style="background-color: ${cat.bgColor}; color: ${cat.color};">
                         <i class="fa-solid ${cat.icon}"></i>
                     </div>
-                    <span class="text-xs font-bold text-gray-700">${cat.title}</span>
-                </button>
+                    <span>${cat.title}</span>
+                </div>
             `).join('');
         }
 
@@ -241,18 +306,19 @@
             const cat = categoriesData.find(c => c.id === catId);
             if (!cat) return;
 
+            document.getElementById('selected-cat-titleinnerText', cat.title);
             document.getElementById('selected-cat-title').innerText = cat.title;
             const subList = document.getElementById('subservices-list');
             
             subList.innerHTML = cat.subservices.map((sub) => `
-                <div onclick='selectSubservice(${JSON.stringify(sub)})' class="p-3 bg-gray-50 hover:bg-indigo-50/50 border border-gray-200 rounded-xl cursor-pointer transition flex justify-between items-center">
+                <div onclick='selectSubservice(${JSON.stringify(sub)})' class="sub-item">
                     <div>
-                        <h4 class="font-bold text-gray-800 text-sm">${sub.name}</h4>
-                        <span class="text-xs text-indigo-600 font-medium">محاسبه: ${sub.type}</span>
+                        <h4>${sub.name}</h4>
+                        <span>محاسبه: ${sub.type}</span>
                     </div>
-                    <div class="text-left">
-                        <span class="text-xs text-indigo-600 font-bold block">پایه: ${sub.basePrice.toLocaleString()} ت</span>
-                        <i class="fa-solid fa-chevron-left text-xs text-gray-400 mt-1"></i>
+                    <div style="text-align: left;">
+                        <span style="font-weight: 700; color: #4f46e5; display: block;">پایه: ${sub.basePrice.toLocaleString()} ت</span>
+                        <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: #cbd5e1; margin-top: 4px;"></i>
                     </div>
                 </div>
             `).join('');
@@ -270,55 +336,52 @@
             const extraContainer = document.getElementById('extra-options-container');
             if (sub.hasStairDetails) {
                 extraContainer.innerHTML = `
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div>
-                            <label class="block font-medium text-gray-600 mb-1">تعداد طبقات راه پله</label>
-                            <input type="number" id="extra-floors" value="4" min="1" oninput="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
-                        </div>
-                        <div>
-                            <label class="block font-medium text-gray-600 mb-1">تعداد واحد ساختمان</label>
-                            <input type="number" id="extra-units" value="8" min="1" oninput="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
-                        </div>
-                        <div>
-                            <label class="block font-medium text-gray-600 mb-1">آسانسور دارد؟</label>
-                            <select id="extra-elevator" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
-                                <option value="دارد">بله، دارد</option>
-                                <option value="ندارد">خیر، ندارد</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-medium text-gray-600 mb-1">پارکینگ دارد؟</label>
-                            <select id="extra-parking" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
-                                <option value="دارد">بله، دارد</option>
-                                <option value="ندارد">خیر، ندارد</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label>تعداد طبقات راه پله</label>
+                        <input type="number" id="extra-floors" value="4" min="1" oninput="calculatePrice()" class="form-control" style="text-align: center;">
+                    </div>
+                    <div class="form-group">
+                        <label>تعداد واحد ساختمان</label>
+                        <input type="number" id="extra-units" value="8" min="1" oninput="calculatePrice()" class="form-control" style="text-align: center;">
+                    </div>
+                    <div class="form-group">
+                        <label>آسانسور دارد؟</label>
+                        <select id="extra-elevator" onchange="calculatePrice()" class="form-control">
+                            <option value="دارد">بله، دارد</option>
+                            <option value="ندارد">خیر، ندارد</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>پارکینگ دارد؟</label>
+                        <select id="extra-parking" onchange="calculatePrice()" class="form-control">
+                            <option value="دارد">بله، دارد</option>
+                            <option value="ندارد">خیر، ندارد</option>
+                        </select>
                     </div>
                 `;
                 extraContainer.classList.remove('hidden');
             } else if (sub.hasHomeDetails) {
                 extraContainer.innerHTML = `
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div>
-                            <label class="block font-medium text-gray-600 mb-1">مدت زمان نظافت</label>
-                            <select id="extra-hours" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
-                                <option value="4">۴ ساعت</option>
-                                <option value="6">۶ ساعت</option>
-                                <option value="8">۸ ساعت (یک روز کامل)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-medium text-gray-600 mb-1">نیاز به مواد شوینده؟</label>
-                            <select id="extra-detergent" onchange="calculatePrice()" class="w-full bg-white border border-gray-300 rounded-lg p-2">
-                                <option value="0">توسط خودم تهیه می‌شود</option>
-                                <option value="150000">توسط متخصص آورده شود (+۱۵۰ ت)</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label>مدت زمان نظافت</label>
+                        <select id="extra-hours" onchange="calculatePrice()" class="form-control">
+                            <option value="4">۴ ساعت</option>
+                            <option value="6">۶ ساعت</option>
+                            <option value="8">۸ ساعت (یک روز کامل)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>نیاز به مواد شوینده؟</label>
+                        <select id="extra-detergent" onchange="calculatePrice()" class="form-control">
+                            <option value="0">توسط خودم تهیه می‌شود</option>
+                            <option value="150000">توسط متخصص آورده شود (+۱۵۰ ت)</option>
+                        </select>
                     </div>
                 `;
                 extraContainer.classList.remove('hidden');
             } else {
                 extraContainer.innerHTML = '';
+                extraContainer.classList.add('hidden');
             }
 
             calculatePrice();
@@ -351,13 +414,13 @@
             if (tabName === 'services') {
                 document.getElementById('tab-services').classList.remove('hidden');
                 document.getElementById('tab-orders').classList.add('hidden');
-                document.getElementById('nav-btn-services').className = "flex flex-col items-center text-indigo-600 text-xs font-bold gap-1";
-                document.getElementById('nav-btn-orders').className = "flex flex-col items-center text-gray-400 text-xs font-medium gap-1";
+                document.getElementById('nav-btn-services').className = "nav-btn active";
+                document.getElementById('nav-btn-orders').className = "nav-btn";
             } else {
                 document.getElementById('tab-services').classList.add('hidden');
                 document.getElementById('tab-orders').classList.remove('hidden');
-                document.getElementById('nav-btn-orders').className = "flex flex-col items-center text-indigo-600 text-xs font-bold gap-1";
-                document.getElementById('nav-btn-services').className = "flex flex-col items-center text-gray-400 text-xs font-medium gap-1";
+                document.getElementById('nav-btn-orders').className = "nav-btn active";
+                document.getElementById('nav-btn-services').className = "nav-btn";
                 loadOrders();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -371,7 +434,7 @@
             const finalPriceText = document.getElementById('estimated-price').innerText;
 
             if (!date || !phone || !address) {
-                alert('لطفاً تاریخ شمسی، شماره تماس و آدرس را به طور کامل وارد کنید.');
+                alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');
                 return;
             }
 
@@ -426,33 +489,33 @@
 
             if (orders.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
-                        <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
-                        <p class="text-gray-500 text-sm">هنوز سفارشی ثبت نکرده‌اید.</p>
+                    <div style="text-align: center; padding: 48px 0; background: white; border-radius: 16px; border: 1px solid #f1f5f9;">
+                        <i class="fa-solid fa-box-open" style="font-size: 36px; color: #cbd5e1; margin-bottom: 12px;"></i>
+                        <p style="color: #64748b; font-size: 13px;">هنوز سفارشی ثبت نکرده‌اید.</p>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = orders.map(ord => `
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
-                    <div class="flex justify-between items-start">
+                <div class="order-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
-                            <h4 class="font-bold text-gray-800 text-sm">${ord.service_name}</h4>
-                            <span class="text-xs text-indigo-600 font-medium">${ord.calculation_type}</span>
+                            <h4 style="font-size: 13px; font-weight: 700; color: #1e293b;">${ord.service_name}</h4>
+                            <span style="font-size: 11px; color: #4f46e5; font-weight: 500;">${ord.calculation_type}</span>
                         </div>
-                        <span class="bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-full font-bold">${ord.status}</span>
+                        <span class="badge">${ord.status}</span>
                     </div>
-                    <div class="text-xs text-gray-600 space-y-1 bg-gray-50 p-3 rounded-xl">
-                        <div><i class="fa-regular fa-calendar ml-1 text-gray-400"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
-                        ${ord.extra_details ? `<div><i class="fa-solid fa-circle-info ml-1 text-gray-400"></i> جزئیات: ${ord.extra_details}</div>` : ''}
-                        <div><i class="fa-solid fa-money-bill-wave ml-1 text-emerald-500"></i> مبلغ: <span class="font-bold text-emerald-600">${ord.total_price}</span></div>
-                        <div><i class="fa-solid fa-location-dot ml-1 text-gray-400"></i> آدرس: ${ord.address}</div>
-                        <div><i class="fa-solid fa-phone ml-1 text-gray-400"></i> تماس: ${ord.phone}</div>
+                    <div style="font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 4px; background: #f8fafc; padding: 12px; border-radius: 10px;">
+                        <div><i class="fa-regular fa-calendar" style="color: #94a3b8; margin-left: 4px;"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
+                        ${ord.extra_details ? `<div><i class="fa-solid fa-circle-info" style="color: #94a3b8; margin-left: 4px;"></i> جزئیات: ${ord.extra_details}</div>` : ''}
+                        <div><i class="fa-solid fa-money-bill-wave" style="color: #10b981; margin-left: 4px;"></i> مبلغ: <b style="color: #059669;">${ord.total_price}</b></div>
+                        <div><i class="fa-solid fa-location-dot" style="color: #94a3b8; margin-left: 4px;"></i> آدرس: ${ord.address}</div>
+                        <div><i class="fa-solid fa-phone" style="color: #94a3b8; margin-left: 4px;"></i> تماس: ${ord.phone}</div>
                     </div>
-                    <div class="flex justify-end pt-1 border-t">
-                        <button onclick="cancelOrder('${ord.id}')" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-100 transition">
-                            <i class="fa-solid fa-trash-can ml-1"></i> لغو سفارش
+                    <div style="display: flex; justify-content: flex-end; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+                        <button onclick="cancelOrder('${ord.id}')" class="cancel-btn">
+                            <i class="fa-solid fa-trash-can"></i> لغو سفارش
                         </button>
                     </div>
                 </div>
