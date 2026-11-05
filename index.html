@@ -10,12 +10,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Persian DatePicker Library -->
+    <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <!-- jQuery (Required for Persian Datepicker) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Vazirmatn', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 text-text-800 min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
     <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
@@ -60,7 +67,7 @@
                 </div>
             </div>
 
-            <!-- Subcategories & Booking Modal Container (Inline Card) -->
+            <!-- Booking Section -->
             <div id="booking-section" class="hidden bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
                     <h3 id="selected-cat-title" class="font-bold text-indigo-600 text-base">انتخاب زیرخدمت</h3>
@@ -84,15 +91,20 @@
                         </div>
                     </div>
 
-                    <!-- Work Type & Calculation inputs -->
+                    <!-- Dynamic Extra Options for Staircase / House Cleaning -->
+                    <div id="extra-options-container" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
+                        <!-- Dynamic inputs based on service -->
+                    </div>
+
+                    <!-- Date & Time -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار</label>
-                            <input type="date" id="order-date" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار (شمسی)</label>
+                            <input type="text" id="order-date" placeholder="انتخاب تاریخ" readonly class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 cursor-pointer">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">ساعت حضور</label>
-                            <select id="order-time" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+                            <select id="order-time" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
                                 <option value="8 تا 12 صبح">۸ تا ۱۲ صبح</option>
                                 <option value="12 تا 16 عصر">۱۲ تا ۱۶ عصر</option>
                                 <option value="16 تا 20 شب">۱۶ تا ۲۰ شب</option>
@@ -102,12 +114,12 @@
 
                     <div>
                         <label class="block text-xs font-medium text-gray-600 mb-1">شماره تماس همراه</label>
-                        <input type="tel" id="order-phone" placeholder="مثال: 09123456789" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-left" dir="ltr">
+                        <input type="tel" id="order-phone" placeholder="مثال: 09123456789" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-left" dir="ltr">
                     </div>
 
                     <div>
                         <label class="block text-xs font-medium text-gray-600 mb-1">آدرس دقیق محل</label>
-                        <textarea id="order-address" rows="2" placeholder="شهر، خیابان، کوچه، پلاک، واحد..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                        <textarea id="order-address" rows="2" placeholder="شهر، خیابان، کوچه، پلاک، واحد..." class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"></textarea>
                     </div>
 
                     <div class="flex items-center justify-between pt-2">
@@ -153,12 +165,11 @@
 
     <!-- Application Logic -->
     <script>
-        // تنظیمات اتصال Supabase (با کلید Publishable امن شما)
         const SUPABASE_URL = 'https://toegqqofbotxmgycgnfd.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_783d7bae...'; // کلید معتبر
+        const SUPABASE_ANON_KEY = 'sb_publishable_783d7bae...'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // داده‌های پیشرفته خدمات و زیرخدمات (فراتر از آچاره و خدمات از ما)
+        // داده‌های جامع خدمات (با تفکیک نظافت منزل و راهپله و جزئیات دقیق)
         const categoriesData = [
             {
                 id: 'cleaning',
@@ -166,9 +177,23 @@
                 icon: 'fa-broom',
                 color: 'bg-amber-50 text-amber-600',
                 subservices: [
-                    { name: 'نظافت منزل و راهپله (ساعتی)', type: 'ساعتی', price: 'از ۱۵۰ هزار تومان / ساعت' },
-                    { name: 'نظافت مجتمع و شرکت‌ها (کنتراتی)', type: 'کنتراتی / پروژه‌ای', price: 'توافقی پس از بازدید' },
-                    { name: 'مبل‌شویی و قالیشویی در منزل', type: 'کنتراتی / پروژه‌ای', price: 'نرخ مصوب اتحادیه' }
+                    { 
+                        name: 'نظافت راه‌پله و مشاعات', 
+                        type: 'کنتراتی / پروژه‌ای', 
+                        price: 'بر اساس تعداد طبقات',
+                        hasStairDetails: true 
+                    },
+                    { 
+                        name: 'نظافت منزل و آپارتمان', 
+                        type: 'ساعتی', 
+                        price: 'از ۱۵۰ هزار تومان / ساعت',
+                        hasHomeDetails: true 
+                    },
+                    { 
+                        name: 'مبل‌شویی و قالیشویی در منزل', 
+                        type: 'پروژه‌ای', 
+                        price: 'نرخ مصوب اتحادیه' 
+                    }
                 ]
             },
             {
@@ -177,7 +202,7 @@
                 icon: 'fa-faucet-dripping',
                 color: 'bg-blue-50 text-blue-600',
                 subservices: [
-                    { name: 'لوله‌کشی آب و فاضلاب (ساعتی/پروژه)', type: 'ساعتی / کنتراتی', price: 'بررسی در محل' },
+                    { name: 'لوله‌کشی آب و فاضلاب', type: 'ساعتی / کنتراتی', price: 'بررسی در محل' },
                     { name: 'رفع گرفتگی لوله و چاه‌بازکنی', type: 'کنتراتی', price: 'نرخ ثابت شرکتی' },
                     { name: 'نصب و تعمیر شیرآلات', type: 'ساعتی', price: 'از ۲۰۰ هزار تومان' }
                 ]
@@ -226,7 +251,17 @@
 
         let currentSelectedService = null;
 
-        // رندر دسته‌بندی‌ها در صفحه
+        // راه‌اندازی تقویم شمسی
+        $(document).ready(function() {
+            $("#order-date").persianDatepicker({
+                format: 'YYYY/MM/DD',
+                initialValue: false,
+                autoClose: true,
+                observer: true
+            });
+            renderCategories();
+        });
+
         function renderCategories() {
             const grid = document.getElementById('categories-grid');
             grid.innerHTML = categoriesData.map(cat => `
@@ -239,7 +274,6 @@
             `).join('');
         }
 
-        // انتخاب دسته و نمایش زیرخدمات
         function selectCategory(catId) {
             const cat = categoriesData.find(c => c.id === catId);
             if (!cat) return;
@@ -247,8 +281,8 @@
             document.getElementById('selected-cat-title').innerText = cat.title;
             const subList = document.getElementById('subservices-list');
             
-            subList.innerHTML = cat.subservices.map((sub, idx) => `
-                <div onclick="selectSubservice('${sub.name}', '${sub.type}', '${sub.price}')" class="p-3 bg-gray-50 hover:bg-indigo-50/50 border border-gray-200 rounded-xl cursor-pointer transition flex justify-between items-center">
+            subList.innerHTML = cat.subservices.map((sub) => `
+                <div onclick='selectSubservice(${JSON.stringify(sub)})' class="p-3 bg-gray-50 hover:bg-indigo-50/50 border border-gray-200 rounded-xl cursor-pointer transition flex justify-between items-center">
                     <div>
                         <h4 class="font-bold text-gray-800 text-sm">${sub.name}</h4>
                         <span class="text-xs text-indigo-600 font-medium">محاسبه: ${sub.type}</span>
@@ -265,12 +299,67 @@
             document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // انتخاب زیرخدمت و نمایش فرم نهایی
-        function selectSubservice(name, type, price) {
-            currentSelectedService = { name, type, price };
-            document.getElementById('summary-service-name').innerText = name;
-            document.getElementById('summary-calc-type').innerText = type;
-            document.getElementById('estimated-price').innerText = price;
+        function selectSubservice(sub) {
+            currentSelectedService = sub;
+            document.getElementById('summary-service-name').innerText = sub.name;
+            document.getElementById('summary-calc-type').innerText = sub.type;
+            document.getElementById('estimated-price').innerText = sub.price;
+
+            // ساخت فرم جزئیات اختصاصی (برای راهپله یا منزل)
+            const extraContainer = document.getElementById('extra-options-container');
+            if (sub.hasStairDetails) {
+                extraContainer.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <label class="block font-medium text-gray-600 mb-1">تعداد طبقات راهپله</label>
+                            <input type="number" id="extra-floors" value="4" min="1" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-600 mb-1">تعداد واحد ساختمان</label>
+                            <input type="number" id="extra-units" value="8" min="1" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-600 mb-1">آسانسور دارد؟</label>
+                            <select id="extra-elevator" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                                <option value="دارد">بله، دارد</option>
+                                <option value="ندارد">خیر، ندارد</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-600 mb-1">پارکینگ دارد؟</label>
+                            <select id="extra-parking" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                                <option value="دارد">بله، دارد</option>
+                                <option value="ندارد">خیر، ندارد</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                extraContainer.classList.remove('hidden');
+            } else if (sub.hasHomeDetails) {
+                extraContainer.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <label class="block font-medium text-gray-600 mb-1">مدت زمان نظافت (ساعت)</label>
+                            <select id="extra-hours" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                                <option value="4 ساعت">۴ ساعت</option>
+                                <option value="6 ساعت">۶ ساعت</option>
+                                <option value="8 ساعت">۸ ساعت (یک روز کامل)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-600 mb-1">نیاز به مواد شوینده؟</label>
+                            <select id="extra-detergent" class="w-full bg-white border border-gray-300 rounded-lg p-2">
+                                <option value="توسط مشتری">توسط خودم تهیه می‌شود</option>
+                                <option value="توسط متخصص">توسط متخصص آورده شود</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                extraContainer.classList.remove('hidden');
+            } else {
+                extraContainer.innerHTML = '';
+            }
+
             document.getElementById('order-form-details').classList.remove('hidden');
             document.getElementById('order-form-details').scrollIntoView({ behavior: 'smooth' });
         }
@@ -279,7 +368,6 @@
             document.getElementById('booking-section').classList.add('hidden');
         }
 
-        // تب‌بندی صفحات
         function switchTab(tabName) {
             if (tabName === 'services') {
                 document.getElementById('tab-services').classList.remove('hidden');
@@ -296,21 +384,35 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ثبت سفارش در Supabase
         async function submitOrder() {
             const date = document.getElementById('order-date').value;
             const time = document.getElementById('order-time').value;
             const phone = document.getElementById('order-phone').value;
             const address = document.getElementById('order-address').value;
 
-            if (!phone || !address || !date) {
-                alert('لطفاً شماره تماس، آدرس و تاریخ را به طور کامل وارد کنید.');
+            if (!date || !phone || !address) {
+                alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');
                 return;
             }
 
+            let extraInfoText = '';
+            if (document.getElementById('extra-floors')) {
+                const floors = document.getElementById('extra-floors').value;
+                const units = document.getElementById('extra-units').value;
+                const elevator = document.getElementById('extra-elevator').value;
+                const parking = document.getElementById('extra-parking').value;
+                extraInfoText = `طبقات: ${floors} | واحدها: ${units} | آسانسور: ${elevator} | پارکینگ: ${parking}`;
+            } else if (document.getElementById('extra-hours')) {
+                const hours = document.getElementById('extra-hours').value;
+                const detergent = document.getElementById('extra-detergent').value;
+                extraInfoText = `مدت: ${hours} | شوینده: ${detergent}`;
+            }
+
             const orderData = {
+                id: 'ord_' + Date.now(),
                 service_name: currentSelectedService.name,
                 calculation_type: currentSelectedService.type,
+                extra_details: extraInfoText,
                 preferred_date: date,
                 preferred_time: time,
                 phone: phone,
@@ -319,31 +421,24 @@
                 created_at: new Date().toISOString()
             };
 
-            try {
-                const { data, error } = await supabaseClient.from('orders').insert([orderData]);
-                if (error) {
-                    // ذخیره محلی در صورت بروز خطا در دیتابیس آنلاین
-                    saveLocalOrder(orderData);
-                } else {
-                    alert('سفارش شما با موفقیت ثبت شد و به زودی متخصصان با شما تماس خواهند گرفت.');
-                }
-                closeBooking();
-                switchTab('orders');
-            } catch (err) {
-                saveLocalOrder(orderData);
-                closeBooking();
-                switchTab('orders');
+            let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+            orders.unshift(orderData);
+            localStorage.setItem('khedmat_orders', JSON.stringify(orders));
+
+            alert('سفارش شما با موفقیت ثبت شد!');
+            closeBooking();
+            switchTab('orders');
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('آیا از لغو این سفارش اطمینان دارید؟')) {
+                let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+                orders = orders.filter(o => o.id !== orderId);
+                localStorage.setItem('khedmat_orders', JSON.stringify(orders));
+                loadOrders();
             }
         }
 
-        function saveLocalOrder(order) {
-            let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
-            orders.unshift(order);
-            localStorage.setItem('khedmat_orders', JSON.stringify(orders));
-            alert('سفارش شما با موفقیت ثبت شد!');
-        }
-
-        // بارگذاری سفارش‌ها
         function loadOrders() {
             const container = document.getElementById('orders-list-container');
             let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
@@ -369,17 +464,18 @@
                     </div>
                     <div class="text-xs text-gray-600 space-y-1 bg-gray-50 p-3 rounded-xl">
                         <div><i class="fa-regular fa-calendar ml-1 text-gray-400"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
+                        ${ord.extra_details ? `<div><i class="fa-solid fa-circle-info ml-1 text-gray-400"></i> جزئیات: ${ord.extra_details}</div>` : ''}
                         <div><i class="fa-solid fa-location-dot ml-1 text-gray-400"></i> آدرس: ${ord.address}</div>
                         <div><i class="fa-solid fa-phone ml-1 text-gray-400"></i> تماس: ${ord.phone}</div>
+                    </div>
+                    <div class="flex justify-end pt-1 border-t">
+                        <button onclick="cancelOrder('${ord.id}')" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-100 transition">
+                            <i class="fa-solid fa-trash-can ml-1"></i> لغو سفارش
+                        </button>
                     </div>
                 </div>
             `).join('');
         }
-
-        // راه‌اندازی اولیه
-        window.onload = function() {
-            renderCategories();
-        };
     </script>
 </body>
 </html>
