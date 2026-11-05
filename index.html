@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- کتابخانه‌های تقویم شمسی -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
@@ -146,7 +153,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="form-group">
                             <label>تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" value="1405/08/15" class="form-control" style="text-align: center; font-weight: 700; color: #4f46e5;" dir="ltr">
+                            <input type="text" id="order-date" class="form-control" style="text-align: center; font-weight: 700; color: #4f46e5; direction: ltr;" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label>ساعت حضور</label>
@@ -306,7 +313,6 @@
             const cat = categoriesData.find(c => c.id === catId);
             if (!cat) return;
 
-            document.getElementById('selected-cat-titleinnerText', cat.title);
             document.getElementById('selected-cat-title').innerText = cat.title;
             const subList = document.getElementById('subservices-list');
             
@@ -387,6 +393,30 @@
             calculatePrice();
             document.getElementById('order-form-details').classList.remove('hidden');
             document.getElementById('order-form-details').scrollIntoView({ behavior: 'smooth' });
+
+            // راه‌اندازی و مقداردهی تقویم شمسی
+            initOrderDatePicker();
+        }
+
+        function initOrderDatePicker() {
+            if (typeof $ === 'undefined' || !$.fn.persianDatepicker) return;
+            const now = new persianDate();
+            const today = now.format('YYYY/MM/DD');
+            
+            const dateInput = document.getElementById('order-date');
+            if (dateInput && !dateInput.value) {
+                dateInput.value = today;
+            }
+
+            $('#order-date').persianDatepicker({
+                format: 'YYYY/MM/DD',
+                initialValue: true,
+                autoClose: true,
+                onSelect: function(unix) {
+                    const d = new persianDate(unix).format('YYYY/MM/DD');
+                    document.getElementById('order-date').value = d;
+                }
+            });
         }
 
         function calculatePrice() {
@@ -513,14 +543,3 @@
                         <div><i class="fa-solid fa-location-dot" style="color: #94a3b8; margin-left: 4px;"></i> آدرس: ${ord.address}</div>
                         <div><i class="fa-solid fa-phone" style="color: #94a3b8; margin-left: 4px;"></i> تماس: ${ord.phone}</div>
                     </div>
-                    <div style="display: flex; justify-content: flex-end; border-top: 1px solid #f1f5f9; padding-top: 8px;">
-                        <button onclick="cancelOrder('${ord.id}')" class="cancel-btn">
-                            <i class="fa-solid fa-trash-can"></i> لغو سفارش
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-    </script>
-</body>
-</html>
