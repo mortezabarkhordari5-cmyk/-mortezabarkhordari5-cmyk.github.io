@@ -10,13 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Persian DatePicker Library -->
-    <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-    <!-- jQuery (Required for Persian Datepicker) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Vazirmatn', sans-serif; }
@@ -91,16 +84,14 @@
                         </div>
                     </div>
 
-                    <!-- Dynamic Extra Options for Staircase / House Cleaning -->
-                    <div id="extra-options-container" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
-                        <!-- Dynamic inputs based on service -->
-                    </div>
+                    <!-- Dynamic Extra Options -->
+                    <div id="extra-options-container" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200"></div>
 
-                    <!-- Date & Time -->
+                    <!-- Date & Time (Persian) -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" placeholder="انتخاب تاریخ" readonly class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 cursor-pointer">
+                            <input type="text" id="order-date" placeholder="مثال: 1405/08/15" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 text-center" dir="ltr">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">ساعت حضور</label>
@@ -169,7 +160,6 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_783d7bae...'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // داده‌های جامع خدمات (با تفکیک نظافت منزل و راهپله و جزئیات دقیق)
         const categoriesData = [
             {
                 id: 'cleaning',
@@ -177,23 +167,9 @@
                 icon: 'fa-broom',
                 color: 'bg-amber-50 text-amber-600',
                 subservices: [
-                    { 
-                        name: 'نظافت راه‌پله و مشاعات', 
-                        type: 'کنتراتی / پروژه‌ای', 
-                        price: 'بر اساس تعداد طبقات',
-                        hasStairDetails: true 
-                    },
-                    { 
-                        name: 'نظافت منزل و آپارتمان', 
-                        type: 'ساعتی', 
-                        price: 'از ۱۵۰ هزار تومان / ساعت',
-                        hasHomeDetails: true 
-                    },
-                    { 
-                        name: 'مبل‌شویی و قالیشویی در منزل', 
-                        type: 'پروژه‌ای', 
-                        price: 'نرخ مصوب اتحادیه' 
-                    }
+                    { name: 'نظافت راه پله و مشاعات', type: 'کنتراتی / پروژه‌ای', price: 'بر اساس تعداد طبقات', hasStairDetails: true },
+                    { name: 'نظافت منزل و آپارتمان', type: 'ساعتی', price: 'از ۱۵۰ هزار تومان / ساعت', hasHomeDetails: true },
+                    { name: 'مبل‌شویی و قالیشویی در منزل', type: 'پروژه‌ای', price: 'نرخ مصوب اتحادیه' }
                 ]
             },
             {
@@ -251,16 +227,10 @@
 
         let currentSelectedService = null;
 
-        // راه‌اندازی تقویم شمسی
-        $(document).ready(function() {
-            $("#order-date").persianDatepicker({
-                format: 'YYYY/MM/DD',
-                initialValue: false,
-                autoClose: true,
-                observer: true
-            });
+        window.onload = function() {
             renderCategories();
-        });
+            document.getElementById('order-date').value = "1405/08/15";
+        };
 
         function renderCategories() {
             const grid = document.getElementById('categories-grid');
@@ -305,13 +275,12 @@
             document.getElementById('summary-calc-type').innerText = sub.type;
             document.getElementById('estimated-price').innerText = sub.price;
 
-            // ساخت فرم جزئیات اختصاصی (برای راهپله یا منزل)
             const extraContainer = document.getElementById('extra-options-container');
             if (sub.hasStairDetails) {
                 extraContainer.innerHTML = `
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                            <label class="block font-medium text-gray-600 mb-1">تعداد طبقات راهپله</label>
+                            <label class="block font-medium text-gray-600 mb-1">تعداد طبقات راه پله</label>
                             <input type="number" id="extra-floors" value="4" min="1" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-center">
                         </div>
                         <div>
@@ -391,7 +360,7 @@
             const address = document.getElementById('order-address').value;
 
             if (!date || !phone || !address) {
-                alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');
+                alert('لطفاً تاریخ شمسی، شماره تماس و آدرس را به طور کامل وارد کنید.');
                 return;
             }
 
