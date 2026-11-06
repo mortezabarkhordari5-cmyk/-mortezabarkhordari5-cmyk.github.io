@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>خدمت پلاس - پنل متخصصان</title>
+<title>خدمت پلاس - پنل اختصاصی متخصصان</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
@@ -39,12 +39,25 @@ main{max-width:768px;margin:0 auto;padding:16px;flex-grow:1;width:100%;padding-b
 .client-revealed{background:#ecfdf5;border:1px solid #6ee7b7;padding:10px;border-radius:10px;font-size:12px;color:#065f46;line-height:1.8}
 .empty-box{text-align:center;padding:48px 16px;background:white;border-radius:16px;border:1px solid #f1f5f9;color:#64748b;font-size:13px}
 .bottom-nav{background:white;border-top:1px solid #e2e8f0;position:fixed;bottom:0;left:0;right:0;z-index:40}
-.nav-container{max-width:768px;margin:0 auto;display:flex;justify-content:space-around;padding:10px}
-.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;gap:4px;text-decoration:none}
-.nav-btn.active{color:#059669;font-weight:700}
+.nav-container{max-width:768px;margin:0 auto;display:flex;justify-content:center;padding:10px}
+.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:500;color:#059669;cursor:pointer;gap:4px;text-decoration:none}
+.nav-btn.active{font-weight:700}
 </style>
 </head>
 <body>
+
+<!-- صفحه محافظت شده متخصص -->
+<div id="auth-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:white;padding:24px;border-radius:16px;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 25px -5px rgba(0,0,0,.2)">
+    <div style="width:50px;height:50px;background:#059669;color:white;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px auto"><i class="fa-solid fa-lock"></i></div>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;color:#1e293b">ورود به پنل متخصصان</h3>
+    <p style="font-size:12px;color:#64748b;margin-bottom:16px">لطفاً رمز عبور اختصاصی متخصص را وارد کنید:</p>
+    <input type="password" id="pro-password-input" class="form-control" placeholder="رمز عبور" style="margin-bottom:12px;text-align:center;letter-spacing:2px">
+    <button onclick="verifyProPassword()" class="btn-submit-bid" style="width:100%;padding:10px">تایید و ورود</button>
+  </div>
+</div>
+
+<div id="main-content" style="display:none; flex-direction:column; min-height:100vh;">
 <header>
   <div class="header-container">
     <div style="display:flex;align-items:center;gap:10px">
@@ -80,32 +93,63 @@ main{max-width:768px;margin:0 auto;padding:16px;flex-grow:1;width:100%;padding-b
 
 <nav class="bottom-nav">
   <div class="nav-container">
-    <button class="nav-btn active"><i class="fa-solid fa-briefcase"></i>سفارش‌های در جریان</button>
-    <a href="index.html" class="nav-btn"><i class="fa-solid fa-store"></i>نسخه مشتری</a>
+    <button class="nav-btn active"><i class="fa-solid fa-briefcase"></i>سفارش‌های در جریان (پنل اختصاصی)</button>
   </div>
 </nav>
+</div>
 
 <script>
+// رمز عبور پیش‌فرض برای پنل متخصص (می‌توانید مقدار آن را تغییر دهید)
+const SPECIALIST_SECRET_PASS = "1368"; 
+
+function verifyProPassword() {
+  const inputVal = document.getElementById('pro-password-input').value.trim();
+  if (inputVal === SPECIALIST_SECRET_PASS) {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'flex';
+    sessionStorage.setItem('pro_authenticated', 'true');
+    renderOrders();
+  } else {
+    alert('رمز عبور اشتباه است!');
+    document.getElementById('pro-password-input').value = '';
+  }
+}
+
+// بررسی اینکه آیا از قبل در همین نشست ورود کرده است یا خیر
+window.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('pro_authenticated') === 'true') {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'flex';
+    renderOrders();
+  }
+});
+
+// اینتر زدن در input رمز
+document.getElementById('pro-password-input')?.addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') verifyProPassword();
+});
+
 const PRO_SPECIALIST = {
   name: "علی رضایی (من)",
   phone: "09121234567"
 };
 
-const BID_COST = 5000; // هزینه‌ای که به ازای ارسال هر پیشنهاد از کیف پول کسر می‌شود
+const BID_COST = 5000;
 const money = n => Number(n).toLocaleString('fa-IR');
 
 function getWalletBalance() {
   let bal = localStorage.getItem('khedmat_wallet_balance');
   if (bal === null) {
-    bal = 250000; // پیش‌فرض اولیه
-    localStorage.setItem('khedmat_balance', bal);
+    bal = 250000;
+    localStorage.setItem('khedmat_wallet_balance', bal);
   }
   return parseInt(bal, 10);
 }
 
 function updateWalletDisplay() {
   const bal = getWalletBalance();
-  document.getElementById('wallet-balance').innerText = money(bal);
+  const el = document.getElementById('wallet-balance');
+  if (el) el.innerText = money(bal);
 }
 
 function chargeWallet() {
@@ -134,6 +178,7 @@ function saveOrders(orders) {
 function renderOrders() {
   updateWalletDisplay();
   const container = document.getElementById('pro-orders-list');
+  if (!container) return;
   const orders = readOrders();
 
   let countNew = 0, countBids = 0, countWon = 0;
@@ -240,7 +285,6 @@ function submitBid(orderId) {
     return;
   }
 
-  // کسر هزینه پیشنهاد از کیف پول
   currentBalance -= BID_COST;
   localStorage.setItem('khedmat_wallet_balance', currentBalance);
 
@@ -271,7 +315,6 @@ function escapeHtml(val){
   return String(val??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-window.onload = renderOrders;
 window.addEventListener('storage', renderOrders);
 </script>
 </body>
