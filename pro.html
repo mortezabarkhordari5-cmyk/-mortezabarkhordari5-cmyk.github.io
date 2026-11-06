@@ -39,7 +39,7 @@ main{max-width:768px;margin:0 auto;padding:16px;flex-grow:1;width:100%;padding-b
 .empty-box{text-align:center;padding:48px 16px;background:white;border-radius:16px;border:1px solid #f1f5f9;color:#64748b;font-size:13px}
 .bottom-nav{background:white;border-top:1px solid #e2e8f0;position:fixed;bottom:0;left:0;right:0;z-index:40}
 .nav-container{max-width:768px;margin:0 auto;display:flex;justify-content:space-around;padding:10px}
-.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;gap:4px}
+.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;gap:4px;text-decoration:none}
 .nav-btn.active{color:#059669;font-weight:700}
 </style>
 </head>
@@ -80,7 +80,7 @@ main{max-width:768px;margin:0 auto;padding:16px;flex-grow:1;width:100%;padding-b
 <nav class="bottom-nav">
   <div class="nav-container">
     <button class="nav-btn active"><i class="fa-solid fa-briefcase"></i>سفارش‌های در جریان</button>
-    <a href="index.html" class="nav-btn" style="text-decoration:none"><i class="fa-solid fa-store"></i>نسخه مشتری</a>
+    <a href="index.html" class="nav-btn"><i class="fa-solid fa-store"></i>نسخه مشتری</a>
   </div>
 </nav>
 
@@ -116,8 +116,8 @@ function renderOrders() {
   }
 
   container.innerHTML = orders.map(ord => {
-    // بررسی وضعیت پیشنهادهای متخصص
-    const myBid = (ord.proposals || []).find(p => p.phone === PRO_SPECIALIST.phone || p.name.includes('علی رضایی'));
+    if (!ord.proposals) ord.proposals = [];
+    const myBid = ord.proposals.find(p => p.phone === PRO_SPECIALIST.phone || p.name.includes('علی رضایی'));
     const isWon = ord.accepted_proposal && (ord.accepted_proposal.phone === PRO_SPECIALIST.phone || ord.accepted_proposal.name.includes('علی رضایی'));
 
     if (isWon) countWon++;
@@ -146,11 +146,12 @@ function renderOrders() {
         </div>
       `;
     } else {
+      const defaultVal = parseInt(String(ord.total_price||'').replace(/[^0-9]/g,''), 10) || 300000;
       actionSection = `
         <div class="bid-section">
           <b style="font-size:12px;color:#065f46">ارسال پیشنهاد همکاری برای این سفارش:</b>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <input type="number" id="bid-price-${ord.id}" class="form-control" placeholder="قیمت پیشنهادی (تومان)" value="${parseInt(String(ord.total_price||'').replace(/[^0-9]/g,''),10) || 300000}">
+            <input type="number" id="bid-price-${ord.id}" class="form-control" placeholder="قیمت پیشنهادی (تومان)" value="${defaultVal}">
             <input type="text" id="bid-eta-${ord.id}" class="form-control" placeholder="زمان اعزام (مثلاً: امروز ۱۷)">
           </div>
           <button onclick="submitBid('${ord.id}')" class="btn-submit-bid">
@@ -174,7 +175,7 @@ function renderOrders() {
           <div><i class="fa-regular fa-calendar"></i> زمان درخواستی: <b>${escapeHtml(ord.preferred_date)} (${escapeHtml(ord.preferred_time)})</b></div>
           ${ord.extra_details ? `<div><i class="fa-solid fa-list-check"></i> جزئیات: ${escapeHtml(ord.extra_details)}</div>` : ''}
           <div><i class="fa-solid fa-coins" style="color:#eab308"></i> برآورد پایه مشتری: <b>${escapeHtml(ord.total_price)}</b></div>
-          <div><i class="fa-solid fa-location-dot"></i> محدوده: ${escapeHtml(ord.address.substring(0, 30))}...</div>
+          <div><i class="fa-solid fa-location-dot"></i> محدوده: ${escapeHtml(ord.address)}</div>
         </div>
 
         ${actionSection}
@@ -205,6 +206,9 @@ function submitBid(orderId) {
 
   if (!ord.proposals) ord.proposals = [];
 
+  // حذف پیشنهاد قبلی این متخصص در صورت وجود و اضافه کردن جدید
+  ord.proposals = ord.proposals.filter(p => p.phone !== PRO_SPECIALIST.phone);
+
   ord.proposals.push({
     id: ord.id + '_pro_' + Date.now(),
     name: PRO_SPECIALIST.name,
@@ -216,7 +220,7 @@ function submitBid(orderId) {
   });
 
   saveOrders(orders);
-  alert('پیشنهاد شما با موفقیت برای مشتری ارسال شد! به محض انتخاب شما، اطلاعات کامل در همین صفحه باز خواهد شد.');
+  alert('پیشنهاد شما با موفقیت برای مشتری ارسال شد!');
   renderOrders();
 }
 
@@ -225,6 +229,7 @@ function escapeHtml(val){
 }
 
 window.onload = renderOrders;
+window.addEventListener('storage', renderOrders);
 </script>
 </body>
 </html>
