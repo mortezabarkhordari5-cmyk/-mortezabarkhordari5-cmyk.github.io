@@ -3,541 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدمت پلاس - پلتفرم جامع خدمات هوشمند در منزل</title>
-    <!-- FontAwesome Icons -->
+    <title>خدمت پلاس - پلتفرم هوشمند خدمات منزل و ثبت سفارش</title>
+    <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    
-    <!-- Persian Datepicker CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-    <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
-    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
-
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
-        * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; }
+        :root {
+            --primary: #00b894;
+            --primary-dark: #00a381;
+            --secondary: #0984e3;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --gray: #b2bec3;
+            --border: #dfe6e9;
+            --radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, Vazirmatn, sans-serif;
+        }
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 70px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,184,148,0.1);
+        }
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .cat-item {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cat-item:hover, .cat-item.active {
+            background: rgba(0,184,148,0.1);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+        .cat-item i {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .cat-item span {
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+        .btn-secondary {
+            background: var(--secondary);
+        }
+        .proposal-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-top: 10px;
+            position: relative;
+        }
+        .proposal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .specialist-name {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .specialist-rating {
+            color: #f39c12;
+            font-size: 0.85rem;
+        }
+        .proposal-price {
+            font-weight: bold;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin: 8px 0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            background: #dfe6e9;
+            color: var(--dark);
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
         
-        header { background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
-        .header-container { max-width: 768px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
-        
-        .logo-box { width: 40px; height: 40px; background: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); }
-        .header-title h1 { font-size: 16px; font-weight: 700; color: #1e293b; line-height: 1.2; }
-        .header-title span { font-size: 11px; color: #4f46e5; font-weight: 500; }
-        
-        .btn-orders-top { background: #eef2ff; color: #4338ca; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        
-        main { max-width: 768px; margin: 0 auto; padding: 16px; flex-grow: 1; width: 100%; padding-bottom: 80px; }
-        
-        .banner { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border-radius: 16px; padding: 20px; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); margin-bottom: 24px; position: relative; overflow: hidden; }
-        .banner h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-        .banner p { font-size: 13px; color: #e0e7ff; }
-        
-        .section-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
-        
-        .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .cat-card { background: white; padding: 16px 8px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 1px 2px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; }
-        .cat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .cat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .cat-card span { font-size: 12px; font-weight: 700; color: #334155; }
-        
-        .booking-section { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; margin-top: 16px; }
-        .booking-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px; }
-        .booking-header h3 { color: #4f46e5; font-size: 15px; font-weight: 700; }
-        .close-btn { background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; }
-        
-        .sub-item { padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .sub-item:hover { background: #eef2ff; border-color: #c7d2fe; }
-        .sub-item h4 { font-size: 13px; font-weight: 700; color: #1e293b; }
-        .sub-item span { font-size: 11px; color: #4f46e5; font-weight: 500; }
-        
-        .form-details { border-top: 1px solid #f1f5f9; padding-top: 16px; margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
-        .summary-box { background: #eef2ff; padding: 12px; border-radius: 12px; border: 1px solid #c7d2fe; display: flex; justify-content: space-between; align-items: center; }
-        .summary-box span { font-size: 11px; color: #64748b; }
-        .summary-box b { font-size: 13px; color: #1e293b; }
-        
-        .extra-box { background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .form-group { display: flex; flex-direction: column; gap: 4px; }
-        .form-group label { font-size: 11px; font-weight: 600; color: #475569; }
-        .form-control { width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; transition: 0.2s; }
-        .form-control:focus { border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1); }
-        
-        .submit-btn { background: #4f46e5; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .submit-btn:hover { background: #4338ca; }
-        
-        .bottom-nav { background: white; border-top: 1px solid #e2e8f0; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.02); }
-        .nav-container { max-width: 768px; margin: 0 auto; display: flex; justify-content: space-around; padding: 10px; }
-        .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 500; color: #94a3b8; cursor: pointer; gap: 4px; }
-        .nav-btn.active { color: #4f46e5; font-weight: 700; }
-        .nav-btn i { font-size: 18px; }
-        
-        .order-card { background: white; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .badge { background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-        .cancel-btn { background: #fff1f2; color: #e11d48; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .cancel-btn:hover { background: #ffe4e6; }
-        
-        .hidden { display: none !important; }
+        /* Navigation bottom bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+        .nav-item {
+            text-align: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.75rem;
+            cursor: pointer;
+            flex: 1;
+        }
+        .nav-item.active {
+            color: var(--primary);
+        }
+        .nav-item i {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .revenue-banner {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 12px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
-        <div class="header-container">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="logo-box">
-                    <i class="fa-solid fa-hands-holding-child"></i>
-                </div>
-                <div class="header-title">
-                    <h1>خدمت پلاس</h1>
-                    <span>نسخه پیشرفته هوشمند</span>
-                </div>
-            </div>
-            <button onclick="switchTab('orders')" class="btn-orders-top">
-                <i class="fa-solid fa-rectangle-list"></i> پیگیری سفارش‌ها
-            </button>
-        </div>
+        <h1>خدمت پلاس</h1>
+        <p>سامانه هوشمند ثبت سفارش و استعلام قیمت خدمات منزل</p>
     </header>
 
-    <!-- Main Container -->
-    <main>
+    <div class="container">
         
-        <!-- TAB 1: SERVICES & BOOKING -->
-        <div id="tab-services">
+        <!-- Revenue / Monetization Notice -->
+        <div class="revenue-banner">
+            <i class="fa fa-crown"></i> طرح‌های اشتراک ویژه و سکوی رزرو متخصصین فعال است!
+        </div>
+
+        <!-- Search & Categories Card -->
+        <div class="card">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="جستجوی خدمت (نظافت، لوله‌کشی، جابجایی...)">
+                <i class="fa fa-search"></i>
+            </div>
             
-            <!-- Banner -->
-            <div class="banner">
-                <div style="position: relative; z-index: 10;">
-                    <h2>چه خدماتی نیاز دارید؟</h2>
-                    <p>سریع‌ترین راه دسترسی به بهترین متخصصان و استادکاران</p>
+            <label style="font-size: 0.85rem; font-weight: bold; color: var(--gray);">دسته‌بندی خدمات</label>
+            <div class="categories-grid" id="categoryGrid">
+                <div class="cat-item active" data-cat="cleaning">
+                    <i class="fa fa-broom" style="color: #00b894;"></i>
+                    <span>نظافت</span>
                 </div>
-                <div style="position: absolute; left: -10px; bottom: -10px; color: rgba(255,255,255,0.1); font-size: 80px;">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                <div class="cat-item" data-cat="plumbing">
+                    <i class="fa fa-faucet" style="color: #0984e3;"></i>
+                    <span>لوله‌کشی</span>
                 </div>
-            </div>
-
-            <!-- Categories Section -->
-            <div>
-                <h3 class="section-title">دسته‌بندی خدمات</h3>
-                <div id="categories-grid" class="categories-grid"></div>
-            </div>
-
-            <!-- Booking Section -->
-            <div id="booking-section" class="booking-section hidden">
-                <div class="booking-header">
-                    <h3 id="selected-cat-title">انتخاب زیرخدمت</h3>
-                    <button onclick="closeBooking()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                <div class="cat-item" data-cat="cooling">
+                    <i class="fa fa-snowflake" style="color: #00cec9;"></i>
+                    <span>سرمایشی</span>
                 </div>
-
-                <div id="subservices-list"></div>
-
-                <!-- Service Details Form -->
-                <div id="order-form-details" class="form-details hidden">
-                    <div class="summary-box">
-                        <div>
-                            <span>خدمت انتخابی:</span>
-                            <b id="summary-service-name"></b>
-                        </div>
-                        <div style="text-align: left;">
-                            <span>نوع محاسبه:</span>
-                            <div id="summary-calc-type" style="background: #4f46e5; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-top: 2px; font-weight: 600;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Extra Options -->
-                    <div id="extra-options-container" class="extra-box hidden"></div>
-
-                    <!-- Date & Time Picker -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div class="form-group">
-                            <label>تاریخ انجام کار (شمسی)</label>
-                            <input type="text" id="order-date" class="form-control" placeholder="انتخاب تاریخ" style="text-align: center; font-weight: 700; color: #4f46e5;" autocomplete="off" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>ساعت حضور</label>
-                            <select id="order-time" class="form-control">
-                                <option value="8 تا 12 صبح">۸ تا ۱۲ صبح</option>
-                                <option value="12 تا 16 عصر">۱۲ تا ۱۶ عصر</option>
-                                <option value="16 تا 20 شب">۱۶ تا ۲۰ شب</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>شماره تماس همراه</label>
-                        <input type="tel" id="order-phone" placeholder="مثال: 09123456789" class="form-control" style="text-align: left;" dir="ltr">
-                    </div>
-
-                    <div class="form-group">
-                        <label>آدرس دقیق محل</label>
-                        <textarea id="order-address" rows="2" placeholder="شهر، خیابان، کوچه، پلاک، واحد..." class="form-control"></textarea>
-                    </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                        <div>
-                            <span style="font-size: 11px; color: #64748b;">مبلغ نهایی قابل پرداخت:</span>
-                            <div id="estimated-price" style="font-size: 16px; font-weight: 800; color: #4f46e5;">۰ تومان</div>
-                        </div>
-                        <button onclick="submitOrder()" class="submit-btn">
-                            ثبت نهایی سفارش <i class="fa-solid fa-check"></i>
-                        </button>
-                    </div>
+                <div class="cat-item" data-cat="moving">
+                    <i class="fa fa-truck-fast" style="color: #e17055;"></i>
+                    <span>باربری</span>
                 </div>
             </div>
-
         </div>
 
-        <!-- TAB 2: ORDERS TRACKING -->
-        <div id="tab-orders" class="hidden" style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="section-title" style="margin-bottom: 0;">سفارش‌های ثبت‌شده شما</h3>
-                <button onclick="switchTab('services')" style="background: none; border: none; color: #4f46e5; font-size: 13px; font-weight: 600; cursor: pointer;"><i class="fa-solid fa-plus"></i> ثبت سفارش جدید</button>
+        <!-- Order Booking Form Card -->
+        <div class="card" id="bookingCard">
+            <h3 style="margin-bottom: 15px; font-size: 1.1rem;"><i class="fa fa-clipboard-list text-primary"></i> ثبت درخواست جدید</h3>
+            
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>انتخاب نحوه قیمت‌دهی</label>
+                    <select class="form-control" id="pricingMode">
+                        <option value="bidding">دریافت پیشنهاد قیمت از متخصصان (رقابتی)</option>
+                        <option value="fixed">تعرفه ثابت و رزرو فوری</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>توضیحات جزئیات کار و آدرس</label>
+                    <textarea class="form-control" id="orderDesc" rows="3" placeholder="مثلاً: نظافت راه پله ساختمان ۴ طبقه همراه با شوینده..."></textarea>
+                </div>
+
+                <div id="dynamicExtraOptions">
+                    <!-- Dynamic fields will be inserted here -->
+                </div>
+
+                <button type="submit" class="btn">ثبت نهایی درخواست و ارسال برای متخصصان</button>
+            </form>
+        </div>
+
+        <!-- Orders & Proposals Tracking Card -->
+        <div class="card" id="trackingCard">
+            <h3 style="margin-bottom: 15px; font-size: 1.1rem;"><i class="fa fa-list-check"></i> پیگیری سفارش‌ها و پیشنهادها</h3>
+            <div id="proposalsList">
+                <p style="color: var(--gray); text-align: center; font-size: 0.9rem;">هنوز سفارشی ثبت نکرده‌اید یا پیشنهادی دریافت نشده است.</p>
             </div>
-            <div id="orders-list-container"></div>
         </div>
 
-    </main>
+    </div>
 
-    <!-- Bottom Nav -->
-    <nav class="bottom-nav">
-        <div class="nav-container">
-            <button onclick="switchTab('services')" id="nav-btn-services" class="nav-btn active">
-                <i class="fa-solid fa-house"></i>
-                خانه و خدمات
-            </button>
-            <button onclick="switchTab('orders')" id="nav-btn-orders" class="nav-btn">
-                <i class="fa-solid fa-clipboard-list"></i>
-                پیگیری سفارش‌ها
-            </button>
-        </div>
-    </nav>
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active"><i class="fa fa-home"></i>خانه</a>
+        <a href="#" class="nav-item"><i class="fa fa-list-alt"></i>سفارش‌ها</a>
+        <a href="#" class="nav-item"><i class="fa fa-wallet"></i>کیف پول</a>
+        <a href="#" class="nav-item"><i class="fa fa-user"></i>حساب کاربری</a>
+    </div>
 
-    <!-- Application Logic -->
     <script>
-        const SUPABASE_URL = 'https://toegqqofbotxmgycgnfd.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_783d7bae...'; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const categoriesData = [
-            {
-                id: 'cleaning',
-                title: 'نظافت و پذیرایی',
-                icon: 'fa-broom',
-                bgColor: '#fef3c7',
-                color: '#d97706',
-                subservices: [
-                    { name: 'نظافت راه پله و مشاعات', type: 'کنتراتی / پروژه‌ای', basePrice: 250000, hasStairDetails: true },
-                    { name: 'نظافت منزل و آپارتمان', type: 'ساعتی', basePrice: 150000, hasHomeDetails: true },
-                    { name: 'مبل‌شویی و قالیشویی در منزل', type: 'پروژه‌ای', basePrice: 400000 }
-                ]
-            },
-            {
-                id: 'plumbing',
-                title: 'تأسیسات و لوله‌کشی',
-                icon: 'fa-faucet-dripping',
-                bgColor: '#e0f2fe',
-                color: '#0284c7',
-                subservices: [
-                    { name: 'لوله‌کشی آب و فاضلاب', type: 'ساعتی / کنتراتی', basePrice: 300000 },
-                    { name: 'رفع گرفتگی لوله و چاه‌بازکنی', type: 'کنتراتی', basePrice: 250000 },
-                    { name: 'نصب و تعمیر شیرآلات', type: 'کنتراتی', basePrice: 200000 }
-                ]
-            },
-            {
-                id: 'cooling_heating',
-                title: 'سرمایش و گرمایش',
-                icon: 'fa-temperature-arrow-up',
-                bgColor: '#cffafe',
-                color: '#0891b2',
-                subservices: [
-                    { name: 'سرویس و تعمیر پکیج و آبگرمکن', type: 'کنتراتی', basePrice: 350000 },
-                    { name: 'نصب و تعمیر کولر گازی و آبی', type: 'کنتراتی', basePrice: 400000 }
-                ]
-            },
-            {
-                id: 'appliances',
-                title: 'لوازم خانگی',
-                icon: 'fa-tv',
-                bgColor: '#f3e8ff',
-                color: '#9333ea',
-                subservices: [
-                    { name: 'تعمیر ماشین لباسشویی و ظرفشویی', type: 'کنتراتی', basePrice: 350000 },
-                    { name: 'تعمیر یخچال و فریزر در محل', type: 'کنتراتی', basePrice: 450000 }
-                ]
-            },
-            {
-                id: 'electrical',
-                title: 'برق‌کاری و روشنایی',
-                icon: 'fa-bolt',
-                bgColor: '#fef9c3',
-                color: '#ca8a04',
-                subservices: [
-                    { name: 'سیم‌کشی و رفع اتصالی برق', type: 'ساعتی', basePrice: 250000 },
-                    { name: 'نصب لوستر، هالوژن و آویز', type: 'کنتراتی (تعداد)', basePrice: 200000 }
-                ]
-            },
-            {
-                id: 'building',
-                title: 'بازسازی و دکوراسیون',
-                icon: 'fa-paint-roller',
-                bgColor: '#ffe4e6',
-                color: '#e11d48',
-                subservices: [
-                    { name: 'نقاشی ساختمان و کاغذ دیواری', type: 'متراژی', basePrice: 500000 },
-                    { name: 'گچ‌کاری، کاشی‌کاری و بنایی', type: 'کنتراتی', basePrice: 600000 }
-                ]
-            }
-        ];
-
-        let currentSelectedService = null;
-
-        window.onload = function() {
-            renderCategories();
-            $("#order-date").persianDatepicker({
-                format: 'YYYY/MM/DD',
-                initialValue: false,
-                autoClose: true,
-                toolbox: {
-                    calendarSwitch: { enabled: false }
-                }
+        // Category selection
+        document.querySelectorAll('.cat-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                updateExtraOptions(this.getAttribute('data-cat'));
             });
-        };
+        });
 
-        function renderCategories() {
-            const grid = document.getElementById('categories-grid');
-            grid.innerHTML = categoriesData.map(cat => `
-                <div onclick="selectCategory('${cat.id}')" class="cat-card">
-                    <div class="cat-icon" style="background-color: ${cat.bgColor}; color: ${cat.color};">
-                        <i class="fa-solid ${cat.icon}"></i>
-                    </div>
-                    <span>${cat.title}</span>
-                </div>
-            `).join('');
-        }
-
-        function selectCategory(catId) {
-            const cat = categoriesData.find(c => c.id === catId);
-            if (!cat) return;
-
-            document.getElementById('selected-cat-title').innerText = cat.title;
-            const subList = document.getElementById('subservices-list');
-            
-            subList.innerHTML = cat.subservices.map((sub) => `
-                <div onclick='selectSubservice(${JSON.stringify(sub)})' class="sub-item">
-                    <div>
-                        <h4>${sub.name}</h4>
-                        <span>محاسبه: ${sub.type}</span>
-                    </div>
-                    <div style="text-align: left;">
-                        <span style="font-weight: 700; color: #4f46e5; display: block;">پایه: ${sub.basePrice.toLocaleString()} ت</span>
-                        <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: #cbd5e1; margin-top: 4px;"></i>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('booking-section').classList.remove('hidden');
-            document.getElementById('order-form-details').classList.add('hidden');
-            document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function selectSubservice(sub) {
-            currentSelectedService = sub;
-            document.getElementById('summary-service-name').innerText = sub.name;
-            document.getElementById('summary-calc-type').innerText = sub.type;
-
-            const extraContainer = document.getElementById('extra-options-container');
-            if (sub.hasStairDetails) {
-                extraContainer.innerHTML = `
+        function updateExtraOptions(cat) {
+            const container = document.getElementById('dynamicExtraOptions');
+            if (cat === 'cleaning') {
+                container.innerHTML = `
                     <div class="form-group">
-                        <label>تعداد طبقات راه پله</label>
-                        <input type="number" id="extra-floors" value="4" min="1" oninput="calculatePrice()" class="form-control" style="text-align: center;">
-                    </div>
-                    <div class="form-group">
-                        <label>تعداد واحد ساختمان</label>
-                        <input type="number" id="extra-units" value="8" min="1" oninput="calculatePrice()" class="form-control" style="text-align: center;">
-                    </div>
-                    <div class="form-group">
-                        <label>آسانسور دارد؟</label>
-                        <select id="extra-elevator" onchange="calculatePrice()" class="form-control">
-                            <option value="دارد">بله، دارد</option>
-                            <option value="ندارد">خیر، ندارد</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>پارکینگ دارد؟</label>
-                        <select id="extra-parking" onchange="calculatePrice()" class="form-control">
-                            <option value="دارد">بله، دارد</option>
-                            <option value="ندارد">خیر، ندارد</option>
-                        </select>
-                    </div>
-                `;
-                extraContainer.classList.remove('hidden');
-            } else if (sub.hasHomeDetails) {
-                extraContainer.innerHTML = `
-                    <div class="form-group">
-                        <label>مدت زمان نظافت</label>
-                        <select id="extra-hours" onchange="calculatePrice()" class="form-control">
+                        <label>مدت زمان نظافت (ساعت)</label>
+                        <select class="form-control" id="cleanHours">
                             <option value="4">۴ ساعت</option>
                             <option value="6">۶ ساعت</option>
-                            <option value="8">۸ ساعت (یک روز کامل)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>نیاز به مواد شوینده؟</label>
-                        <select id="extra-detergent" onchange="calculatePrice()" class="form-control">
-                            <option value="0">توسط خودم تهیه می‌شود</option>
-                            <option value="150000">توسط متخصص آورده شود (+۱۵۰ ت)</option>
+                            <option value="8">۸ ساعت</option>
                         </select>
                     </div>
                 `;
-                extraContainer.classList.remove('hidden');
+            } else if (cat === 'moving') {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label>نوع خودرو باربری</label>
+                        <select class="form-control" id="truckType">
+                            <option value="nissan">نیسان بار</option>
+                            <option value="khatir">خاور مسقف</option>
+                        </select>
+                    </div>
+                `;
             } else {
-                extraContainer.innerHTML = '';
-                extraContainer.classList.add('hidden');
+                container.innerHTML = '';
             }
-
-            calculatePrice();
-            document.getElementById('order-form-details').classList.remove('hidden');
-            document.getElementById('order-form-details').scrollIntoView({ behavior: 'smooth' });
         }
+        // Initialize default
+        updateExtraOptions('cleaning');
 
-        function calculatePrice() {
-            if (!currentSelectedService) return;
-            let total = currentSelectedService.basePrice;
-
-            if (currentSelectedService.hasStairDetails) {
-                const floors = parseInt(document.getElementById('extra-floors').value) || 1;
-                const units = parseInt(document.getElementById('extra-units').value) || 1;
-                total = (floors * 50000) + (units * 15000) + 100000;
-            } else if (currentSelectedService.hasHomeDetails) {
-                const hours = parseInt(document.getElementById('extra-hours').value) || 4;
-                const detergent = parseInt(document.getElementById('extra-detergent').value) || 0;
-                total = (hours * currentSelectedService.basePrice) + detergent;
-            }
-
-            document.getElementById('estimated-price').innerText = total.toLocaleString() + ' تومان';
-        }
-
-        function closeBooking() {
-            document.getElementById('booking-section').classList.add('hidden');
-        }
-
-        function switchTab(tabName) {
-            if (tabName === 'services') {
-                document.getElementById('tab-services').classList.remove('hidden');
-                document.getElementById('tab-orders').classList.add('hidden');
-                document.getElementById('nav-btn-services').className = "nav-btn active";
-                document.getElementById('nav-btn-orders').className = "nav-btn";
-            } else {
-                document.getElementById('tab-services').classList.add('hidden');
-                document.getElementById('tab-orders').classList.remove('hidden');
-                document.getElementById('nav-btn-orders').className = "nav-btn active";
-                document.getElementById('nav-btn-services').className = "nav-btn";
-                loadOrders();
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        async function submitOrder() {
-            const date = document.getElementById('order-date').value;
-            const time = document.getElementById('order-time').value;
-            const phone = document.getElementById('order-phone').value;
-            const address = document.getElementById('order-address').value;
-            const finalPriceText = document.getElementById('estimated-price').innerText;
-
-            if (!date || !phone || !address) {
-                alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');
+        // Form Submission & Simulated Proposals
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const desc = document.getElementById('orderDesc').value;
+            const mode = document.getElementById('pricingMode').value;
+            
+            if(!desc) {
+                alert('لطفاً توضیحات سفارش را وارد کنید.');
                 return;
             }
 
-            let extraInfoText = '';
-            if (document.getElementById('extra-floors')) {
-                const floors = document.getElementById('extra-floors').value;
-                const units = document.getElementById('extra-units').value;
-                const elevator = document.getElementById('extra-elevator').value;
-                const parking = document.getElementById('extra-parking').value;
-                extraInfoText = `طبقات: ${floors} | واحدها: ${units} | آسانسور: ${elevator} | پارکینگ: ${parking}`;
-            } else if (document.getElementById('extra-hours')) {
-                const hours = document.getElementById('extra-hours').value;
-                const detergent = document.getElementById('extra-detergent').value > 0 ? 'توسط متخصص' : 'توسط مشتری';
-                extraInfoText = `مدت: ${hours} ساعت | شوینده: ${detergent}`;
-            }
-
-            const orderData = {
-                id: 'ord_' + Date.now(),
-                service_name: currentSelectedService.name,
-                calculation_type: currentSelectedService.type,
-                extra_details: extraInfoText,
-                preferred_date: date,
-                preferred_time: time,
-                phone: phone,
-                address: address,
-                total_price: finalPriceText,
-                status: 'در انتظار تایید و تخصیص متخصص',
-                created_at: new Date().toISOString()
-            };
-
-            let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
-            orders.unshift(orderData);
+            // Save to LocalStorage
+            const orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
+            const newOrder = { id: Date.now(), desc, mode, status: 'waiting' };
+            orders.push(newOrder);
             localStorage.setItem('khedmat_orders', JSON.stringify(orders));
 
-            alert('سفارش شما با موفقیت ثبت شد!');
-            closeBooking();
-            switchTab('orders');
-        }
+            alert('درخواست شما با موفقیت ثبت شد و به متخصصان ارسال گردید.');
+            renderProposals();
+        });
 
-        function cancelOrder(orderId) {
-            if (confirm('آیا از لغو این سفارش اطمینان دارید؟')) {
-                let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
-                orders = orders.filter(o => o.id !== orderId);
-                localStorage.setItem('khedmat_orders', JSON.stringify(orders));
-                loadOrders();
-            }
-        }
-
-        function loadOrders() {
-            const container = document.getElementById('orders-list-container');
-            let orders = JSON.parse(localStorage.getItem('khedmat_orders') || '[]');
-
-            if (orders.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 48px 0; background: white; border-radius: 16px; border: 1px solid #f1f5f9;">
-                        <i class="fa-solid fa-box-open" style="font-size: 36px; color: #cbd5e1; margin-bottom: 12px;"></i>
-                        <p style="color: #64748b; font-size: 13px;">هنوز سفارشی ثبت نکرده‌اید.</p>
+        function renderProposals() {
+            const list = document.getElementById('proposalsList');
+            // Simulate incoming proposals for demonstration
+            list.innerHTML = `
+                <div class="proposal-card">
+                    <div class="proposal-header">
+                        <span class="specialist-name"><i class="fa fa-user-shield text-primary"></i> استاد علی رحیمی</span>
+                        <span class="specialist-rating"><i class="fa fa-star"></i> ۴.۸ (۳۴ نظر)</span>
                     </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = orders.map(ord => `
-                <div class="order-card">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
-                            <h4 style="font-size: 13px; font-weight: 700; color: #1e293b;">${ord.service_name}</h4>
-                            <span style="font-size: 11px; color: #4f46e5; font-weight: 500;">${ord.calculation_type}</span>
-                        </div>
-                        <span class="badge">${ord.status}</div>
-                    </div>
-                    <div style="font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 4px; background: #f8fafc; padding: 12px; border-radius: 10px;">
-                        <div><i class="fa-regular fa-calendar" style="color: #94a3b8; margin-left: 4px;"></i> تاریخ: ${ord.preferred_date} (${ord.preferred_time})</div>
-                        ${ord.extra_details ? `<div><i class="fa-solid fa-circle-info" style="color: #94a3b8; margin-left: 4px;"></i> جزئیات: ${ord.extra_details}</div>` : ''}
-                        <div><i class="fa-solid fa-money-bill-wave" style="color: #10b981; margin-left: 4px;"></i> مبلغ: <b style="color: #059669;">${ord.total_price}</b></div>
-                        <div><i class="fa-solid fa-location-dot" style="color: #94a3b8; margin-left: 4px;"></i> آدرس: ${ord.address}</div>
-                        <div><i class="fa-solid fa-phone" style="color: #94a3b8; margin-left: 4px;"></i> تماس: ${ord.phone}</div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; border-top: 1px solid #f1f5f9; padding-top: 8px;">
-                        <button onclick="cancelOrder('${ord.id}')" class="cancel-dfn cancel-btn">
-                            <i class="fa-solid fa-trash-can"></i> لغو سفارش
-                        </button>
+                    <p style="font-size: 0.85rem; color: #666;">آماده انجام کار با کیفیت تضمین شده در کمترین زمان.</p>
+                    <div class="proposal-price">۲۵۰,۰۰۰ تومان</div>
+                    <span class="badge badge-warning">منتظر تأیید شما</span>
+                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                        <button class="btn" style="padding: 8px; font-size: 0.85rem;" onclick="alert('پیشنهاد پذیرفته شد! شماره تماس متخصص نمایش داده شد.')">تأیید و رزرو</button>
+                        <button class="btn btn-secondary" style="padding: 8px; font-size: 0.85rem; background:#d63031;" onclick="alert('پیشنهاد لغو شد.')">لغو</button>
                     </div>
                 </div>
-            `).join('');
+            `;
         }
+
+        // Load initial proposals if any
+        renderProposals();
     </script>
 </body>
 </html>
