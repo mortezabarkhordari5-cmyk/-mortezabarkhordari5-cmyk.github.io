@@ -22,8 +22,15 @@ header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.05);position:sticky;top:
 .form-group{display:flex;flex-direction:column;gap:4px}.form-group label{font-size:11px;font-weight:600;color:#475569}.form-control{width:100%;background:white;border:1px solid #cbd5e1;border-radius:10px;padding:8px 12px;font-size:13px;outline:none;transition:.2s}.form-control:focus{border-color:#4f46e5;box-shadow:0 0 0 2px rgba(79,70,229,.1)}
 .submit-btn{background:#4f46e5;color:white;border:none;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 6px rgba(79,70,229,.2);transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}.submit-btn:hover{background:#4338ca}.bottom-nav{background:white;border-top:1px solid #e2e8f0;position:fixed;bottom:0;left:0;right:0;z-index:40;box-shadow:0 -4px 6px -1px rgba(0,0,0,.02)}.nav-container{max-width:768px;margin:0 auto;display:flex;justify-content:space-around;padding:10px}.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;gap:4px}.nav-btn.active{color:#4f46e5;font-weight:700}.nav-btn i{font-size:18px}
 .order-card{background:white;padding:16px;border-radius:16px;border:1px solid #f1f5f9;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:12px;display:flex;flex-direction:column;gap:10px}.badge{background:#fef3c7;color:#d97706;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}.cancel-btn{background:#fff1f2;color:#e11d48;border:none;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:.2s}.cancel-btn:hover{background:#ffe4e6}.hidden{display:none!important}
-/* افزونه‌های بازار رقابتی */
-.market-tools{background:white;padding:14px;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}.search-wrap{position:relative}.search-wrap i{position:absolute;right:12px;top:12px;color:#94a3b8}.search-wrap input{padding-right:38px}.mode-help{font-size:11px;color:#64748b;line-height:1.8}.proposal-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}.proposal-row{background:#fff;border:1px solid #e9d5ff;border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}.proposal-actions{display:flex;gap:6px;flex-wrap:wrap}.proposal-btn{border:0;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:11px;font-weight:700}.accept-btn{background:#dcfce7;color:#15803d}.reject-btn{background:#fee2e2;color:#be123c}.contact-revealed{background:#ecfdf5;color:#047857;border-radius:8px;padding:9px;font-size:12px}.empty-results{grid-column:1/-1;text-align:center;padding:16px;color:#64748b;font-size:12px}@media(max-width:420px){.categories-grid{gap:8px}.cat-card{padding:12px 5px}}
+.market-tools{background:white;padding:14px;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}.search-wrap{position:relative}.search-wrap i{position:absolute;right:12px;top:12px;color:#94a3b8}.search-wrap input{padding-right:38px}.mode-help{font-size:11px;color:#64748b;line-height:1.8}
+.proposal-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.proposal-row{background:#fff;border:1px solid #e9d5ff;border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}
+.proposal-actions{display:flex;gap:6px;flex-wrap:wrap}
+.proposal-btn{border:0;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:11px;font-weight:700}
+.accept-btn{background:#dcfce7;color:#15803d}
+.reject-btn{background:#fee2e2;color:#be123c}
+.contact-revealed{background:#ecfdf5;color:#047857;border-radius:8px;padding:9px;font-size:12px;font-weight:600}
+.empty-results{grid-column:1/-1;text-align:center;padding:16px;color:#64748b;font-size:12px}@media(max-width:420px){.categories-grid{gap:8px}.cat-card{padding:12px 5px}}
 </style>
 </head>
 <body>
@@ -72,17 +79,144 @@ function filterServices(){renderCategories();const box=document.getElementById('
 function selectCategory(catId,scroll=true){const cat=categoriesData.find(c=>c.id===catId);if(!cat)return;document.getElementById('selected-cat-title').innerText=cat.title;const q=(document.getElementById('service-search').value||'').trim().toLocaleLowerCase();const list=cat.subservices.filter(s=>(cat.title+' '+s.name+' '+s.type).toLocaleLowerCase().includes(q));document.getElementById('subservices-list').innerHTML=list.length?list.map(sub=>`<div onclick='selectSubservice(${JSON.stringify(sub)})' class="sub-item"><div><h4>${sub.name}</h4><span>محاسبه: ${sub.type}</span></div><div style="text-align:left"><span style="font-weight:700;color:#4f46e5;display:block">پایه: ${money(sub.basePrice)} ت</span><i class="fa-solid fa-chevron-left" style="font-size:10px;color:#cbd5e1;margin-top:4px"></i></div></div>`).join(''):'<div class="empty-results">زیرخدمت مرتبطی نیست.</div>';document.getElementById('booking-section').classList.remove('hidden');document.getElementById('order-form-details').classList.add('hidden');if(scroll)document.getElementById('booking-section').scrollIntoView({behavior:'smooth'})}
 function selectSubservice(sub){currentSelectedService=sub;document.getElementById('summary-service-name').innerText=sub.name;document.getElementById('summary-calc-type').innerText=sub.type;const box=document.getElementById('extra-options-container');if(sub.hasStairDetails){box.innerHTML='<div class="form-group"><label>تعداد طبقات راه پله</label><input type="number" id="extra-floors" value="4" min="1" oninput="calculatePrice()" class="form-control" style="text-align:center"></div><div class="form-group"><label>تعداد واحد ساختمان</label><input type="number" id="extra-units" value="8" min="1" oninput="calculatePrice()" class="form-control" style="text-align:center"></div><div class="form-group"><label>آسانسور دارد؟</label><select id="extra-elevator" onchange="calculatePrice()" class="form-control"><option value="دارد">بله، دارد</option><option value="ندارد">خیر، ندارد</option></select></div><div class="form-group"><label>پارکینگ دارد؟</label><select id="extra-parking" onchange="calculatePrice()" class="form-control"><option value="دارد">بله، دارد</option><option value="ندارد">خیر، ندارد</option></select></div>';box.classList.remove('hidden')}else if(sub.hasHomeDetails){box.innerHTML='<div class="form-group"><label>مدت زمان نظافت</label><select id="extra-hours" onchange="calculatePrice()" class="form-control"><option value="4">۴ ساعت</option><option value="6">۶ ساعت</option><option value="8">۸ ساعت (یک روز کامل)</option></select></div><div class="form-group"><label>نیاز به مواد شوینده؟</label><select id="extra-detergent" onchange="calculatePrice()" class="form-control"><option value="0">توسط خودم تهیه می‌شود</option><option value="150000">توسط متخصص آورده شود (+۱۵۰ ت)</option></select></div>';box.classList.remove('hidden')}else{box.innerHTML='';box.classList.add('hidden')}calculatePrice();document.getElementById('order-form-details').classList.remove('hidden');document.getElementById('order-form-details').scrollIntoView({behavior:'smooth'})}
 function calculatePrice(){if(!currentSelectedService)return;let total=currentSelectedService.basePrice;if(currentSelectedService.hasStairDetails){const floors=parseInt(document.getElementById('extra-floors').value)||1,units=parseInt(document.getElementById('extra-units').value)||1;total=(floors*50000)+(units*15000)+100000}else if(currentSelectedService.hasHomeDetails){const hours=parseInt(document.getElementById('extra-hours').value)||4,detergent=parseInt(document.getElementById('extra-detergent').value)||0;total=(hours*currentSelectedService.basePrice)+detergent}document.getElementById('estimated-price').innerText=money(total)+' تومان'}
-function updatePricingMode(){const bid=document.getElementById('pricing-mode').value==='bidding';document.getElementById('pricing-mode-help').innerText=bid?'سفارش برای دریافت پیشنهادهای شبیه‌سازی‌شده متخصصان ثبت می‌شود؛ با پذیرش پیشنهاد، اطلاعات تماس نمایش داده می‌شود.':'هزینه بر اساس تعرفه پایه و جزئیات خدمت محاسبه می‌شود.';document.getElementById('mode-price-note').innerText=bid?'مبلغ نشان‌داده‌شده صرفاً برآورد اولیه است؛ مبلغ نهایی با انتخاب پیشنهاد تعیین می‌شود.':'';document.getElementById('submit-label').innerText=bid?'ثبت و دریافت پیشنهادها':'ثبت نهایی سفارش'}
+function updatePricingMode(){const bid=document.getElementById('pricing-mode').value==='bidding';document.getElementById('pricing-mode-help').innerText=bid?'سفارش برای دریافت پیشنهاد قیمت از متخصصان ثبت می‌شود؛ با پذیرش پیشنهاد، اطلاعات تماس نمایش داده می‌شود.':'هزینه بر اساس تعرفه پایه و جزئیات خدمت محاسبه می‌شود.';document.getElementById('mode-price-note').innerText=bid?'مبلغ نشان‌داده‌شده صرفاً برآورد اولیه است؛ مبلغ نهایی با انتخاب پیشنهاد تعیین می‌شود.':'';document.getElementById('submit-label').innerText=bid?'ثبت و دریافت پیشنهادها':'ثبت نهایی سفارش'}
 function closeBooking(){document.getElementById('booking-section').classList.add('hidden')}
 function switchTab(tab){if(tab==='services'){document.getElementById('tab-services').classList.remove('hidden');document.getElementById('tab-orders').classList.add('hidden');document.getElementById('nav-btn-services').className='nav-btn active';document.getElementById('nav-btn-orders').className='nav-btn'}else{document.getElementById('tab-services').classList.add('hidden');document.getElementById('tab-orders').classList.remove('hidden');document.getElementById('nav-btn-orders').className='nav-btn active';document.getElementById('nav-btn-services').className='nav-btn';loadOrders()}window.scrollTo({top:0,behavior:'smooth'})}
-// هوک‌های آماده درآمدزایی: نرخ کمیسیون و موجودی اعتباری؛ تسویه واقعی نیازمند بک‌اند امن است.
+
 const MONETIZATION={commissionRate:0.10,creditBalance:0,currency:'تومان'};
 function commissionFor(amount){return Math.round(Number(amount||0)*MONETIZATION.commissionRate)}
 function creditHook(event,amount,orderId){const log=JSON.parse(localStorage.getItem('khedmat_monetization_events')||'[]');log.unshift({event,amount:Number(amount||0),orderId,commission:commissionFor(amount),at:new Date().toISOString()});localStorage.setItem('khedmat_monetization_events',JSON.stringify(log.slice(0,100)));return log[0]}
-function getProposals(ord){if(!ord.proposals){const base=parseInt(String(ord.total_price||'').replace(/[^0-9]/g,''),10)||300000;const names=['علی رضایی','مهدی کریمی','حسین احمدی'];ord.proposals=names.map((name,i)=>({id:ord.id+'_p'+i,name,price:Math.round(base*[.94,1.02,1.08][i]/10000)*10000,rating:['۴٫۹','۴٫۸','۴٫۷'][i],eta:['امروز، ساعت ۱۵','فردا صبح','امروز، ساعت ۱۸'][i],phone:['09121234567','09129876543','09351234567'][i],status:'pending'}))}return ord.proposals}
-async function submitOrder(){const date=document.getElementById('order-date').value,time=document.getElementById('order-time').value,phone=document.getElementById('order-phone').value.trim(),address=document.getElementById('order-address').value.trim(),finalPriceText=document.getElementById('estimated-price').innerText;if(!currentSelectedService){alert('لطفاً ابتدا خدمت موردنظر را انتخاب کنید.');return}if(!date||!phone||!address){alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');return}let extraInfoText='';if(document.getElementById('extra-floors')){const floors=document.getElementById('extra-floors').value,units=document.getElementById('extra-units').value,elevator=document.getElementById('extra-elevator').value,parking=document.getElementById('extra-parking').value;extraInfoText=`طبقات: ${floors} | واحدها: ${units} | آسانسور: ${elevator} | پارکینگ: ${parking}`}else if(document.getElementById('extra-hours')){const hours=document.getElementById('extra-hours').value,detergent=document.getElementById('extra-detergent').value>0?'توسط متخصص':'توسط مشتری';extraInfoText=`مدت: ${hours} ساعت | شوینده: ${detergent}`}const bidding=document.getElementById('pricing-mode').value==='bidding';const orderData={id:'ord_'+Date.now(),service_name:currentSelectedService.name,calculation_type:currentSelectedService.type,extra_details:extraInfoText,preferred_date:date,preferred_time:time,phone,address,total_price:finalPriceText,status:bidding?'در انتظار پیشنهاد متخصصان':'در انتظار تایید و تخصیص متخصص',pricing_mode:bidding?'bidding':'standard',created_at:new Date().toISOString()};let orders=readOrders();orders.unshift(orderData);saveOrders(orders);creditHook('order_created',parseInt(finalPriceText.replace(/[^0-9]/g,''),10)||0,orderData.id);alert(bidding?'سفارش ثبت شد؛ پیشنهادهای آزمایشی متخصصان در پیگیری سفارش‌ها نمایش داده می‌شود.':'سفارش شما با موفقیت ثبت شد!');closeBooking();switchTab('orders')}
-function chooseProposal(orderId,proposalId,accept){let orders=readOrders();const ord=orders.find(o=>o.id===orderId);if(!ord)return;const proposals=getProposals(ord),p=proposals.find(x=>x.id===proposalId);if(!p)return;if(accept){proposals.forEach(x=>{x.status=x.id===proposalId?'accepted':'not_selected'});ord.total_price=money(p.price)+' تومان';ord.status='پیشنهاد پذیرفته شد';ord.accepted_proposal={name:p.name,phone:p.phone,price:p.price};creditHook('proposal_accepted',p.price,ord.id);creditHook('commission_accrual',commissionFor(p.price),ord.id)}else{p.status='rejected';const open=proposals.some(x=>x.status==='pending');if(!open&&ord.status==='در انتظار پیشنهاد متخصصان')ord.status='همه پیشنهادها رد شدند'}saveOrders(orders);loadOrders()}
-function cancelOrder(orderId){if(confirm('آیا از لغو این سفارش اطمینان دارید؟')){saveOrders(readOrders().filter(o=>o.id!==orderId));loadOrders()}}
-function loadOrders(){const container=document.getElementById('orders-list-container'),orders=readOrders();if(!orders.length){container.innerHTML='<div style="text-align:center;padding:48px 0;background:white;border-radius:16px;border:1px solid #f1f5f9"><i class="fa-solid fa-box-open" style="font-size:36px;color:#cbd5e1;margin-bottom:12px"></i><p style="color:#64748b;font-size:13px">هنوز سفارشی ثبت نکرده‌اید.</p></div>';return}container.innerHTML=orders.map(ord=>{const props=ord.pricing_mode==='bidding'?getProposals(ord):[];const accepted=ord.accepted_proposal;let bidHtml='';if(accepted){bidHtml=`<div class="contact-revealed"><b>پیشنهاد پذیرفته‌شده از ${accepted.name}</b><br>تماس متخصص: <a href="tel:${accepted.phone}" dir="ltr">${accepted.phone}</a> · مبلغ نهایی: ${money(accepted.price)} تومان</div>`}else if(props.length){bidHtml=`<div class="proposal-box"><b style="font-size:12px;color:#5b21b6">پیشنهادهای آزمایشی متخصصان (قابل رد یا پذیرش)</b>${props.map(p=>`<div class="proposal-row"><div><b>${p.name}</b> · امتیاز ${p.rating}<br><span style="color:#64748b">${p.eta} | ${money(p.price)} تومان</span></div>${p.status==='pending'?`<div class="proposal-actions"><button class="proposal-btn accept-btn" onclick="chooseProposal('${ord.id}','${p.id}',true)">پذیرش و نمایش تماس</button><button class="proposal-btn reject-btn" onclick="chooseProposal('${ord.id}','${p.id}',false)">رد</button></div>`:p.status==='accepted'?'<span style="color:#15803d">پذیرفته‌شده</span>':`<span style="color:#94a3b8">${p.status==='rejected'?'رد شد':'انتخاب نشد'}</span>`}</div>`).join('')}<small style="color:#64748b">این پیشنهادها فقط برای آزمایش تجربه بازار هستند و به متخصص واقعی ارسال نمی‌شوند.</small></div>`}return `<div class="order-card"><div style="display:flex;justify-content:space-between;align-items:start"><div><h4 style="font-size:13px;font-weight:700;color:#1e293b">${escapeHtml(ord.service_name)}</h4><span style="font-size:11px;color:#4f46e5;font-weight:500">${escapeHtml(ord.calculation_type)}</span></div><span class="badge">${escapeHtml(ord.status)}</span></div><div style="font-size:12px;color:#475569;display:flex;flex-direction:column;gap:4px;background:#f8fafc;padding:12px;border-radius:10px"><div><i class="fa-regular fa-calendar" style="color:#94a3b8;margin-left:4px"></i> تاریخ: ${escapeHtml(ord.preferred_date)} (${escapeHtml(ord.preferred_time)})</div>${ord.extra_details?`<div><i class="fa-solid fa-circle-info" style="color:#94a3b8;margin-left:4px"></i> جزئیات: ${escapeHtml(ord.extra_details)}</div>`:''}<div><i class="fa-solid fa-money-bill-wave" style="color:#10b981;margin-left:4px"></i> مبلغ: <b style="color:#059669">${escapeHtml(ord.total_price)}</b>${ord.pricing_mode==='bidding'&&!accepted?' (برآورد اولیه)':''}</div><div><i class="fa-solid fa-location-dot" style="color:#94a3b8;margin-left:4px"></i> آدرس: ${escapeHtml(ord.address)}</div><div><i class="fa-solid fa-phone" style="color:#94a3b8;margin-left:4px"></i> تماس: ${escapeHtml(ord.phone)}</div></div>${bidHtml}<div style="display:flex;justify-content:flex-end;border-top:1px solid #f1f5f9;padding-top:8px"><button onclick="cancelOrder('${ord.id}')" class="cancel-btn"><i class="fa-solid fa-trash-can"></i> لغو سفارش</button></div></div>`}).join('');saveOrders(orders)}
-function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+async function submitOrder(){
+  const date=document.getElementById('order-date').value,
+        time=document.getElementById('order-time').value,
+        phone=document.getElementById('order-phone').value.trim(),
+        address=document.getElementById('order-address').value.trim(),
+        finalPriceText=document.getElementById('estimated-price').innerText;
+  
+  if(!currentSelectedService){alert('لطفاً ابتدا خدمت موردنظر را انتخاب کنید.');return}
+  if(!date||!phone||!address){alert('لطفاً تاریخ، شماره تماس و آدرس را به طور کامل وارد کنید.');return}
+  
+  let extraInfoText='';
+  if(document.getElementById('extra-floors')){
+    const floors=document.getElementById('extra-floors').value,
+          units=document.getElementById('extra-units').value,
+          elevator=document.getElementById('extra-elevator').value,
+          parking=document.getElementById('extra-parking').value;
+    extraInfoText=`طبقات: ${floors} | واحدها: ${units} | آسانسور: ${elevator} | پارکینگ: ${parking}`;
+  }else if(document.getElementById('extra-hours')){
+    const hours=document.getElementById('extra-hours').value,
+          detergent=document.getElementById('extra-detergent').value>0?'توسط متخصص':'توسط مشتری';
+    extraInfoText=`مدت: ${hours} ساعت | شوینده: ${detergent}`;
+  }
+
+  const bidding=document.getElementById('pricing-mode').value==='bidding';
+  const orderData={
+    id:'ord_'+Date.now(),
+    service_name:currentSelectedService.name,
+    calculation_type:currentSelectedService.type,
+    extra_details:extraInfoText,
+    preferred_date:date,
+    preferred_time:time,
+    phone,
+    address,
+    total_price:finalPriceText,
+    status:bidding?'در انتظار پیشنهاد متخصصان':'در انتظار تایید و تخصیص متخصص',
+    pricing_mode:bidding?'bidding':'standard',
+    proposals:[], // لیست پیشنهادهایی که متخصص ثبت می‌کند
+    created_at:new Date().toISOString()
+  };
+
+  let orders=readOrders();
+  orders.unshift(orderData);
+  saveOrders(orders);
+  creditHook('order_created',parseInt(finalPriceText.replace(/[^0-9]/g,''),10)||0,orderData.id);
+  alert(bidding?'سفارش ثبت شد؛ منتظر ارسال قیمت از طرف متخصصان باشید.':'سفارش شما با موفقیت ثبت شد!');
+  closeBooking();
+  switchTab('orders');
+}
+
+function chooseProposal(orderId,proposalIndex,accept){
+  let orders=readOrders();
+  const ord=orders.find(o=>o.id===orderId);
+  if(!ord||!ord.proposals||!ord.proposals[proposalIndex])return;
+  const p=ord.proposals[proposalIndex];
+  
+  if(accept){
+    ord.proposals.forEach(x=>x.status='not_selected');
+    p.status='accepted';
+    ord.total_price=money(p.price)+' تومان';
+    ord.status='پیشنهاد پذیرفته شد';
+    ord.accepted_proposal={name:p.name,phone:p.phone||'09120000000',price:p.price};
+    creditHook('proposal_accepted',p.price,ord.id);
+    creditHook('commission_accrual',commissionFor(p.price),ord.id);
+  }else{
+    p.status='rejected';
+  }
+  saveOrders(orders);
+  loadOrders();
+}
+
+function cancelOrder(orderId){
+  if(confirm('آیا از لغو این سفارش اطمینان دارید؟')){
+    saveOrders(readOrders().filter(o=>o.id!==orderId));
+    loadOrders();
+  }
+}
+
+function loadOrders(){
+  const container=document.getElementById('orders-list-container');
+  const orders=readOrders();
+  
+  if(!orders.length){
+    container.innerHTML='<div style="text-align:center;padding:48px 0;background:white;border-radius:16px;border:1px solid #f1f5f9"><i class="fa-solid fa-box-open" style="font-size:36px;color:#cbd5e1;margin-bottom:12px"></i><p style="color:#64748b;font-size:13px">هنوز سفارشی ثبت نکرده‌اید.</p></div>';
+    return;
+  }
+  
+  container.innerHTML=orders.map(ord=>{
+    const accepted=ord.accepted_proposal;
+    let proposalsHtml='';
+    
+    // اگر متخصص پیشنهاد داده باشد اینجا نمایش داده می‌شود
+    if(ord.proposals && ord.proposals.length > 0 && !accepted){
+      proposalsHtml=`<div class="proposal-box"><b style="font-size:12px;color:#5b21b6">پیشنهادهای قیمت ارسال شده توسط متخصصان:</b>${ord.proposals.map((p, idx)=>`
+        <div class="proposal-row">
+          <div><b>${escapeHtml(p.name)}</b> · امتیاز: ${escapeHtml(p.rating||'۵٫۰')}<br><span style="color:#64748b">مبلغ پیشنهادی: <b>${money(p.price)} تومان</b> (${escapeHtml(p.eta||'بررسی فوری')})</span></div>
+          ${p.status==='pending' || !p.status ? `
+            <div class="proposal-actions">
+              <button class="proposal-btn accept-btn" onclick="chooseProposal('${ord.id}', ${idx}, true)">پذیرش پیشنهاد</button>
+              <button class="proposal-btn reject-btn" onclick="chooseProposal('${ord.id}', ${idx}, false)">رد</button>
+            </div>
+          `:p.status==='accepted'?'<span style="color:#15803d;font-weight:700">پذیرفته‌شده</span>':'<span style="color:#94a3b8">رد شد</span>'}
+        </div>
+      `).join('')}</div>`;
+    }
+
+    let contactHtml='';
+    if(accepted){
+      contactHtml=`<div class="contact-revealed"><b>پیشنهاد پذیرفته‌شده (${accepted.name})</b><br>تلفن تماس متخصص: <a href="tel:${accepted.phone}" dir="ltr" style="color:#047857">${accepted.phone}</a> · مبلغ نهایی: ${money(accepted.price)} تومان</div>`;
+    }
+
+    return `<div class="order-card">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div><h4 style="font-size:13px;font-weight:700;color:#1e293b">${escapeHtml(ord.service_name)}</h4><span style="font-size:11px;color:#4f46e5;font-weight:500">${escapeHtml(ord.calculation_type)}</span></div>
+        <span class="badge">${escapeHtml(ord.status)}</span>
+      </div>
+      <div style="font-size:12px;color:#475569;display:flex;flex-direction:column;gap:4px;background:#f8fafc;padding:12px;border-radius:10px">
+        <div><i class="fa-regular fa-calendar" style="color:#94a3b8;margin-left:4px"></i> تاریخ: ${escapeHtml(ord.preferred_date)} (${escapeHtml(ord.preferred_time)})</div>
+        ${ord.extra_details?`<div><i class="fa-solid fa-circle-info" style="color:#94a3b8;margin-left:4px"></i> جزئیات: ${escapeHtml(ord.extra_details)}</div>`:''}
+        <div><i class="fa-solid fa-money-bill-wave" style="color:#10b981;margin-left:4px"></i> مبلغ: <b style="color:#059669">${escapeHtml(ord.total_price)}</b></div>
+        <div><i class="fa-solid fa-location-dot" style="color:#94a3b8;margin-left:4px"></i> آدرس: ${escapeHtml(ord.address)}</div>
+        <div><i class="fa-solid fa-phone" style="color:#94a3b8;margin-left:4px"></i> تماس: ${escapeHtml(ord.phone)}</div>
+      </div>
+      ${proposalsHtml}
+      ${contactHtml}
+      <div style="display:flex;justify-content:flex-end;border-top:1px solid #f1f5f9;padding-top:8px">
+        <button onclick="cancelOrder('${ord.id}')" class="cancel-btn"><i class="fa-solid fa-trash-can"></i> لغو سفارش</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;T'}[c]))}
 </script></body></html>
