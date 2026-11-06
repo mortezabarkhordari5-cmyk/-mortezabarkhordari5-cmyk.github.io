@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خدمت پلاس - پنل متخصصان</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+*{font-family:'Vazirmatn',sans-serif;box-sizing:border-box;margin:0;padding:0}
+body{background-color:#f8fafc;color:#1e293b;min-height:100vh;display:flex;flex-direction:column}
+header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.05);position:sticky;top:0;z-index:50}
+.header-container{max-width:768px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.logo-box{width:40px;height:40px;background:#059669;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;box-shadow:0 4px 6px rgba(5,150,105,.2)}
+.header-title h1{font-size:16px;font-weight:700;color:#1e293b;line-height:1.2}
+.header-title span{font-size:11px;color:#059669;font-weight:600}
+.wallet-badge{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+main{max-width:768px;margin:0 auto;padding:16px;flex-grow:1;width:100%;padding-bottom:80px}
+.pro-card{background:linear-gradient(135deg,#059669 0%,#0d9488 100%);border-radius:16px;padding:20px;color:white;box-shadow:0 10px 15px -3px rgba(5,150,105,.3);margin-bottom:20px}
+.pro-card h2{font-size:17px;font-weight:700;margin-bottom:6px}
+.pro-card p{font-size:12px;color:#ccfbf1;line-height:1.7}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat-box{background:white;padding:12px;border-radius:12px;border:1px solid #f1f5f9;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.02)}
+.stat-box span{font-size:11px;color:#64748b;display:block;margin-bottom:4px}
+.stat-box b{font-size:15px;color:#1e293b;font-weight:800}
+.section-title{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.order-card{background:white;padding:16px;border-radius:16px;border:1px solid #f1f5f9;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+.order-header{display:flex;justify-content:space-between;align-items:start}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-new{background:#e0f2fe;color:#0369a1}
+.badge-sent{background:#fef3c7;color:#b45309}
+.badge-won{background:#dcfce7;color:#15803d}
+.details-box{font-size:12px;color:#475569;display:flex;flex-direction:column;gap:6px;background:#f8fafc;padding:12px;border-radius:10px}
+.bid-section{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.form-control{width:100%;background:white;border:1px solid #cbd5e1;border-radius:10px;padding:8px 12px;font-size:13px;outline:none}
+.btn-submit-bid{background:#059669;color:white;border:none;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-submit-bid:hover{background:#047857}
+.client-revealed{background:#ecfdf5;border:1px solid #6ee7b7;padding:10px;border-radius:10px;font-size:12px;color:#065f46;line-height:1.8}
+.empty-box{text-align:center;padding:48px 16px;background:white;border-radius:16px;border:1px solid #f1f5f9;color:#64748b;font-size:13px}
+.bottom-nav{background:white;border-top:1px solid #e2e8f0;position:fixed;bottom:0;left:0;right:0;z-index:40}
+.nav-container{max-width:768px;margin:0 auto;display:flex;justify-content:space-around;padding:10px}
+.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;gap:4px}
+.nav-btn.active{color:#059669;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="logo-box"><i class="fa-solid fa-user-gear"></i></div>
+      <div class="header-title">
+        <h1>خدمت پلاس</h1>
+        <span>پنل اختصاصی متخصصان</span>
+      </div>
+    </div>
+    <div class="wallet-badge"><i class="fa-solid fa-wallet"></i> اعتبار: <span id="wallet-balance">۲۵۰,۰۰۰</span> ت</div>
+  </div>
+</header>
+
+<main>
+  <div class="pro-card">
+    <h2>همکار گرامی، خوش آمدید!</h2>
+    <p>سفارش‌های ثبت شده توسط مشتریان در منطقه شما در زیر قابل مشاهده است. پیشنهاد قیمت و زمان اعزام خود را ثبت کنید تا در صورت تأیید مشتری، کار به شما واگذار شود.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-box"><span>سفارش‌های جدید</span><b id="stat-new">۰</b></div>
+    <div class="stat-box"><span>پیشنهادهای من</span><b id="stat-bids">۰</b></div>
+    <div class="stat-box"><span>پروژه‌های موفق</span><b id="stat-won">۰</b></div>
+  </div>
+
+  <div class="section-title">
+    <span>لیست فرصت‌های شغلی و سفارش‌ها</span>
+    <button onclick="renderOrders()" style="background:none;border:none;color:#059669;font-size:12px;font-weight:700;cursor:pointer"><i class="fa-solid fa-rotate-right"></i> به‌روزرسانی</button>
+  </div>
+
+  <div id="pro-orders-list"></div>
+</main>
+
+<nav class="bottom-nav">
+  <div class="nav-container">
+    <button class="nav-btn active"><i class="fa-solid fa-briefcase"></i>سفارش‌های در جریان</button>
+    <a href="index.html" class="nav-btn" style="text-decoration:none"><i class="fa-solid fa-store"></i>نسخه مشتری</a>
+  </div>
+</nav>
+
+<script>
+const PRO_SPECIALIST = {
+  name: "علی رضایی (من)",
+  phone: "09121234567"
+};
+
+const money = n => Number(n).toLocaleString('fa-IR');
+
+function readOrders() {
+  try { return JSON.parse(localStorage.getItem('khedmat_orders') || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveOrders(orders) {
+  localStorage.setItem('khedmat_orders', JSON.stringify(orders));
+}
+
+function renderOrders() {
+  const container = document.getElementById('pro-orders-list');
+  const orders = readOrders();
+
+  let countNew = 0, countBids = 0, countWon = 0;
+
+  if (!orders.length) {
+    container.innerHTML = '<div class="empty-box"><i class="fa-solid fa-inbox" style="font-size:32px;color:#cbd5e1;margin-bottom:8px;display:block"></i>در حال حاضر سفارشی توسط مشتری ثبت نشده است.<br><small style="color:#94a3b8">ابتدا از پنل مشتری یک سفارش ثبت کنید تا اینجا ظاهر شود.</small></div>';
+    document.getElementById('stat-new').innerText = '۰';
+    document.getElementById('stat-bids').innerText = '۰';
+    document.getElementById('stat-won').innerText = '۰';
+    return;
+  }
+
+  container.innerHTML = orders.map(ord => {
+    // بررسی وضعیت پیشنهادهای متخصص
+    const myBid = (ord.proposals || []).find(p => p.phone === PRO_SPECIALIST.phone || p.name.includes('علی رضایی'));
+    const isWon = ord.accepted_proposal && (ord.accepted_proposal.phone === PRO_SPECIALIST.phone || ord.accepted_proposal.name.includes('علی رضایی'));
+
+    if (isWon) countWon++;
+    else if (myBid) countBids++;
+    else countNew++;
+
+    let badge = '<span class="badge badge-new">فرصت جدید</span>';
+    if (isWon) badge = '<span class="badge badge-won">شما انتخاب شدید</span>';
+    else if (myBid) badge = '<span class="badge badge-sent">پیشنهاد شما ارسال شده</span>';
+
+    let actionSection = '';
+
+    if (isWon) {
+      actionSection = `
+        <div class="client-revealed">
+          <b><i class="fa-solid fa-circle-check" style="color:#059669"></i> تبریک! مشتری پیشنهاد شما را قبول کرد.</b><br>
+          تماس با مشتری: <a href="tel:${escapeHtml(ord.phone)}" style="font-weight:700;color:#047857">${escapeHtml(ord.phone)}</a><br>
+          آدرس دقیق: ${escapeHtml(ord.address)}
+        </div>
+      `;
+    } else if (myBid) {
+      actionSection = `
+        <div style="background:#f8fafc;padding:10px;border-radius:10px;font-size:12px;color:#64748b">
+          پیشنهاد شما: <b>${money(myBid.price)} تومان</b> (${escapeHtml(myBid.eta)})<br>
+          وضعیت: در انتظار بررسی و انتخاب مشتری...
+        </div>
+      `;
+    } else {
+      actionSection = `
+        <div class="bid-section">
+          <b style="font-size:12px;color:#065f46">ارسال پیشنهاد همکاری برای این سفارش:</b>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <input type="number" id="bid-price-${ord.id}" class="form-control" placeholder="قیمت پیشنهادی (تومان)" value="${parseInt(String(ord.total_price||'').replace(/[^0-9]/g,''),10) || 300000}">
+            <input type="text" id="bid-eta-${ord.id}" class="form-control" placeholder="زمان اعزام (مثلاً: امروز ۱۷)">
+          </div>
+          <button onclick="submitBid('${ord.id}')" class="btn-submit-bid">
+            <i class="fa-solid fa-paper-plane"></i> ثبت و ارسال پیشنهاد به مشتری
+          </button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="order-card">
+        <div class="order-header">
+          <div>
+            <h4 style="font-size:14px;font-weight:700;color:#1e293b">${escapeHtml(ord.service_name)}</h4>
+            <span style="font-size:11px;color:#059669;font-weight:600">نوع محاسبه: ${escapeHtml(ord.calculation_type)}</span>
+          </div>
+          ${badge}
+        </div>
+
+        <div class="details-box">
+          <div><i class="fa-regular fa-calendar"></i> زمان درخواستی: <b>${escapeHtml(ord.preferred_date)} (${escapeHtml(ord.preferred_time)})</b></div>
+          ${ord.extra_details ? `<div><i class="fa-solid fa-list-check"></i> جزئیات: ${escapeHtml(ord.extra_details)}</div>` : ''}
+          <div><i class="fa-solid fa-coins" style="color:#eab308"></i> برآورد پایه مشتری: <b>${escapeHtml(ord.total_price)}</b></div>
+          <div><i class="fa-solid fa-location-dot"></i> محدوده: ${escapeHtml(ord.address.substring(0, 30))}...</div>
+        </div>
+
+        ${actionSection}
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('stat-new').innerText = money(countNew);
+  document.getElementById('stat-bids').innerText = money(countBids);
+  document.getElementById('stat-won').innerText = money(countWon);
+}
+
+function submitBid(orderId) {
+  const priceInput = document.getElementById(`bid-price-${orderId}`);
+  const etaInput = document.getElementById(`bid-eta-${orderId}`);
+
+  const price = parseInt(priceInput.value, 10);
+  const eta = etaInput.value.trim() || 'امروز در اولین فرصت';
+
+  if (!price || price <= 0) {
+    alert('لطفاً مبلغ پیشنهادی معتبر وارد کنید.');
+    return;
+  }
+
+  let orders = readOrders();
+  const ord = orders.find(o => o.id === orderId);
+  if (!ord) return;
+
+  if (!ord.proposals) ord.proposals = [];
+
+  ord.proposals.push({
+    id: ord.id + '_pro_' + Date.now(),
+    name: PRO_SPECIALIST.name,
+    price: price,
+    rating: '۵٫۰',
+    eta: eta,
+    phone: PRO_SPECIALIST.phone,
+    status: 'pending'
+  });
+
+  saveOrders(orders);
+  alert('پیشنهاد شما با موفقیت برای مشتری ارسال شد! به محض انتخاب شما، اطلاعات کامل در همین صفحه باز خواهد شد.');
+  renderOrders();
+}
+
+function escapeHtml(val){
+  return String(val??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+window.onload = renderOrders;
+</script>
+</body>
+</html>
